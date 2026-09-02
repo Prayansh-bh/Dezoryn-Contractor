@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getActiveGalleryItems } from "@backend/services/gallery.service";
 import { SiteShell, PageHero, PageCta } from "@frontend/components/site-shell";
 
@@ -6,40 +7,144 @@ export const dynamic = "force-dynamic";
 export default async function GalleryPage() {
   const items = await getActiveGalleryItems();
 
+  const curatedShowcase = [
+    {
+      id: "c1",
+      title: "Thermoplastic Expressway Paving & Marking",
+      caption: "High-speed automated application on 8-lane corridor.",
+      image: "/images/products/thermoplastic-paint.jpg",
+      tag: "Road Marking",
+    },
+    {
+      id: "c2",
+      title: "Retro-Reflective Micro Glass Beads Lab QC",
+      caption: "Testing optical retroreflectivity under directional light beam.",
+      image: "/images/products/reflective-glass-beads.jpg",
+      tag: "Quality Control",
+    },
+    {
+      id: "c3",
+      title: "High-Contrast Kerb & Divider Barrier Coatings",
+      caption: "Long-lasting UV-resistant kerb paint on highway median.",
+      image: "/images/products/kerb-barrier-coatings.jpg",
+      tag: "Barrier Coatings",
+    },
+    {
+      id: "c4",
+      title: "Solar & Cat-Eye Highway Road Studs",
+      caption: "Lane delineation and night curve warning studs.",
+      image: "/images/products/road-studs-delineators.jpg",
+      tag: "Highway Hardware",
+    },
+    {
+      id: "c5",
+      title: "Project Safety Hardware & Barricades",
+      caption: "Heavy-duty traffic cones and high-visibility work zone bollards.",
+      image: "/images/products/traffic-safety-products.jpg",
+      tag: "Traffic Safety",
+    },
+    {
+      id: "c6",
+      title: "Automated Material Batching Facility",
+      caption: "Standardized chemical blending and temperature-controlled compounding.",
+      image: "/images/products/custom-manufacturing.jpg",
+      tag: "Manufacturing",
+    },
+  ];
+
   return (
     <SiteShell>
       <PageHero
-        eyebrow="PROJECTS / GALLERY"
-        title="Work that moves infrastructure forward."
-        text="A view of our highway product applications, supply work and project activity."
+        eyebrow="PROJECTS & MEDIA GALLERY"
+        breadcrumbCurrent="Gallery"
+        title="Visual Showcase of Highway Applications and Manufacturing Work."
+        text="A curated perspective on our highway marking compounds, retro-reflective testing, safety hardware installations, and manufacturing facility."
       />
-      <section className="inner-section">
-        <div className="container public-gallery">
-          {items.map((m) => (
-            <article key={m.id}>
-              {m.mediaType === "video" ? (
-                <video src={`/api/media/${m.id}`} controls preload="metadata" />
-              ) : (
-                <img src={`/api/media/${m.id}`} alt={m.title} />
-              )}
-              <div>
-                <span>{m.mediaType}</span>
-                <h2>{m.title}</h2>
-                {m.caption && <p>{m.caption}</p>}
+
+      <section className="py-20 bg-slate-50">
+        <div className="container">
+          {/* User Uploaded Live Media (if present) */}
+          {items.length > 0 && (
+            <div className="mb-16">
+              <div className="section-label mb-2">
+                <span /> LIVE PROJECT MEDIA
               </div>
-            </article>
-          ))}
-          {!items.length && (
-            <div className="gallery-empty">
-              <span>GALLERY UPDATES</span>
-              <h2>Project media is being curated.</h2>
-              <p>
-                New work images and videos will appear here after they are published by our team.
-              </p>
+              <h2 className="text-2xl font-bold text-slate-900 mb-8">
+                Recent Dispatches & Site Work ({items.length})
+              </h2>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {items.map((m) => (
+                  <article
+                    key={m.id}
+                    className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm hover:border-amber-500 transition-colors"
+                  >
+                    <div className="relative h-60 bg-slate-900">
+                      {m.mediaType === "video" ? (
+                        <video
+                          src={`/api/media/${m.id}`}
+                          controls
+                          preload="metadata"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <img
+                          src={`/api/media/${m.id}`}
+                          alt={m.title}
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+                    </div>
+                    <div className="p-5">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-1 block">
+                        {m.mediaType}
+                      </span>
+                      <h3 className="text-base font-bold text-slate-900 mb-1">{m.title}</h3>
+                      {m.caption && <p className="text-xs text-slate-500">{m.caption}</p>}
+                    </div>
+                  </article>
+                ))}
+              </div>
             </div>
           )}
+
+          {/* Curated Infrastructure Showcase */}
+          <div>
+            <div className="section-label mb-2">
+              <span /> INFRASTRUCTURE PORTFOLIO
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900 mb-8">
+              Highway Products in Action
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {curatedShowcase.map((item) => (
+                <article
+                  key={item.id}
+                  className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm hover:border-amber-500 transition-all hover:-translate-y-1"
+                >
+                  <div className="relative h-64 bg-slate-900">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider text-amber-400 border border-amber-500/30">
+                      {item.tag}
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-lg font-bold text-slate-900 mb-2">{item.title}</h3>
+                    <p className="text-xs text-slate-600 leading-relaxed">{item.caption}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
+
       <PageCta />
     </SiteShell>
   );

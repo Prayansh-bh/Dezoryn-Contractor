@@ -1,127 +1,83 @@
-"use client";
-
-import { FormEvent, useState } from "react";
-import { ArrowRight, Mail, MapPin, PackageCheck } from "lucide-react";
-import { DEFAULT_PRODUCTS } from "@shared/constants";
+import { Mail, MapPin, PackageCheck, Phone, ShieldCheck } from "lucide-react";
 import { SiteShell, PageHero } from "@frontend/components/site-shell";
+import { EnquiryForm } from "@frontend/components/enquiry-form";
 
 export default function ContactPage() {
-  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  async function submit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setStatus("sending");
-    setErrorMessage("");
-
-    const f = e.currentTarget;
-    try {
-      const r = await fetch("/api/enquiries", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(Object.fromEntries(new FormData(f).entries())),
-      });
-      if (!r.ok) {
-        const err = await r.json();
-        throw new Error(err.error || "Submission failed");
-      }
-      f.reset();
-      setStatus("success");
-    } catch (err: any) {
-      setErrorMessage(err.message || "Please try again.");
-      setStatus("error");
-    }
-  }
-
   return (
     <SiteShell>
       <PageHero
-        eyebrow="CONTACT / BULK ENQUIRY"
-        title="Start a project conversation."
-        text="Tell us the product, approximate quantity and delivery location. Our B2B team will review the requirement for a project-specific quotation."
+        eyebrow="COMMERCIAL DESK & QUOTATIONS"
+        breadcrumbCurrent="Contact Us"
+        title="Start a Project Sourcing Conversation."
+        text="Connect with our technical supply team for material availability, batch production schedules, and dispatched delivery across India. We provide formal BOQ quotations for EPC contractors and government infrastructure vendors."
       />
-      <section className="inner-section contact-page">
-        <div className="container contact-grid">
-          <aside>
-            <div className="section-label">REACH DEZORYN</div>
-            <h2>Bulk orders and project enquiries.</h2>
-            <div className="contact-item">
-              <Mail />
+
+      {/* Main Form Section */}
+      <section className="py-20 bg-slate-950 text-white">
+        <EnquiryForm />
+      </section>
+
+      {/* Contact Details & Logistics Strip */}
+      <section className="py-16 bg-slate-900 border-t border-slate-800 text-white">
+        <div className="container">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="p-6 rounded-lg bg-slate-800/60 border border-slate-700/80 flex items-start gap-4">
+              <div className="w-12 h-12 rounded bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-500 shrink-0">
+                <Mail size={22} />
+              </div>
               <div>
-                <span>Email</span>
-                <a href="mailto:sales@dezoryn.com">sales@dezoryn.com</a>
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                  Email Enquiries
+                </span>
+                <a
+                  href="mailto:sales@dezoryn.com"
+                  className="text-base font-bold text-white hover:text-amber-400 transition-colors"
+                >
+                  sales@dezoryn.com
+                </a>
+                <span className="text-xs text-slate-400 block mt-1">
+                  Direct response within 4 working hours
+                </span>
               </div>
             </div>
-            <div className="contact-item">
-              <MapPin />
+
+            <div className="p-6 rounded-lg bg-slate-800/60 border border-slate-700/80 flex items-start gap-4">
+              <div className="w-12 h-12 rounded bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-500 shrink-0">
+                <Phone size={22} />
+              </div>
               <div>
-                <span>Supply coverage</span>
-                <b>Pan-India project dispatch</b>
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                  Direct B2B Hotline
+                </span>
+                <a
+                  href="tel:+919876543210"
+                  className="text-base font-bold text-white hover:text-amber-400 transition-colors"
+                >
+                  +91 98765 43210
+                </a>
+                <span className="text-xs text-slate-400 block mt-1">
+                  Mon – Sat, 9:00 AM – 7:00 PM IST
+                </span>
               </div>
             </div>
-            <div className="contact-item">
-              <PackageCheck />
+
+            <div className="p-6 rounded-lg bg-slate-800/60 border border-slate-700/80 flex items-start gap-4">
+              <div className="w-12 h-12 rounded bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-500 shrink-0">
+                <MapPin size={22} />
+              </div>
               <div>
-                <span>Commercial model</span>
-                <b>B2B and bulk orders only</b>
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                  Supply Coverage
+                </span>
+                <strong className="text-base font-bold text-white block">
+                  Pan-India Freight Logistics
+                </strong>
+                <span className="text-xs text-slate-400 block mt-1">
+                  Scheduled dispatches to all major highway corridors
+                </span>
               </div>
             </div>
-          </aside>
-          <form className="enquiry-form" onSubmit={submit}>
-            <div className="form-row">
-              <label>
-                Full Name
-                <input required name="name" placeholder="Your name" />
-              </label>
-              <label>
-                Company Name
-                <input required name="company" placeholder="Company / organisation" />
-              </label>
-            </div>
-            <div className="form-row">
-              <label>
-                Phone Number
-                <input required name="phone" inputMode="tel" placeholder="+91 98765 43210" />
-              </label>
-              <label>
-                Email Address
-                <input required type="email" name="email" placeholder="name@company.com" />
-              </label>
-            </div>
-            <div className="form-row">
-              <label>
-                Product
-                <select required name="product" defaultValue="">
-                  <option value="" disabled>Select product</option>
-                  {DEFAULT_PRODUCTS.map((p) => (
-                    <option key={p.slug} value={p.name}>{p.name}</option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Approx. Quantity
-                <input required name="quantity" placeholder="e.g. 25 MT / 5,000 units" />
-              </label>
-            </div>
-            <label>
-              Delivery Location
-              <input required name="location" placeholder="City, State" />
-            </label>
-            <label>
-              Requirement Details
-              <textarea name="message" rows={5} placeholder="Specification, project timeline or any special requirement" />
-            </label>
-            <button className="btn btn-dark" disabled={status === "sending"}>
-              {status === "sending" ? "Submitting…" : "Submit Bulk Enquiry"}
-              <ArrowRight />
-            </button>
-            {status === "success" && (
-              <p className="form-message success">Your enquiry has been received.</p>
-            )}
-            {status === "error" && (
-              <p className="form-message error">{errorMessage}</p>
-            )}
-          </form>
+          </div>
         </div>
       </section>
     </SiteShell>

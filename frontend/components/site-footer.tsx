@@ -1,43 +1,85 @@
+import Link from "next/link";
+import { ArrowUpRight, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
+
 export function SiteFooter() {
   return (
     <footer>
-      <div className="container footer-grid">
-        <div>
-          <a className="brand footer-brand" href="/">
-            <span className="brand-mark">
-              <span />
-            </span>
-            <span>
-              <b>DEZORYN</b>
-              <small>CONTRACTOR</small>
-            </span>
-          </a>
-          <p>
-            Manufacturing and bulk supply of highway safety and road-marking products for infrastructure projects.
-          </p>
+      <div className="container">
+        <div className="footer-grid">
+          {/* Col 1: Identity */}
+          <div className="footer-col">
+            <Link href="/" className="brand mb-4 inline-flex">
+              <div className="brand-mark">
+                <span className="sr-only">Dezoryn</span>
+              </div>
+              <div className="brand-info">
+                <b>DEZORYN</b>
+                <small>CONTRACTOR</small>
+              </div>
+            </Link>
+            <p className="text-slate-400 text-sm leading-relaxed mt-4 max-w-sm">
+              Dedicated manufacturer and bulk supplier of high-performance thermoplastic road marking paint, reflective glass beads, kerb coatings, and highway safety systems across India.
+            </p>
+            <div className="flex items-center gap-2 mt-4 text-xs text-amber-500 font-semibold uppercase tracking-wider">
+              <ShieldCheck size={16} /> Batch-Controlled Quality Sourcing
+            </div>
+          </div>
+
+          {/* Col 2: Products */}
+          <div className="footer-col">
+            <h4>Highway Products</h4>
+            <div className="footer-links">
+              <Link href="/products/thermoplastic-road-marking-paint">Road Marking Paint</Link>
+              <Link href="/products/reflective-glass-beads">Reflective Glass Beads</Link>
+              <Link href="/products/kerb-barrier-coatings">Kerb & Barrier Coatings</Link>
+              <Link href="/products/road-studs-delineators">Road Studs & Delineators</Link>
+              <Link href="/products/traffic-safety-products">Traffic Safety Products</Link>
+              <Link href="/products/custom-manufacturing">Project Manufacturing</Link>
+            </div>
+          </div>
+
+          {/* Col 3: Sectors */}
+          <div className="footer-col">
+            <h4>Applications</h4>
+            <div className="footer-links">
+              <Link href="/applications">National & State Highways</Link>
+              <Link href="/applications">Expressways & Corridors</Link>
+              <Link href="/applications">Urban Roads & Smart Cities</Link>
+              <Link href="/applications">Airports & Logistics Parks</Link>
+              <Link href="/quality">Quality Assurance Protocol</Link>
+              <Link href="/gallery">Project Media Gallery</Link>
+            </div>
+          </div>
+
+          {/* Col 4: Contact */}
+          <div className="footer-col">
+            <h4>B2B Project Desk</h4>
+            <div className="footer-links">
+              <a href="mailto:sales@dezoryn.com" className="flex items-center gap-2">
+                <Mail size={14} className="text-amber-500" /> sales@dezoryn.com
+              </a>
+              <a href="tel:+919876543210" className="flex items-center gap-2">
+                <Phone size={14} className="text-amber-500" /> +91 98765 43210
+              </a>
+              <div className="flex items-start gap-2 text-sm text-slate-400">
+                <MapPin size={16} className="text-amber-500 shrink-0 mt-0.5" />
+                <span>Highway Industrial Corridor, Pan-India Dispatch Network</span>
+              </div>
+              <Link href="/contact" className="mt-2 inline-flex items-center gap-1.5 text-amber-500 font-bold text-xs uppercase tracking-wider hover:underline">
+                Request Project BOQ Quote <ArrowUpRight size={14} />
+              </Link>
+            </div>
+          </div>
         </div>
-        <div>
-          <h4>Explore</h4>
-          <a href="/about">About</a>
-          <a href="/products">Products</a>
-          <a href="/quality">Quality</a>
+
+        <div className="footer-bottom">
+          <span>© {new Date().getFullYear()} Dezoryn Contractor. All rights reserved.</span>
+          <span className="flex items-center gap-4">
+            <span>MORTH & IRC Specification Aligned</span>
+            <span>•</span>
+            <span>Engineered for Indian Roads</span>
+          </span>
         </div>
-        <div>
-          <h4>Products</h4>
-          <a href="/products/thermoplastic-road-marking-paint">Road Marking Paint</a>
-          <a href="/products/reflective-glass-beads">Glass Beads</a>
-          <a href="/products/traffic-safety-products">Safety Products</a>
-        </div>
-        <div>
-          <h4>Enquiries</h4>
-          <a href="mailto:sales@dezoryn.com">sales@dezoryn.com</a>
-          <span>India-wide bulk supply</span>
-          <a href="/contact">Request quotation</a>
-        </div>
-      </div>
-      <div className="container footer-bottom">
-        <span>© 2026 Dezoryn Contractor. All rights reserved.</span>
-        <span>Built for safer roads.</span>
       </div>
     </footer>
   );
