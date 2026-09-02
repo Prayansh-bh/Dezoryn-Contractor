@@ -17,10 +17,10 @@ export function SiteFooter() {
                 <small>CONTRACTOR</small>
               </div>
             </Link>
-            <p className="text-slate-400 text-sm leading-relaxed mt-4 max-w-sm">
+            <p className="text-[#64748b] text-sm leading-relaxed mt-4 max-w-sm">
               Dedicated manufacturer and bulk supplier of high-performance thermoplastic road marking paint, reflective glass beads, kerb coatings, and highway safety systems across India.
             </p>
-            <div className="flex items-center gap-2 mt-4 text-xs text-amber-500 font-semibold uppercase tracking-wider">
+            <div className="flex items-center gap-2 mt-4 text-xs text-[#c9a35d] font-semibold uppercase tracking-wider">
               <ShieldCheck size={16} /> Batch-Controlled Quality Sourcing
             </div>
           </div>
@@ -56,16 +56,16 @@ export function SiteFooter() {
             <h4>B2B Project Desk</h4>
             <div className="footer-links">
               <a href="mailto:sales@dezoryn.com" className="flex items-center gap-2">
-                <Mail size={14} className="text-amber-500" /> sales@dezoryn.com
+                <Mail size={14} className="text-[#c9a35d]" /> sales@dezoryn.com
               </a>
               <a href="tel:+919876543210" className="flex items-center gap-2">
-                <Phone size={14} className="text-amber-500" /> +91 98765 43210
+                <Phone size={14} className="text-[#c9a35d]" /> +91 98765 43210
               </a>
-              <div className="flex items-start gap-2 text-sm text-slate-400">
-                <MapPin size={16} className="text-amber-500 shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2 text-sm text-[#64748b]">
+                <MapPin size={16} className="text-[#c9a35d] shrink-0 mt-0.5" />
                 <span>Highway Industrial Corridor, Pan-India Dispatch Network</span>
               </div>
-              <Link href="/contact" className="mt-2 inline-flex items-center gap-1.5 text-amber-500 font-bold text-xs uppercase tracking-wider hover:underline">
+              <Link href="/contact" className="mt-2 inline-flex items-center gap-1.5 text-[#c9a35d] font-bold text-xs uppercase tracking-wider hover:underline">
                 Request Project BOQ Quote <ArrowUpRight size={14} />
               </Link>
             </div>
