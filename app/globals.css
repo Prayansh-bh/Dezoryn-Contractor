@@ -96,15 +96,12 @@ h4,
   background: #ffffff;
 }
 
-.hero-image {
+.hero-overlay {
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0.94) 25%, rgba(255, 255, 255, 0.5) 48%, rgba(255, 255, 255, 0.04) 75%, transparent 100%),
-    url("/highway-hero-light.jpg?v=2");
-  background-size: cover;
-  background-position: center right;
-  filter: contrast(1.04) brightness(1.02);
+  pointer-events: none;
+  background: linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0.94) 28%, rgba(255, 255, 255, 0.5) 48%, rgba(255, 255, 255, 0.04) 75%, transparent 100%);
+  z-index: 1;
 }
 
 .hero:after {
@@ -113,6 +110,7 @@ h4,
   inset: 0;
   pointer-events: none;
   box-shadow: inset 0 -60px 80px #ffffff;
+  z-index: 1;
 }
 
 .hero-grid {

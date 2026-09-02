@@ -19,6 +19,7 @@ import { SiteHeader } from "@frontend/components/site-header";
 import { SiteFooter } from "@frontend/components/site-footer";
 import { EnquiryForm } from "@frontend/components/enquiry-form";
 import { HomeProductCard } from "@frontend/components/product-card";
+import { HeroVideoHighway } from "@frontend/components/hero-video-highway";
 import { CAPABILITIES } from "@shared/constants";
 
 const products = [
@@ -73,7 +74,8 @@ export default function HomePage() {
 
       {/* Hero Section — Exact Original Front-Page Fold */}
       <section id="home" className="hero">
-        <div className="hero-image" />
+        <HeroVideoHighway />
+        <div className="hero-overlay" />
         <div className="hero-grid" />
         <div className="container hero-content">
           <div className="eyebrow">
