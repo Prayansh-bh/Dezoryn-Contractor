@@ -103,14 +103,13 @@ h4,
   inset: 0;
   pointer-events: none;
   background: linear-gradient(
-    90deg,
+    102deg,
     #ffffff 0%,
-    #ffffff 38%,
-    rgba(255, 255, 255, 0.94) 44%,
-    rgba(255, 255, 255, 0.72) 50%,
-    rgba(255, 255, 255, 0.35) 58%,
-    rgba(255, 255, 255, 0.08) 66%,
-    transparent 74%
+    #ffffff 43%,
+    rgba(255, 255, 255, 0.92) 46%,
+    rgba(255, 255, 255, 0.65) 50%,
+    rgba(255, 255, 255, 0.25) 54%,
+    transparent 58%
   );
   z-index: 1;
 }
