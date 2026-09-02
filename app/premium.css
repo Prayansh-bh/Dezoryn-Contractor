@@ -1,7 +1,7 @@
-/* Precision Engineering Enhancements & Modern UI Tokens */
+/* Precision Engineering Enhancements & Modern Aztec Champagne Gold Tokens */
 
 .text-gradient-amber {
-  background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+  background: linear-gradient(135deg, #f0d796 0%, #b98d43 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -14,23 +14,23 @@
 
 .card-dark-glass {
   background: linear-gradient(145deg, rgba(22, 32, 50, 0.7), rgba(9, 13, 20, 0.9));
-  border: 1px solid rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(201, 163, 93, 0.18);
   backdrop-filter: blur(12px);
   border-radius: 8px;
 }
 
 .card-dark-glass:hover {
-  border-color: rgba(245, 158, 11, 0.4);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35), 0 0 20px rgba(245, 158, 11, 0.08);
+  border-color: rgba(201, 163, 93, 0.45);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35), 0 0 20px rgba(201, 163, 93, 0.1);
 }
 
 .spec-chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(245, 158, 11, 0.08);
-  border: 1px solid rgba(245, 158, 11, 0.2);
-  color: #f59e0b;
+  background: rgba(201, 163, 93, 0.08);
+  border: 1px solid rgba(201, 163, 93, 0.25);
+  color: #c9a35d;
   font-family: var(--font-display);
   font-size: 11px;
   font-weight: 700;
@@ -59,7 +59,7 @@
   width: 100%;
   max-height: 90vh;
   background: #090d14;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  border: 1px solid rgba(201, 163, 93, 0.3);
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
