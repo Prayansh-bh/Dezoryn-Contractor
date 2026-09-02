@@ -108,13 +108,13 @@ export default function HomePage() {
             </span>
           </div>
         </div>
-        <Link
-          href="/about"
-          className="hidden md:flex absolute right-12 bottom-10 z-10 items-center gap-2 text-xs uppercase font-bold tracking-widest text-[#64748b] hover:text-[#c9a35d] transition-colors"
+        <a
+          href="#products"
+          className="hidden md:flex absolute right-12 bottom-10 z-10 items-center gap-2 text-xs uppercase font-bold tracking-widest text-[#64748b] hover:text-[#c9a35d] transition-colors cursor-pointer"
         >
           <span>Scroll to Explore</span>
           <ChevronDown size={14} className="animate-bounce text-[#c9a35d]" />
-        </Link>
+        </a>
       </section>
 
       {/* Trust & Capabilities Strip */}
