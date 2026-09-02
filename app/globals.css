@@ -5,27 +5,26 @@
   --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-display: "Outfit", "Plus Jakarta Sans", sans-serif;
 
-  /* Industrial Color Palette — Obsidian + Aztec Champagne Gold */
-  --bg-dark: #090d14;
-  --bg-card-dark: #101726;
-  --bg-elevated: #162032;
-  --border-dark: rgba(255, 255, 255, 0.08);
-  --border-amber: rgba(201, 163, 93, 0.28);
+  /* Executive Industrial Palette — Obsidian & Aztec Champagne Gold */
+  --bg-dark: #06090d;
+  --bg-surface: #090d14;
+  --bg-card: #0e141f;
+  --bg-elevated: #141c2b;
   
-  --amber-primary: #c9a35d;
-  --amber-hover: #b98d43;
-  --amber-glow: rgba(201, 163, 93, 0.2);
-  --amber-gradient: linear-gradient(135deg, #f0d796 0%, #b98d43 100%);
-  
-  --text-main-dark: #ffffff;
-  --text-muted-dark: #94a3b8;
-  --text-subtle-dark: #64748b;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-amber: rgba(201, 163, 93, 0.22);
+  --border-amber-hover: rgba(201, 163, 93, 0.6);
 
-  --bg-light: #f5f2eb;
-  --bg-card-light: #f8f6f0;
-  --border-light: #dfd8cb;
-  --text-main-light: #161e27;
-  --text-muted-light: #526071;
+  --amber-primary: #c9a35d;
+  --amber-hover: #b88a3d;
+  --amber-light: #f0d796;
+  --amber-glow: rgba(201, 163, 93, 0.25);
+  --amber-gradient: linear-gradient(135deg, #f1d99b 0%, #b88a3d 100%);
+
+  --text-heading: #ffffff;
+  --text-body: #94a3b8;
+  --text-subtle: #64748b;
+  --text-gold: #f0d796;
 }
 
 * {
@@ -36,18 +35,22 @@ html {
   scroll-behavior: smooth;
   font-family: var(--font-sans);
   background-color: var(--bg-dark);
-  color: var(--text-main-light);
+  color: var(--text-body);
 }
 
 body {
   margin: 0;
-  background-color: var(--bg-light);
-  color: var(--text-main-light);
+  background-color: var(--bg-dark);
+  color: var(--text-body);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, .font-heading {
+h1,
+h2,
+h3,
+h4,
+.font-heading {
   font-family: var(--font-display);
   letter-spacing: -0.025em;
 }
@@ -58,7 +61,8 @@ h1, h2, h3, h4, .font-heading {
 }
 
 /* Engineering Eyebrow / Badges */
-.eyebrow, .section-label {
+.eyebrow,
+.section-label {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -70,7 +74,8 @@ h1, h2, h3, h4, .font-heading {
   color: var(--amber-primary);
 }
 
-.eyebrow span, .section-label span {
+.eyebrow span,
+.section-label span {
   display: inline-block;
   width: 24px;
   height: 2px;
@@ -90,7 +95,7 @@ h1, h2, h3, h4, .font-heading {
 .hero-image {
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     radial-gradient(circle at 76% 48%, transparent 0, rgba(4, 6, 8, 0.18) 34%, rgba(4, 6, 8, 0.9) 78%),
     linear-gradient(90deg, rgba(3, 5, 7, 0.97), rgba(3, 5, 7, 0.66) 48%, rgba(3, 5, 7, 0.08) 80%),
     url("/highway-hero.png");
@@ -191,7 +196,7 @@ h1, h2, h3, h4, .font-heading {
 
 /* Industrial Grid Background */
 .bg-grid-pattern {
-  background-image: 
+  background-image:
     linear-gradient(rgba(201, 163, 93, 0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(201, 163, 93, 0.05) 1px, transparent 1px);
   background-size: 64px 64px;

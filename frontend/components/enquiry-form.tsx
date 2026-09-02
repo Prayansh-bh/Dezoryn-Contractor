@@ -60,30 +60,30 @@ function EnquiryFormInner() {
           <div className="section-label mb-3">
             <span /> 05 — COMMERCIAL DESK
           </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight mb-6">
+          <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-6 font-serif">
             Request Project BOQ Quotation
           </h2>
-          <p className="text-slate-300 text-base md:text-lg leading-relaxed mb-8">
+          <p className="text-[#94a3b8] text-base md:text-lg leading-relaxed mb-8">
             Provide your product requirements, estimated volume, and delivery destination. Our technical sales engineers will review the BOQ and prepare a project-specific supply proposal.
           </p>
 
-          <div className="space-y-4 border-t border-slate-800 pt-6">
+          <div className="space-y-4 border-t border-[rgba(201,163,93,0.2)] pt-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0">
-                <PackageCheck size={20} className="text-amber-500" />
+              <div className="w-10 h-10 rounded bg-[#070a0f] border border-[rgba(201,163,93,0.25)] flex items-center justify-center shrink-0">
+                <PackageCheck size={20} className="text-[#c9a35d]" />
               </div>
               <div>
                 <strong className="block text-sm text-white">Bulk B2B Supply Model</strong>
-                <span className="text-xs text-slate-400">Competitive rate structures for EPCs & infrastructure contractors</span>
+                <span className="text-xs text-[#94a3b8]">Competitive rate structures for EPCs & infrastructure contractors</span>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0">
-                <CheckCircle2 size={20} className="text-amber-500" />
+              <div className="w-10 h-10 rounded bg-[#070a0f] border border-[rgba(201,163,93,0.25)] flex items-center justify-center shrink-0">
+                <CheckCircle2 size={20} className="text-[#c9a35d]" />
               </div>
               <div>
                 <strong className="block text-sm text-white">MORTH Specification Verification</strong>
-                <span className="text-xs text-slate-400">Batch test certificates provided with every consignment</span>
+                <span className="text-xs text-[#94a3b8]">Batch test certificates provided with every consignment</span>
               </div>
             </div>
           </div>
@@ -94,11 +94,11 @@ function EnquiryFormInner() {
           <div className="enquiry-form-card">
             {status === "success" ? (
               <div className="text-center py-12">
-                <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-[#070a0f] text-[#c9a35d] border border-[rgba(201,163,93,0.3)] rounded-full flex items-center justify-center mx-auto mb-4">
                   <CheckCircle2 size={36} />
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">Quotation Request Received</h3>
-                <p className="text-slate-600 max-w-md mx-auto mb-6 text-sm leading-relaxed">
+                <h3 className="text-2xl font-bold text-white mb-2 font-serif">Quotation Request Received</h3>
+                <p className="text-[#94a3b8] max-w-md mx-auto mb-6 text-sm leading-relaxed">
                   Thank you. Our highway technical desk is reviewing your requirements and will reach out with a detailed BOQ quote shortly.
                 </p>
                 <button
@@ -170,12 +170,13 @@ function EnquiryFormInner() {
                       onChange={(e) => setSelectedProduct(e.target.value)}
                       className="form-select"
                     >
-                      <option value="" disabled>Select Product Category</option>
-                      {DEFAULT_PRODUCTS.map((p) => (
-                        <option key={p.slug} value={p.name}>
-                          {p.name}
+                      <option value="">Select Product Category</option>
+                      {DEFAULT_PRODUCTS.map((prod) => (
+                        <option key={prod.slug} value={prod.name}>
+                          {prod.name}
                         </option>
                       ))}
+                      <option value="Custom Compounding">Custom Material Specification</option>
                     </select>
                   </div>
                   <div className="form-group">
@@ -194,13 +195,13 @@ function EnquiryFormInner() {
 
                 {/* Quick Quantity Chips */}
                 <div className="flex items-center gap-2 mb-4 flex-wrap">
-                  <span className="text-xs text-slate-500 font-semibold uppercase">Quick volume:</span>
+                  <span className="text-xs text-[#94a3b8] font-semibold uppercase">Quick volume:</span>
                   {quickQuantities.map((q) => (
                     <button
                       key={q}
                       type="button"
                       onClick={() => setQuantity(q)}
-                      className="text-xs font-semibold px-2.5 py-1 bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-800 rounded border border-slate-200 transition-colors"
+                      className="text-xs font-semibold px-2.5 py-1 bg-[#070a0f] hover:bg-[#141c2b] text-white hover:text-[#f0d796] rounded border border-[rgba(201,163,93,0.25)] transition-colors"
                     >
                       {q}
                     </button>

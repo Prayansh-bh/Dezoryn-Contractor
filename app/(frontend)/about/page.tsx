@@ -42,37 +42,37 @@ export default function AboutPage() {
       />
 
       {/* Purpose & Manufacturing Setup */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-[#090d14] text-white border-b border-[rgba(201,163,93,0.2)]">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-6">
               <div className="section-label mb-3">
                 <span /> OUR PURPOSE
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6">
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-6 font-serif">
                 Strong highway infrastructure begins with disciplined manufacturing.
               </h2>
-              <p className="text-slate-600 text-base sm:text-lg leading-relaxed mb-6">
+              <p className="text-[#94a3b8] text-base sm:text-lg leading-relaxed mb-6">
                 Infrastructure projects cannot afford delays due to inconsistent batch quality or delayed consignments. Our workflow starts with a rigorous understanding of the road conditions, required specifications, and target timelines.
               </p>
-              <p className="text-slate-600 text-base leading-relaxed mb-8">
+              <p className="text-[#94a3b8] text-base leading-relaxed mb-8">
                 By focusing on specialized thermoplastic compounding, precision-graded glass beads, and impact-resistant highway hardware, we provide dependable materials that withstand heavy axle traffic and extreme seasonal weather.
               </p>
 
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200">
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[rgba(201,163,93,0.2)]">
                 <div>
-                  <strong className="text-2xl font-black text-amber-600 block">100%</strong>
-                  <span className="text-xs font-semibold uppercase text-slate-500">Batch Tested</span>
+                  <strong className="text-2xl font-black text-[#f0d796] block font-display">100%</strong>
+                  <span className="text-xs font-semibold uppercase text-[#94a3b8]">Batch Tested</span>
                 </div>
                 <div>
-                  <strong className="text-2xl font-black text-amber-600 block">Pan-India</strong>
-                  <span className="text-xs font-semibold uppercase text-slate-500">Dispatch Network</span>
+                  <strong className="text-2xl font-black text-[#f0d796] block font-display">Pan-India</strong>
+                  <span className="text-xs font-semibold uppercase text-[#94a3b8]">Dispatch Network</span>
                 </div>
               </div>
             </div>
 
             <div className="lg:col-span-6">
-              <div className="relative h-[400px] rounded-lg overflow-hidden border border-slate-200 shadow-xl">
+              <div className="relative h-[400px] rounded-lg overflow-hidden border border-[rgba(201,163,93,0.25)] shadow-2xl">
                 <Image
                   src="/images/products/custom-manufacturing.jpg"
                   alt="Dezoryn Manufacturing Facility"
@@ -86,13 +86,13 @@ export default function AboutPage() {
       </section>
 
       {/* Core Operational Pillars */}
-      <section className="py-20 bg-slate-900 text-white">
+      <section className="py-20 bg-[#06090d] text-white">
         <div className="container">
           <div className="max-w-3xl mb-14">
             <div className="section-label mb-3">
               <span /> CORE PILLARS
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-serif">
               What Defines Dezoryn Contractor
             </h2>
           </div>
@@ -101,32 +101,36 @@ export default function AboutPage() {
             {pillars.map((pillar) => {
               const Icon = pillar.icon;
               return (
-                <div
+                <article
                   key={pillar.title}
-                  className="p-8 rounded-lg bg-slate-800/70 border border-slate-700/80 hover:border-amber-500/50 transition-colors"
+                  className="p-8 rounded-lg bg-[#0e141f] border border-[rgba(201,163,93,0.18)] hover:border-[#c9a35d] transition-all shadow-lg flex flex-col justify-between"
                 >
-                  <Icon size={32} className="text-amber-500 mb-6" />
-                  <h3 className="text-xl font-bold text-white mb-3">{pillar.title}</h3>
-                  <p className="text-slate-300 text-sm leading-relaxed">{pillar.desc}</p>
-                </div>
+                  <div>
+                    <div className="w-12 h-12 rounded bg-[#070a0f] border border-[rgba(201,163,93,0.25)] flex items-center justify-center text-[#c9a35d] mb-6">
+                      <Icon size={24} />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3 font-serif">{pillar.title}</h3>
+                    <p className="text-[#94a3b8] text-sm leading-relaxed">{pillar.desc}</p>
+                  </div>
+                </article>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* Market Presence */}
-      <section className="py-20 bg-slate-50">
+      {/* Nationwide Supply Banner */}
+      <section className="py-20 bg-[#090d14] border-t border-[rgba(201,163,93,0.2)] text-white">
         <div className="container">
-          <div className="p-10 lg:p-14 rounded-xl bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 text-white border border-slate-800 shadow-2xl flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="p-10 lg:p-14 rounded-xl bg-[#0e141f] text-white border border-[rgba(201,163,93,0.25)] shadow-2xl flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="max-w-2xl">
               <div className="section-label mb-3">
                 <span /> NATIONWIDE SUPPLY
               </div>
-              <h2 className="text-3xl font-extrabold text-white mb-4">
+              <h2 className="text-3xl font-bold text-white mb-4 font-serif">
                 Serving Infrastructure Projects Across India
               </h2>
-              <p className="text-slate-300 text-base leading-relaxed">
+              <p className="text-[#94a3b8] text-base leading-relaxed">
                 From National Highway expansions and Greenfield Expressways to smart city arterial roads and industrial transit corridors, our materials support contractors executing major infrastructure works.
               </p>
             </div>

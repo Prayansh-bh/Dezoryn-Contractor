@@ -43,9 +43,9 @@ export function ProductCard({
             {product.features.slice(0, 2).map((feat) => (
               <span
                 key={feat}
-                className="inline-flex items-center gap-1.5 text-xs text-slate-600 bg-slate-100 px-2.5 py-1 rounded"
+                className="inline-flex items-center gap-1.5 text-xs text-slate-300 bg-[#070a0f] border border-[rgba(201,163,93,0.2)] px-2.5 py-1 rounded"
               >
-                <CheckCircle2 size={12} className="text-amber-500 shrink-0" />
+                <CheckCircle2 size={12} className="text-[#c9a35d] shrink-0" />
                 <span>{feat}</span>
               </span>
             ))}
@@ -61,7 +61,7 @@ export function ProductCard({
           </Link>
           <Link
             href={`/contact?product=${encodeURIComponent(product.name)}`}
-            className="text-xs font-bold text-amber-600 uppercase tracking-wider hover:underline"
+            className="text-xs font-bold text-[#f0d796] uppercase tracking-wider hover:text-[#c9a35d] hover:underline"
           >
             Request Quote
           </Link>
@@ -105,7 +105,7 @@ export function HomeProductCard({
       </div>
 
       <div className="product-card-body">
-        <div className="text-xs font-bold text-amber-500 uppercase tracking-wider mb-2">
+        <div className="text-xs font-bold text-[#f0d796] uppercase tracking-wider mb-2">
           {product.no} — Category
         </div>
         <h3>{product.title}</h3>
@@ -120,7 +120,7 @@ export function HomeProductCard({
           </Link>
           <Link
             href={`/contact?product=${encodeURIComponent(product.title)}`}
-            className="text-xs font-bold text-amber-600 uppercase tracking-wider hover:underline"
+            className="text-xs font-bold text-[#f0d796] uppercase tracking-wider hover:text-[#c9a35d] hover:underline"
           >
             Quick Quote
           </Link>

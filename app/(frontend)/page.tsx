@@ -116,18 +116,18 @@ export default function HomePage() {
       </section>
 
       {/* Trust & Capabilities Strip */}
-      <section className="bg-slate-900 border-y border-amber-500/20 py-8 text-white relative z-20">
+      <section className="bg-[#0b1017] border-y border-[rgba(201,163,93,0.22)] py-8 text-white relative z-20">
         <div className="container">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {CAPABILITIES.map(([value, label], idx) => (
               <div
                 key={label}
-                className="flex flex-col justify-center border-l-2 border-amber-500/50 pl-4 py-1"
+                className="flex flex-col justify-center border-l-2 border-[#c9a35d]/60 pl-4 py-1"
               >
-                <span className="text-amber-400 font-black text-xl lg:text-2xl tracking-tight">
+                <span className="text-[#f0d796] font-black text-xl lg:text-2xl tracking-tight">
                   {value}
                 </span>
-                <span className="text-xs uppercase tracking-wider text-slate-400 font-semibold mt-1">
+                <span className="text-xs uppercase tracking-wider text-[#94a3b8] font-semibold mt-1">
                   {label}
                 </span>
               </div>
@@ -137,20 +137,20 @@ export default function HomePage() {
       </section>
 
       {/* Section 1: About & Sourcing */}
-      <section id="about" className="py-24 bg-[#f5f2eb] text-slate-900">
+      <section id="about" className="py-24 bg-[#090d14] text-white border-b border-[rgba(201,163,93,0.2)]">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-6">
               <div className="section-label mb-3">
                 <span /> 01 — COMPANY PROFILE
               </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-6 font-serif">
                 Reliable material supply for roads that never pause.
               </h2>
-              <p className="text-slate-600 text-base sm:text-lg leading-relaxed mb-6">
+              <p className="text-[#94a3b8] text-base sm:text-lg leading-relaxed mb-6">
                 Dezoryn Contractor manufactures and supplies highway-use products engineered for demanding traffic loads, extreme weather shifts, and strict project timelines.
               </p>
-              <p className="text-slate-600 text-base leading-relaxed mb-8">
+              <p className="text-[#94a3b8] text-base leading-relaxed mb-8">
                 We collaborate directly with road contractors, EPC concessionaires, State PWD vendors, and infrastructure distributors who demand repeatable batch quality, verified retro-reflectivity, and scheduled site dispatches.
               </p>
 
@@ -160,7 +160,7 @@ export default function HomePage() {
                 </Link>
                 <Link
                   href="/quality"
-                  className="text-xs font-bold uppercase tracking-wider text-amber-600 hover:underline"
+                  className="text-xs font-bold uppercase tracking-wider text-[#f0d796] hover:text-[#c9a35d] hover:underline"
                 >
                   Quality Protocol →
                 </Link>
@@ -168,21 +168,21 @@ export default function HomePage() {
             </div>
 
             <div className="lg:col-span-6">
-              <div className="relative h-[380px] sm:h-[450px] rounded-lg overflow-hidden border border-[#dfd8cb] shadow-xl">
+              <div className="relative h-[380px] sm:h-[450px] rounded-lg overflow-hidden border border-[rgba(201,163,93,0.25)] shadow-2xl">
                 <Image
                   src="/images/products/custom-manufacturing.jpg"
                   alt="Dezoryn Automated Highway Material Production Facility"
                   fill
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent flex flex-col justify-end p-8 text-white">
-                  <div className="flex items-center gap-2 text-amber-400 text-xs font-bold uppercase tracking-widest mb-1">
+                <div className="absolute inset-0 bg-gradient-to-t from-[#06090d]/95 via-[#06090d]/40 to-transparent flex flex-col justify-end p-8 text-white">
+                  <div className="flex items-center gap-2 text-[#f0d796] text-xs font-bold uppercase tracking-widest mb-1">
                     <Factory size={16} /> Automated Batch Production
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">
+                  <h3 className="text-xl font-bold text-white mb-2 font-serif">
                     Standardized Chemical Compounding & Packaging
                   </h3>
-                  <p className="text-xs text-slate-300">
+                  <p className="text-xs text-[#cbd5e1]">
                     Continuous monitoring of resin purity, pigment concentration, and retro-reflective bead gradation.
                   </p>
                 </div>
@@ -193,18 +193,18 @@ export default function HomePage() {
       </section>
 
       {/* Section 2: Products Portfolio */}
-      <section id="products" className="py-24 bg-slate-950 text-white relative">
+      <section id="products" className="py-24 bg-[#06090d] text-white relative">
         <div className="container">
           <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-6 mb-16">
             <div>
               <div className="section-label mb-3">
                 <span /> 02 — HIGHWAY PRODUCT CATALOG
               </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-serif">
                 Essential Highway Safety Solutions.
               </h2>
             </div>
-            <p className="text-slate-400 max-w-md text-sm sm:text-base leading-relaxed">
+            <p className="text-[#94a3b8] max-w-md text-sm sm:text-base leading-relaxed">
               Every order is quoted based on exact technical specifications, batch volume, packaging requirements, and project destination.
             </p>
           </div>
@@ -224,7 +224,7 @@ export default function HomePage() {
       </section>
 
       {/* Section 3: Quality First — Signature QC Radar Visual & Process */}
-      <section id="quality" className="quality-section-wrap text-slate-900">
+      <section id="quality" className="quality-section-wrap text-white">
         <div className="container">
           <div className="quality-grid-split">
             {/* Left: Concentric Dial Visual */}
@@ -246,11 +246,11 @@ export default function HomePage() {
               <div className="section-label mb-3">
                 <span /> 03 — QUALITY FIRST
               </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-6 font-serif">
                 Consistency is not a promise.<br />
                 It is the process.
               </h2>
-              <p className="text-slate-600 text-base sm:text-lg leading-relaxed mb-8">
+              <p className="text-[#94a3b8] text-base sm:text-lg leading-relaxed mb-8">
                 Our production workflow is designed around repeatability, performance and documented checks—so every project receives material aligned with its requirement.
               </p>
 
@@ -283,54 +283,54 @@ export default function HomePage() {
       </section>
 
       {/* Section 4: Applications & Corridors */}
-      <section className="py-24 bg-slate-900 text-white">
+      <section className="py-24 bg-[#06090d] text-white border-y border-[rgba(201,163,93,0.2)]">
         <div className="container">
           <div className="max-w-2xl mb-16">
             <div className="section-label mb-3">
               <span /> 04 — SECTOR APPLICABILITY
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-serif">
               Where Our Products Perform
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="p-8 rounded-lg bg-slate-800/60 border border-slate-700/80 flex flex-col justify-between h-[240px]">
+            <div className="p-8 rounded-lg bg-[#0e141f] border border-[rgba(201,163,93,0.18)] hover:border-[#c9a35d] transition-all flex flex-col justify-between h-[240px] shadow-lg">
               <div>
-                <Route size={32} className="text-amber-500 mb-4" />
+                <Route size={32} className="text-[#c9a35d] mb-4" />
                 <h3 className="text-lg font-bold text-white">National & State Highways</h3>
               </div>
-              <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
+              <span className="text-xs text-[#94a3b8] uppercase tracking-wider font-semibold">
                 High-Volume Corridors
               </span>
             </div>
 
-            <div className="p-8 rounded-lg bg-slate-800/60 border border-slate-700/80 flex flex-col justify-between h-[240px]">
+            <div className="p-8 rounded-lg bg-[#0e141f] border border-[rgba(201,163,93,0.18)] hover:border-[#c9a35d] transition-all flex flex-col justify-between h-[240px] shadow-lg">
               <div>
-                <Truck size={32} className="text-amber-500 mb-4" />
+                <Truck size={32} className="text-[#c9a35d] mb-4" />
                 <h3 className="text-lg font-bold text-white">Expressways & Corridors</h3>
               </div>
-              <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
+              <span className="text-xs text-[#94a3b8] uppercase tracking-wider font-semibold">
                 Phased Construction EPC
               </span>
             </div>
 
-            <div className="p-8 rounded-lg bg-slate-800/60 border border-slate-700/80 flex flex-col justify-between h-[240px]">
+            <div className="p-8 rounded-lg bg-[#0e141f] border border-[rgba(201,163,93,0.18)] hover:border-[#c9a35d] transition-all flex flex-col justify-between h-[240px] shadow-lg">
               <div>
-                <Building2 size={32} className="text-amber-500 mb-4" />
+                <Building2 size={32} className="text-[#c9a35d] mb-4" />
                 <h3 className="text-lg font-bold text-white">Urban Roads & Smart Cities</h3>
               </div>
-              <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
+              <span className="text-xs text-[#94a3b8] uppercase tracking-wider font-semibold">
                 Intersections & Crossings
               </span>
             </div>
 
-            <div className="p-8 rounded-lg bg-slate-800/60 border border-slate-700/80 flex flex-col justify-between h-[240px]">
+            <div className="p-8 rounded-lg bg-[#0e141f] border border-[rgba(201,163,93,0.18)] hover:border-[#c9a35d] transition-all flex flex-col justify-between h-[240px] shadow-lg">
               <div>
-                <Plane size={32} className="text-amber-500 mb-4" />
+                <Plane size={32} className="text-[#c9a35d] mb-4" />
                 <h3 className="text-lg font-bold text-white">Airports & Industrial Parks</h3>
               </div>
-              <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
+              <span className="text-xs text-[#94a3b8] uppercase tracking-wider font-semibold">
                 Controlled Transit Areas
               </span>
             </div>
@@ -339,7 +339,7 @@ export default function HomePage() {
       </section>
 
       {/* Section 5: B2B Quotation Form */}
-      <section id="quote" className="py-24 bg-slate-950 text-white relative">
+      <section id="quote" className="py-24 bg-[#090d14] text-white relative">
         <EnquiryForm />
       </section>
 

@@ -59,7 +59,7 @@ export default function ApplicationsPage() {
         text="From 8-lane expressways to high-traffic urban junctions and airport aprons, our highway products deliver verified durability, retro-reflectivity, and safety across public and private infrastructure projects."
       />
 
-      <section className="py-20 bg-slate-50">
+      <section className="py-20 bg-[#090d14] text-white border-b border-[rgba(201,163,93,0.2)]">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {sectors.map((sector, i) => {
@@ -67,28 +67,28 @@ export default function ApplicationsPage() {
               return (
                 <article
                   key={sector.title}
-                  className="p-8 rounded-lg bg-white border border-slate-200 hover:border-amber-500 transition-colors shadow-sm flex flex-col justify-between"
+                  className="p-8 rounded-lg bg-[#0e141f] border border-[rgba(201,163,93,0.18)] hover:border-[#c9a35d] transition-all shadow-lg flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex justify-between items-center mb-6">
-                      <div className="w-12 h-12 rounded bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
+                      <div className="w-12 h-12 rounded bg-[#070a0f] border border-[rgba(201,163,93,0.25)] flex items-center justify-center text-[#c9a35d]">
                         <Icon size={24} />
                       </div>
-                      <span className="text-xs font-black text-slate-400">0{i + 1}</span>
+                      <span className="text-xs font-black text-[#f0d796]">0{i + 1}</span>
                     </div>
 
-                    <h2 className="text-xl font-bold text-slate-900 mb-3">{sector.title}</h2>
-                    <p className="text-slate-600 text-sm leading-relaxed mb-6">{sector.desc}</p>
+                    <h2 className="text-xl font-bold text-white mb-3 font-serif">{sector.title}</h2>
+                    <p className="text-[#94a3b8] text-sm leading-relaxed mb-6">{sector.desc}</p>
 
-                    <div className="p-3 bg-slate-50 rounded border border-slate-100 text-xs text-slate-700 mb-6">
-                      <strong className="text-amber-700 block mb-1">Recommended Portfolio:</strong>
+                    <div className="p-3 bg-[#070a0f] rounded border border-[rgba(201,163,93,0.2)] text-xs text-slate-300 mb-6">
+                      <strong className="text-[#f0d796] block mb-1">Recommended Portfolio:</strong>
                       {sector.products}
                     </div>
                   </div>
 
                   <Link
                     href={`/contact?product=${encodeURIComponent(sector.title)}`}
-                    className="inline-flex items-center gap-2 text-xs font-bold text-slate-900 uppercase tracking-wider hover:text-amber-600 transition-colors mt-auto pt-4 border-t border-slate-100"
+                    className="inline-flex items-center gap-2 text-xs font-bold text-[#f0d796] uppercase tracking-wider hover:text-[#c9a35d] transition-colors mt-auto pt-4 border-t border-[rgba(255,255,255,0.08)]"
                   >
                     Discuss Sector Supply <ArrowRight size={14} />
                   </Link>
