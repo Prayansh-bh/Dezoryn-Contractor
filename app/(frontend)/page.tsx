@@ -110,10 +110,10 @@ export default function HomePage() {
         </div>
         <a
           href="#products"
-          className="hidden md:flex absolute right-12 bottom-10 z-10 items-center gap-2 text-xs uppercase font-bold tracking-widest text-[#64748b] hover:text-[#c9a35d] transition-colors cursor-pointer"
+          className="group hidden md:flex absolute right-12 bottom-10 z-10 items-center gap-2 text-xs uppercase font-bold tracking-widest text-[#64748b] hover:text-[#c9a35d] transition-colors cursor-pointer"
         >
           <span>Scroll to Explore</span>
-          <ChevronDown size={14} className="animate-bounce text-[#c9a35d]" />
+          <ChevronDown size={14} className="animate-bounce text-[#64748b] group-hover:text-[#c9a35d] transition-colors" />
         </a>
       </section>
 
