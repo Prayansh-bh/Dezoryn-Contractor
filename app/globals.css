@@ -77,6 +77,118 @@ h1, h2, h3, h4, .font-heading {
   background-color: var(--amber-primary);
 }
 
+/* Hero Section Styles */
+.hero {
+  height: 780px;
+  min-height: 700px;
+  position: relative;
+  color: white;
+  overflow: hidden;
+  background: #06090d;
+}
+
+.hero-image {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 76% 48%, transparent 0, rgba(4, 6, 8, 0.18) 34%, rgba(4, 6, 8, 0.9) 78%),
+    linear-gradient(90deg, rgba(3, 5, 7, 0.97), rgba(3, 5, 7, 0.66) 48%, rgba(3, 5, 7, 0.08) 80%),
+    url("/highway-hero.png");
+  background-size: cover;
+  background-position: center;
+  filter: saturate(0.85) contrast(1.08);
+}
+
+.hero:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 -160px 170px #07090d;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(#ffffff08 1px, transparent 1px),
+    linear-gradient(90deg, #ffffff08 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: linear-gradient(to right, #000, transparent 65%);
+}
+
+.hero-content {
+  position: relative;
+  padding-top: 210px;
+  z-index: 2;
+}
+
+.hero h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(52px, 6.3vw, 84px);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  margin: 24px 0;
+  max-width: 850px;
+  font-weight: 500;
+  text-shadow: 0 16px 50px #000;
+}
+
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(110deg, #fff6df, #b98a3e);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 0;
+}
+
+.hero p {
+  max-width: 640px;
+  color: #b9c0c5;
+  font-size: 19px;
+  line-height: 1.7;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 34px;
+}
+
+.hero-proof {
+  display: flex;
+  gap: 28px;
+  margin-top: 36px;
+  color: #aeb7bd;
+  font-size: 13px;
+}
+
+.hero-proof span {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.hero-proof svg {
+  color: var(--amber-primary);
+  width: 17px;
+}
+
+.scroll-hint {
+  position: absolute;
+  right: 40px;
+  bottom: 34px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #a7afb5;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 10px;
+  transform: rotate(90deg);
+  z-index: 2;
+}
+
 /* Industrial Grid Background */
 .bg-grid-pattern {
   background-image: 
@@ -104,16 +216,16 @@ h1, h2, h3, h4, .font-heading {
 }
 
 .btn-primary {
-  background: var(--amber-gradient);
+  background: linear-gradient(135deg, #f1d99b 0%, #b88a3d 100%);
   color: #080a0c;
-  box-shadow: 0 4px 20px var(--amber-glow);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.45);
   border-color: #c9a35d;
 }
 
 .btn-primary:hover {
   background: linear-gradient(135deg, #ffe9b1 0%, #c99d51 100%);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(201, 163, 93, 0.35);
+  box-shadow: 0 18px 50px rgba(201, 163, 93, 0.35);
 }
 
 .btn-secondary {
@@ -138,7 +250,7 @@ h1, h2, h3, h4, .font-heading {
 .btn-ghost:hover {
   background: rgba(255, 255, 255, 0.12);
   border-color: var(--amber-primary);
-  color: var(--amber-primary);
+  color: #ffffff;
   transform: translateY(-2px);
 }
 

@@ -4,7 +4,6 @@ import {
   ArrowRight,
   BadgeCheck,
   Building2,
-  CheckCircle2,
   ChevronDown,
   Factory,
   Gauge,
@@ -72,70 +71,45 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen">
       <SiteHeader />
 
-      {/* Hero Section */}
-      <section className="relative min-h-[720px] lg:min-h-[820px] bg-slate-950 text-white flex items-center overflow-hidden">
-        {/* Background Image with Cinematic Overlay */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/hero-infrastructure.jpg"
-            alt="Highway Infrastructure Construction and Road Markings"
-            fill
-            priority
-            className="object-cover opacity-35"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/40" />
-          <div className="absolute inset-0 bg-grid-pattern opacity-40" />
-        </div>
-
-        <div className="container relative z-10 py-24 lg:py-32">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold text-xs uppercase tracking-widest mb-6">
-              <ShieldCheck size={14} /> High-Performance Road Safety Infrastructure
-            </div>
-
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.05] mb-6 text-white">
-              Engineered for Indian Roads. <br />
-              <span className="text-gradient-amber">Manufactured for Scale.</span>
-            </h1>
-
-            <p className="text-lg sm:text-xl text-slate-300 leading-relaxed mb-10 max-w-2xl font-normal">
-              Specialized manufacturer and bulk supplier of high-grade thermoplastic road marking paints, retro-reflective glass beads, and highway safety systems for EPC contractors and infrastructure authorities.
-            </p>
-
-            <div className="flex flex-wrap gap-4 items-center">
-              <Link href="/products" className="btn btn-primary">
-                Explore Product Portfolio <ArrowRight size={16} />
-              </Link>
-              <Link href="#quote" className="btn btn-ghost">
-                Request Bulk Quotation
-              </Link>
-            </div>
-
-            <div className="flex flex-wrap gap-6 sm:gap-10 mt-14 pt-8 border-t border-slate-800/80 text-xs sm:text-sm text-slate-300 font-medium">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 size={16} className="text-amber-500" />
-                <span>MORTH Specification Aligned</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 size={16} className="text-amber-500" />
-                <span>Batch-Controlled QC Sourcing</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 size={16} className="text-amber-500" />
-                <span>Pan-India Phased Dispatch</span>
-              </div>
-            </div>
+      {/* Hero Section — Exact Original Front-Page Fold */}
+      <section id="home" className="hero">
+        <div className="hero-image" />
+        <div className="hero-grid" />
+        <div className="container hero-content">
+          <div className="eyebrow">
+            <span /> HIGHWAY SAFETY PRODUCT MANUFACTURER
+          </div>
+          <h1>
+            Built for the road.
+            <br />
+            <em>Engineered for scale.</em>
+          </h1>
+          <p>
+            Premium road-marking and highway safety products manufactured for
+            contractors, infrastructure companies and large-scale projects across
+            India.
+          </p>
+          <div className="hero-actions">
+            <a className="btn btn-primary" href="#products">
+              Explore Products <ArrowRight size={19} />
+            </a>
+            <a className="btn btn-ghost" href="#quote">
+              Discuss Bulk Requirement
+            </a>
+          </div>
+          <div className="hero-proof">
+            <span>
+              <ShieldCheck /> Quality-controlled production
+            </span>
+            <span>
+              <Truck /> Project-ready bulk dispatch
+            </span>
           </div>
         </div>
-
-        <Link
-          href="#about"
-          className="hidden md:flex absolute right-8 bottom-8 z-10 items-center gap-2 text-xs uppercase font-bold tracking-widest text-slate-400 hover:text-amber-400 transition-colors"
-        >
-          <span>Scroll to Explore</span>
-          <ChevronDown size={14} className="animate-bounce" />
-        </Link>
+        <a className="scroll-hint" href="#about">
+          <span>Discover</span>
+          <ChevronDown size={14} />
+        </a>
       </section>
 
       {/* Trust & Capabilities Strip */}
