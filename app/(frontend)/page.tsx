@@ -90,12 +90,12 @@ export default function HomePage() {
             India.
           </p>
           <div className="hero-actions">
-            <a className="btn btn-primary" href="#products">
+            <Link className="btn btn-primary" href="/products">
               Explore Products <ArrowRight size={19} />
-            </a>
-            <a className="btn btn-ghost" href="#quote">
+            </Link>
+            <Link className="btn btn-ghost" href="/contact">
               Discuss Bulk Requirement
-            </a>
+            </Link>
           </div>
           <div className="hero-proof">
             <span>
@@ -107,7 +107,7 @@ export default function HomePage() {
           </div>
         </div>
         <Link
-          href="#about"
+          href="/about"
           className="hidden md:flex absolute right-8 bottom-8 z-10 items-center gap-2 text-xs uppercase font-bold tracking-widest text-slate-400 hover:text-amber-400 transition-colors"
         >
           <span>Scroll to Explore</span>
