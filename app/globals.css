@@ -134,8 +134,8 @@ h4,
 
 .hero-content {
   position: relative;
-  padding-top: 24px;
-  padding-bottom: 32px;
+  margin-top: -55px;
+  padding-bottom: 20px;
   z-index: 2;
 }
 
