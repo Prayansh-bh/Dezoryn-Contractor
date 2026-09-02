@@ -21,11 +21,11 @@
   --text-muted-dark: #94a3b8;
   --text-subtle-dark: #64748b;
 
-  --bg-light: #f8fafc;
-  --bg-card-light: #ffffff;
-  --border-light: #e2e8f0;
-  --text-main-light: #0f172a;
-  --text-muted-light: #475569;
+  --bg-light: #f5f2eb;
+  --bg-card-light: #f8f6f0;
+  --border-light: #dfd8cb;
+  --text-main-light: #161e27;
+  --text-muted-light: #526071;
 }
 
 * {

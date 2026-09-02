@@ -137,7 +137,7 @@ export default function HomePage() {
       </section>
 
       {/* Section 1: About & Sourcing */}
-      <section id="about" className="py-24 bg-slate-50 text-slate-900">
+      <section id="about" className="py-24 bg-[#f5f2eb] text-slate-900">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-6">
@@ -168,7 +168,7 @@ export default function HomePage() {
             </div>
 
             <div className="lg:col-span-6">
-              <div className="relative h-[380px] sm:h-[450px] rounded-lg overflow-hidden border border-slate-200 shadow-xl">
+              <div className="relative h-[380px] sm:h-[450px] rounded-lg overflow-hidden border border-[#dfd8cb] shadow-xl">
                 <Image
                   src="/images/products/custom-manufacturing.jpg"
                   alt="Dezoryn Automated Highway Material Production Facility"
