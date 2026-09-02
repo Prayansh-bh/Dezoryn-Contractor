@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Enquiry {
+  id        Int      @id @default(autoincrement())
+  name      String
+  company   String
+  phone     String
+  email     String
+  product   String
+  quantity  String
+  location  String
+  message   String   @default("")
+  status    String   @default("new")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("enquiries")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique
+  name        String
+  kicker      String   @default("")
+  description String
+  features    Json     @default("[]")
+  uses        Json     @default("[]")
+  specs       Json     @default("[]")
+  active      Boolean  @default(true)
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("products")
+}
+
+model GalleryItem {
+  id          Int      @id @default(autoincrement())
+  title       String
+  caption     String   @default("")
+  mediaType   String   @map("media_type")
+  objectKey   String   @unique @map("object_key")
+  fileName    String   @map("file_name")
+  contentType String   @map("content_type")
+  fileData    Bytes?   @map("file_data")
+  featured    Boolean  @default(false)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("gallery_items")
+}
+
+model SiteSetting {
+  key       String   @id
+  value     String   @default("")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+}
+
+model AdminUser {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String   @default("")
+  role      String   @default("admin")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("admin_users")
+}
