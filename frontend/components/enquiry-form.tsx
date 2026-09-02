@@ -56,34 +56,34 @@ function EnquiryFormInner() {
     <div className="container">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         {/* Left Col: Copy & Assurance */}
-        <div className="lg:col-span-5 text-white">
+        <div className="lg:col-span-5 text-[#0f172a]">
           <div className="section-label mb-3">
             <span /> 05 — COMMERCIAL DESK
           </div>
-          <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-6 font-serif">
+          <h2 className="text-3xl md:text-5xl font-bold text-[#0f172a] leading-tight mb-6 font-serif">
             Request Project BOQ Quotation
           </h2>
-          <p className="text-[#94a3b8] text-base md:text-lg leading-relaxed mb-8">
+          <p className="text-[#475569] text-base md:text-lg leading-relaxed mb-8">
             Provide your product requirements, estimated volume, and delivery destination. Our technical sales engineers will review the BOQ and prepare a project-specific supply proposal.
           </p>
 
-          <div className="space-y-4 border-t border-[rgba(201,163,93,0.2)] pt-6">
+          <div className="space-y-4 border-t border-[#e2e8f0] pt-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded bg-[#070a0f] border border-[rgba(201,163,93,0.25)] flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded bg-[#f8fafc] border border-[#e2e8f0] flex items-center justify-center shrink-0">
                 <PackageCheck size={20} className="text-[#c9a35d]" />
               </div>
               <div>
-                <strong className="block text-sm text-white">Bulk B2B Supply Model</strong>
-                <span className="text-xs text-[#94a3b8]">Competitive rate structures for EPCs & infrastructure contractors</span>
+                <strong className="block text-sm text-[#0f172a]">Bulk B2B Supply Model</strong>
+                <span className="text-xs text-[#64748b]">Competitive rate structures for EPCs & infrastructure contractors</span>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded bg-[#070a0f] border border-[rgba(201,163,93,0.25)] flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded bg-[#f8fafc] border border-[#e2e8f0] flex items-center justify-center shrink-0">
                 <CheckCircle2 size={20} className="text-[#c9a35d]" />
               </div>
               <div>
-                <strong className="block text-sm text-white">MORTH Specification Verification</strong>
-                <span className="text-xs text-[#94a3b8]">Batch test certificates provided with every consignment</span>
+                <strong className="block text-sm text-[#0f172a]">MORTH Specification Verification</strong>
+                <span className="text-xs text-[#64748b]">Batch test certificates provided with every consignment</span>
               </div>
             </div>
           </div>
@@ -94,11 +94,11 @@ function EnquiryFormInner() {
           <div className="enquiry-form-card">
             {status === "success" ? (
               <div className="text-center py-12">
-                <div className="w-16 h-16 bg-[#070a0f] text-[#c9a35d] border border-[rgba(201,163,93,0.3)] rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-[#f8fafc] text-[#c9a35d] border border-[#e2e8f0] rounded-full flex items-center justify-center mx-auto mb-4">
                   <CheckCircle2 size={36} />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-2 font-serif">Quotation Request Received</h3>
-                <p className="text-[#94a3b8] max-w-md mx-auto mb-6 text-sm leading-relaxed">
+                <h3 className="text-2xl font-bold text-[#0f172a] mb-2 font-serif">Quotation Request Received</h3>
+                <p className="text-[#475569] max-w-md mx-auto mb-6 text-sm leading-relaxed">
                   Thank you. Our highway technical desk is reviewing your requirements and will reach out with a detailed BOQ quote shortly.
                 </p>
                 <button
@@ -195,13 +195,13 @@ function EnquiryFormInner() {
 
                 {/* Quick Quantity Chips */}
                 <div className="flex items-center gap-2 mb-4 flex-wrap">
-                  <span className="text-xs text-[#94a3b8] font-semibold uppercase">Quick volume:</span>
+                  <span className="text-xs text-[#64748b] font-semibold uppercase">Quick volume:</span>
                   {quickQuantities.map((q) => (
                     <button
                       key={q}
                       type="button"
                       onClick={() => setQuantity(q)}
-                      className="text-xs font-semibold px-2.5 py-1 bg-[#070a0f] hover:bg-[#141c2b] text-white hover:text-[#f0d796] rounded border border-[rgba(201,163,93,0.25)] transition-colors"
+                      className="text-xs font-semibold px-2.5 py-1 bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] hover:text-[#b88a3d] rounded border border-[#cbd5e1] transition-colors"
                     >
                       {q}
                     </button>

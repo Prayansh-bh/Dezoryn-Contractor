@@ -1,16 +1,16 @@
-/* Industrial Corporate Layout & Component Styles */
+/* Industrial Corporate Layout & Component Styles — White Theme */
 
 /* ==========================================================================
    Header & Navigation
    ========================================================================== */
 .topbar {
-  background: #05080c;
+  background: #0f172a;
   color: #94a3b8;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding: 8px 0;
 }
 
@@ -42,9 +42,10 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(9, 13, 20, 0.94);
+  background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(245, 158, 11, 0.15);
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
   padding: 16px 0;
   transition: all 0.25s ease;
 }
@@ -65,7 +66,7 @@
 .brand-mark {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #1e293b, #090d14);
+  background: #0f172a;
   border: 1.5px solid var(--amber-primary);
   display: flex;
   align-items: center;
@@ -91,7 +92,7 @@
   font-size: 18px;
   font-weight: 800;
   letter-spacing: 0.16em;
-  color: #ffffff;
+  color: #0f172a;
 }
 
 .brand-info small {
@@ -115,7 +116,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #cbd5e1;
+  color: #334155;
   position: relative;
   padding: 6px 0;
   transition: color 0.2s;
@@ -133,40 +134,40 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   background: var(--amber-gradient);
-  color: #000000;
+  color: #0f172a;
   padding: 10px 20px;
   border-radius: 4px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 4px 15px var(--amber-glow);
+  box-shadow: 0 4px 14px rgba(201, 163, 93, 0.3);
   transition: all 0.2s;
 }
 
 .nav-cta:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 6px 20px rgba(201, 163, 93, 0.45);
 }
 
 .menu-btn {
   display: none;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
   padding: 8px;
   border-radius: 4px;
   cursor: pointer;
 }
 
 /* ==========================================================================
-   Page Hero & Inner Sections
+   Page Hero & Inner Sections — White Theme
    ========================================================================== */
 .page-hero {
   position: relative;
-  background: radial-gradient(circle at 80% 20%, #162032 0%, #090d14 60%, #05080c 100%);
-  color: #ffffff;
-  padding: 80px 0;
-  border-bottom: 1px solid rgba(245, 158, 11, 0.15);
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  color: #0f172a;
+  padding: 80px 0 60px;
+  border-bottom: 1px solid #e2e8f0;
   overflow: hidden;
 }
 
@@ -174,8 +175,8 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(245, 158, 11, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(245, 158, 11, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(201, 163, 93, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201, 163, 93, 0.04) 1px, transparent 1px);
   background-size: 60px 60px;
   mask-image: linear-gradient(180deg, #000 40%, transparent 100%);
 }
@@ -187,12 +188,14 @@
   letter-spacing: -0.03em;
   margin: 18px 0;
   max-width: 900px;
+  color: #0f172a;
+  font-family: Georgia, serif;
 }
 
 .page-hero p {
   font-size: 18px;
   line-height: 1.7;
-  color: #94a3b8;
+  color: #475569;
   max-width: 700px;
 }
 
@@ -486,14 +489,14 @@
 }
 
 /* ==========================================================================
-   Page CTA Pre-Footer Conversion Box
+   Page CTA Pre-Footer Conversion Box — White Theme
    ========================================================================== */
 .page-cta {
-  background: radial-gradient(circle at 10% 50%, #141c2b, #06090d 70%);
-  color: #ffffff;
+  background: #f8fafc;
+  color: #0f172a;
   padding: 70px 0;
-  border-top: 1px solid var(--border-amber);
-  border-bottom: 1px solid var(--border-amber);
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .cta-grid {
@@ -506,14 +509,14 @@
 .cta-grid h2 {
   font-family: Georgia, serif;
   font-size: clamp(30px, 3.5vw, 44px);
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1.15;
   margin: 12px 0 16px;
-  color: #ffffff;
+  color: #0f172a;
 }
 
 .cta-grid p {
-  color: #94a3b8;
+  color: #475569;
   font-size: 16px;
   line-height: 1.65;
 }

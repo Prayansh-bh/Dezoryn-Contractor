@@ -87,15 +87,15 @@ export default function QualityPage() {
             })}
 
             {/* Compliance Badge Card */}
-            <article className="p-8 rounded-lg bg-[#090d14] text-white border border-[rgba(201,163,93,0.25)] flex flex-col justify-between shadow-2xl">
+            <article className="p-8 rounded-lg bg-white text-[#0f172a] border border-[#e2e8f0] flex flex-col justify-between shadow-sm">
               <div>
                 <ShieldCheck size={32} className="text-[#c9a35d] mb-6" />
-                <h3 className="text-xl font-bold text-white mb-3 font-serif">Specification Compliance</h3>
-                <p className="text-[#94a3b8] text-sm leading-relaxed">
+                <h3 className="text-xl font-bold text-[#0f172a] mb-3 font-serif">Specification Compliance</h3>
+                <p className="text-[#475569] text-sm leading-relaxed">
                   All formulations comply strictly with MORTH Specification Clause 803 and IRC guidelines for road markings and highway safety hardware.
                 </p>
               </div>
-              <span className="text-xs font-bold text-[#f0d796] uppercase tracking-widest mt-6 block">
+              <span className="text-xs font-bold text-[#c9a35d] uppercase tracking-widest mt-6 block">
                 Official MTC Provided
               </span>
             </article>
@@ -104,12 +104,12 @@ export default function QualityPage() {
       </section>
 
       {/* Quality Principle Statement */}
-      <section className="py-20 bg-[#090d14] text-white text-center border-t border-[rgba(201,163,93,0.2)]">
+      <section className="py-20 bg-[#ffffff] text-[#0f172a] text-center border-t border-[#e2e8f0]">
         <div className="container max-w-4xl mx-auto">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#f0d796] block mb-4">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#c9a35d] block mb-4">
             OUR QUALITY COMMITMENT
           </span>
-          <blockquote className="text-2xl sm:text-4xl font-normal text-white leading-tight font-serif">
+          <blockquote className="text-2xl sm:text-4xl font-normal text-[#0f172a] leading-tight font-serif">
             “Deliver the exact specification agreed, in the quantity committed, with the consistency a large infrastructure project demands.”
           </blockquote>
         </div>

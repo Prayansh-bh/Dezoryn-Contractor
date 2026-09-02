@@ -147,11 +147,11 @@ export default async function ProductDetailPage({
 
             {/* Specifications Matrix */}
             <div className="lg:col-span-5">
-              <div className="p-8 rounded-lg bg-[#090d14] text-white border border-[rgba(201,163,93,0.25)] shadow-2xl">
-                <div className="flex items-center gap-2 text-[#f0d796] text-xs font-bold uppercase tracking-wider mb-6">
+              <div className="p-8 rounded-lg bg-white text-[#0f172a] border border-[#e2e8f0] shadow-sm">
+                <div className="flex items-center gap-2 text-[#c9a35d] text-xs font-bold uppercase tracking-wider mb-6">
                   <Layers size={16} /> Supply Specifications
                 </div>
-                <h3 className="text-xl font-bold text-white mb-6 font-serif">
+                <h3 className="text-xl font-bold text-[#0f172a] mb-6 font-serif">
                   Commercial & Packaging Parameters
                 </h3>
 
@@ -159,18 +159,18 @@ export default async function ProductDetailPage({
                   {product.specs.map((spec, i) => (
                     <div
                       key={spec}
-                      className="flex items-start gap-3 pb-4 border-b border-[rgba(255,255,255,0.08)] last:border-0 last:pb-0 text-sm"
+                      className="flex items-start gap-3 pb-4 border-b border-[#f1f5f9] last:border-0 last:pb-0 text-sm"
                     >
                       <span className="text-[#c9a35d] font-bold text-xs mt-0.5">
                         0{i + 1}.
                       </span>
-                      <span className="text-slate-300">{spec}</span>
+                      <span className="text-[#475569]">{spec}</span>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-[rgba(255,255,255,0.08)]">
-                  <div className="flex items-center gap-3 text-xs text-[#94a3b8] mb-4">
+                <div className="mt-8 pt-6 border-t border-[#f1f5f9]">
+                  <div className="flex items-center gap-3 text-xs text-[#64748b] mb-4">
                     <Package size={16} className="text-[#c9a35d] shrink-0" />
                     <span>Custom bulk packaging & palleted containers available upon request.</span>
                   </div>

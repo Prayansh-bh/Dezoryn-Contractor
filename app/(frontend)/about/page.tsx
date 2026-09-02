@@ -86,13 +86,13 @@ export default function AboutPage() {
       </section>
 
       {/* Core Operational Pillars */}
-      <section className="py-20 bg-[#090d14] text-white">
+      <section className="py-20 bg-[#f8fafc] text-[#0f172a] border-b border-[#e2e8f0]">
         <div className="container">
           <div className="max-w-3xl mb-14">
             <div className="section-label mb-3">
               <span /> CORE PILLARS
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-serif">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0f172a] tracking-tight font-serif">
               What Defines Dezoryn Contractor
             </h2>
           </div>
@@ -103,14 +103,14 @@ export default function AboutPage() {
               return (
                 <article
                   key={pillar.title}
-                  className="p-8 rounded-lg bg-[#0e141f] border border-[rgba(201,163,93,0.18)] hover:border-[#c9a35d] transition-all shadow-lg flex flex-col justify-between"
+                  className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] transition-all shadow-sm flex flex-col justify-between"
                 >
                   <div>
-                    <div className="w-12 h-12 rounded bg-[#070a0f] border border-[rgba(201,163,93,0.25)] flex items-center justify-center text-[#c9a35d] mb-6">
+                    <div className="w-12 h-12 rounded bg-[#f8fafc] border border-[#e2e8f0] flex items-center justify-center text-[#c9a35d] mb-6">
                       <Icon size={24} />
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-3 font-serif">{pillar.title}</h3>
-                    <p className="text-[#94a3b8] text-sm leading-relaxed">{pillar.desc}</p>
+                    <h3 className="text-xl font-bold text-[#0f172a] mb-3 font-serif">{pillar.title}</h3>
+                    <p className="text-[#475569] text-sm leading-relaxed">{pillar.desc}</p>
                   </div>
                 </article>
               );
@@ -120,17 +120,17 @@ export default function AboutPage() {
       </section>
 
       {/* Nationwide Supply Banner */}
-      <section className="py-20 bg-[#f8fafc] border-t border-[#e2e8f0]">
+      <section className="py-20 bg-[#ffffff] border-t border-[#e2e8f0]">
         <div className="container">
-          <div className="p-10 lg:p-14 rounded-xl bg-[#0e141f] text-white border border-[rgba(201,163,93,0.25)] shadow-2xl flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="p-10 lg:p-14 rounded-xl bg-[#f8fafc] text-[#0f172a] border border-[#e2e8f0] shadow-sm flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="max-w-2xl">
               <div className="section-label mb-3">
                 <span /> NATIONWIDE SUPPLY
               </div>
-              <h2 className="text-3xl font-bold text-white mb-4 font-serif">
+              <h2 className="text-3xl font-bold text-[#0f172a] mb-4 font-serif">
                 Serving Infrastructure Projects Across India
               </h2>
-              <p className="text-[#94a3b8] text-base leading-relaxed">
+              <p className="text-[#475569] text-base leading-relaxed">
                 From National Highway expansions and Greenfield Expressways to smart city arterial roads and industrial transit corridors, our materials support contractors executing major infrastructure works.
               </p>
             </div>

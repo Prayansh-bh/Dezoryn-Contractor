@@ -116,18 +116,18 @@ export default function HomePage() {
       </section>
 
       {/* Trust & Capabilities Strip */}
-      <section className="bg-[#0f172a] border-y border-[rgba(201,163,93,0.25)] py-8 text-white relative z-20">
+      <section className="bg-[#f8fafc] border-y border-[#e2e8f0] py-8 text-[#0f172a] relative z-20">
         <div className="container">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {CAPABILITIES.map(([value, label], idx) => (
               <div
                 key={label}
-                className="flex flex-col justify-center border-l-2 border-[#c9a35d]/60 pl-4 py-1"
+                className="flex flex-col justify-center border-l-2 border-[#c9a35d] pl-4 py-1"
               >
-                <span className="text-[#f0d796] font-black text-xl lg:text-2xl tracking-tight">
+                <span className="text-[#c9a35d] font-black text-xl lg:text-2xl tracking-tight font-display">
                   {value}
                 </span>
-                <span className="text-xs uppercase tracking-wider text-[#94a3b8] font-semibold mt-1">
+                <span className="text-xs uppercase tracking-wider text-[#64748b] font-semibold mt-1">
                   {label}
                 </span>
               </div>
@@ -137,7 +137,7 @@ export default function HomePage() {
       </section>
 
       {/* Section 1: About & Sourcing */}
-      <section id="about" className="py-24 bg-[#f8fafc] text-[#0f172a] border-b border-[#e2e8f0]">
+      <section id="about" className="py-24 bg-[#ffffff] text-[#0f172a] border-b border-[#e2e8f0]">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-6">
@@ -193,18 +193,18 @@ export default function HomePage() {
       </section>
 
       {/* Section 2: Products Portfolio */}
-      <section id="products" className="py-24 bg-[#090d14] text-white relative">
+      <section id="products" className="py-24 bg-[#f8fafc] text-[#0f172a] border-b border-[#e2e8f0] relative">
         <div className="container">
           <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-6 mb-16">
             <div>
               <div className="section-label mb-3">
                 <span /> 02 — HIGHWAY PRODUCT CATALOG
               </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-serif">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0f172a] tracking-tight font-serif">
                 Essential Highway Safety Solutions.
               </h2>
             </div>
-            <p className="text-[#94a3b8] max-w-md text-sm sm:text-base leading-relaxed">
+            <p className="text-[#475569] max-w-md text-sm sm:text-base leading-relaxed">
               Every order is quoted based on exact technical specifications, batch volume, packaging requirements, and project destination.
             </p>
           </div>
@@ -283,54 +283,54 @@ export default function HomePage() {
       </section>
 
       {/* Section 4: Applications & Corridors */}
-      <section className="py-24 bg-[#06090d] text-white border-y border-[rgba(201,163,93,0.2)]">
+      <section className="py-24 bg-[#f8fafc] text-[#0f172a] border-b border-[#e2e8f0]">
         <div className="container">
           <div className="max-w-2xl mb-16">
             <div className="section-label mb-3">
               <span /> 04 — SECTOR APPLICABILITY
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-serif">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0f172a] tracking-tight font-serif">
               Where Our Products Perform
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="p-8 rounded-lg bg-[#0e141f] border border-[rgba(201,163,93,0.18)] hover:border-[#c9a35d] transition-all flex flex-col justify-between h-[240px] shadow-lg">
+            <div className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] transition-all flex flex-col justify-between h-[240px] shadow-sm">
               <div>
                 <Route size={32} className="text-[#c9a35d] mb-4" />
-                <h3 className="text-lg font-bold text-white">National & State Highways</h3>
+                <h3 className="text-lg font-bold text-[#0f172a]">National & State Highways</h3>
               </div>
-              <span className="text-xs text-[#94a3b8] uppercase tracking-wider font-semibold">
+              <span className="text-xs text-[#64748b] uppercase tracking-wider font-semibold">
                 High-Volume Corridors
               </span>
             </div>
 
-            <div className="p-8 rounded-lg bg-[#0e141f] border border-[rgba(201,163,93,0.18)] hover:border-[#c9a35d] transition-all flex flex-col justify-between h-[240px] shadow-lg">
+            <div className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] transition-all flex flex-col justify-between h-[240px] shadow-sm">
               <div>
                 <Truck size={32} className="text-[#c9a35d] mb-4" />
-                <h3 className="text-lg font-bold text-white">Expressways & Corridors</h3>
+                <h3 className="text-lg font-bold text-[#0f172a]">Expressways & Corridors</h3>
               </div>
-              <span className="text-xs text-[#94a3b8] uppercase tracking-wider font-semibold">
+              <span className="text-xs text-[#64748b] uppercase tracking-wider font-semibold">
                 Phased Construction EPC
               </span>
             </div>
 
-            <div className="p-8 rounded-lg bg-[#0e141f] border border-[rgba(201,163,93,0.18)] hover:border-[#c9a35d] transition-all flex flex-col justify-between h-[240px] shadow-lg">
+            <div className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] transition-all flex flex-col justify-between h-[240px] shadow-sm">
               <div>
                 <Building2 size={32} className="text-[#c9a35d] mb-4" />
-                <h3 className="text-lg font-bold text-white">Urban Roads & Smart Cities</h3>
+                <h3 className="text-lg font-bold text-[#0f172a]">Urban Roads & Smart Cities</h3>
               </div>
-              <span className="text-xs text-[#94a3b8] uppercase tracking-wider font-semibold">
+              <span className="text-xs text-[#64748b] uppercase tracking-wider font-semibold">
                 Intersections & Crossings
               </span>
             </div>
 
-            <div className="p-8 rounded-lg bg-[#0e141f] border border-[rgba(201,163,93,0.18)] hover:border-[#c9a35d] transition-all flex flex-col justify-between h-[240px] shadow-lg">
+            <div className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] transition-all flex flex-col justify-between h-[240px] shadow-sm">
               <div>
                 <Plane size={32} className="text-[#c9a35d] mb-4" />
-                <h3 className="text-lg font-bold text-white">Airports & Industrial Parks</h3>
+                <h3 className="text-lg font-bold text-[#0f172a]">Airports & Industrial Parks</h3>
               </div>
-              <span className="text-xs text-[#94a3b8] uppercase tracking-wider font-semibold">
+              <span className="text-xs text-[#64748b] uppercase tracking-wider font-semibold">
                 Controlled Transit Areas
               </span>
             </div>
@@ -339,7 +339,7 @@ export default function HomePage() {
       </section>
 
       {/* Section 5: B2B Quotation Form */}
-      <section id="quote" className="py-24 bg-[#090d14] text-white relative">
+      <section id="quote" className="py-24 bg-[#ffffff] text-[#0f172a] relative">
         <EnquiryForm />
       </section>
 
