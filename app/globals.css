@@ -88,12 +88,14 @@ h4,
 
 /* Hero Section Styles */
 .hero {
-  height: 780px;
-  min-height: 700px;
+  min-height: 860px;
   position: relative;
   color: #0f172a;
   overflow: hidden;
   background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .hero-overlay {
@@ -132,7 +134,8 @@ h4,
 
 .hero-content {
   position: relative;
-  padding-top: 210px;
+  padding-top: 175px;
+  padding-bottom: 95px;
   z-index: 2;
 }
 
@@ -165,23 +168,23 @@ h4,
 
 .hero-actions {
   display: flex;
-  gap: 14px;
-  margin-top: 34px;
+  gap: 16px;
+  margin-top: 36px;
 }
 
 .hero-proof {
   display: flex;
-  gap: 28px;
+  gap: 32px;
   margin-top: 36px;
   color: #475569;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 600;
 }
 
 .hero-proof span {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
 }
 
 .hero-proof svg {

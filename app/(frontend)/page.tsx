@@ -95,22 +95,22 @@ export default function HomePage() {
             <Link className="btn btn-primary" href="/products">
               Explore Products <ArrowRight size={19} />
             </Link>
-            <Link className="btn btn-ghost" href="/contact">
+            <Link className="btn btn-secondary" href="/contact">
               Discuss Bulk Requirement
             </Link>
           </div>
           <div className="hero-proof">
             <span>
-              <ShieldCheck /> Quality-controlled production
+              <ShieldCheck className="text-[#c9a35d]" /> Quality-controlled production
             </span>
             <span>
-              <Truck /> Project-ready bulk dispatch
+              <Truck className="text-[#c9a35d]" /> Project-ready bulk dispatch
             </span>
           </div>
         </div>
         <Link
           href="/about"
-          className="hidden md:flex absolute right-8 bottom-8 z-10 items-center gap-2 text-xs uppercase font-bold tracking-widest text-[#64748b] hover:text-[#c9a35d] transition-colors"
+          className="hidden md:flex absolute right-12 bottom-10 z-10 items-center gap-2 text-xs uppercase font-bold tracking-widest text-[#64748b] hover:text-[#c9a35d] transition-colors"
         >
           <span>Scroll to Explore</span>
           <ChevronDown size={14} className="animate-bounce text-[#c9a35d]" />
@@ -118,18 +118,18 @@ export default function HomePage() {
       </section>
 
       {/* Trust & Capabilities Strip */}
-      <section className="bg-[#f8fafc] border-y border-[#e2e8f0] py-8 text-[#0f172a] relative z-20">
+      <section className="bg-[#f8fafc] border-y border-[#e2e8f0] py-12 text-[#0f172a] relative z-20">
         <div className="container">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             {CAPABILITIES.map(([value, label], idx) => (
               <div
                 key={label}
-                className="flex flex-col justify-center border-l-2 border-[#c9a35d] pl-4 py-1"
+                className="flex flex-col justify-center border-l-2 border-[#c9a35d] pl-6 py-2"
               >
-                <span className="text-[#c9a35d] font-black text-xl lg:text-2xl tracking-tight font-display">
+                <span className="text-[#c9a35d] font-black text-2xl lg:text-3xl tracking-tight font-display">
                   {value}
                 </span>
-                <span className="text-xs uppercase tracking-wider text-[#64748b] font-semibold mt-1">
+                <span className="text-xs uppercase tracking-wider text-[#64748b] font-semibold mt-1.5">
                   {label}
                 </span>
               </div>
