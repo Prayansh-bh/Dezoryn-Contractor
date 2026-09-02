@@ -18,16 +18,16 @@ export default async function ProductsPage() {
 
       <section className="inner-section">
         <div className="container">
-          <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-10 pb-6 border-b border-[rgba(201,163,93,0.2)]">
+          <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-10 pb-6 border-b border-[#e2e8f0]">
             <div>
-              <span className="text-xs font-bold text-[#f0d796] uppercase tracking-widest block mb-1">
+              <span className="text-xs font-bold text-[#c9a35d] uppercase tracking-widest block mb-1">
                 Standard Supply Catalog
               </span>
-              <h2 className="text-2xl font-bold text-white font-serif">
+              <h2 className="text-2xl font-bold text-[#0f172a] font-serif">
                 Active Manufacturing Lines ({products.length})
               </h2>
             </div>
-            <span className="text-xs font-medium text-[#94a3b8]">
+            <span className="text-xs font-medium text-[#64748b]">
               Bulk dispatch available pan-India via scheduled logistics.
             </span>
           </div>

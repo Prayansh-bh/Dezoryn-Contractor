@@ -42,37 +42,37 @@ export default function AboutPage() {
       />
 
       {/* Purpose & Manufacturing Setup */}
-      <section className="py-20 bg-[#090d14] text-white border-b border-[rgba(201,163,93,0.2)]">
+      <section className="py-20 bg-[#f8fafc] text-[#0f172a] border-b border-[#e2e8f0]">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-6">
               <div className="section-label mb-3">
                 <span /> OUR PURPOSE
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-6 font-serif">
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0f172a] tracking-tight leading-tight mb-6 font-serif">
                 Strong highway infrastructure begins with disciplined manufacturing.
               </h2>
-              <p className="text-[#94a3b8] text-base sm:text-lg leading-relaxed mb-6">
+              <p className="text-[#475569] text-base sm:text-lg leading-relaxed mb-6">
                 Infrastructure projects cannot afford delays due to inconsistent batch quality or delayed consignments. Our workflow starts with a rigorous understanding of the road conditions, required specifications, and target timelines.
               </p>
-              <p className="text-[#94a3b8] text-base leading-relaxed mb-8">
+              <p className="text-[#475569] text-base leading-relaxed mb-8">
                 By focusing on specialized thermoplastic compounding, precision-graded glass beads, and impact-resistant highway hardware, we provide dependable materials that withstand heavy axle traffic and extreme seasonal weather.
               </p>
 
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[rgba(201,163,93,0.2)]">
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[#e2e8f0]">
                 <div>
-                  <strong className="text-2xl font-black text-[#f0d796] block font-display">100%</strong>
-                  <span className="text-xs font-semibold uppercase text-[#94a3b8]">Batch Tested</span>
+                  <strong className="text-2xl font-black text-[#c9a35d] block font-display">100%</strong>
+                  <span className="text-xs font-semibold uppercase text-[#64748b]">Batch Tested</span>
                 </div>
                 <div>
-                  <strong className="text-2xl font-black text-[#f0d796] block font-display">Pan-India</strong>
-                  <span className="text-xs font-semibold uppercase text-[#94a3b8]">Dispatch Network</span>
+                  <strong className="text-2xl font-black text-[#c9a35d] block font-display">Pan-India</strong>
+                  <span className="text-xs font-semibold uppercase text-[#64748b]">Dispatch Network</span>
                 </div>
               </div>
             </div>
 
             <div className="lg:col-span-6">
-              <div className="relative h-[400px] rounded-lg overflow-hidden border border-[rgba(201,163,93,0.25)] shadow-2xl">
+              <div className="relative h-[400px] rounded-lg overflow-hidden border border-[#e2e8f0] shadow-xl">
                 <Image
                   src="/images/products/custom-manufacturing.jpg"
                   alt="Dezoryn Manufacturing Facility"
@@ -86,7 +86,7 @@ export default function AboutPage() {
       </section>
 
       {/* Core Operational Pillars */}
-      <section className="py-20 bg-[#06090d] text-white">
+      <section className="py-20 bg-[#090d14] text-white">
         <div className="container">
           <div className="max-w-3xl mb-14">
             <div className="section-label mb-3">
@@ -120,7 +120,7 @@ export default function AboutPage() {
       </section>
 
       {/* Nationwide Supply Banner */}
-      <section className="py-20 bg-[#090d14] border-t border-[rgba(201,163,93,0.2)] text-white">
+      <section className="py-20 bg-[#f8fafc] border-t border-[#e2e8f0]">
         <div className="container">
           <div className="p-10 lg:p-14 rounded-xl bg-[#0e141f] text-white border border-[rgba(201,163,93,0.25)] shadow-2xl flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="max-w-2xl">

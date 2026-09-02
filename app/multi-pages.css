@@ -198,12 +198,12 @@
 
 .inner-section {
   padding: 90px 0;
-  background: var(--bg-surface);
-  color: var(--text-body);
+  background: var(--bg-light);
+  color: var(--text-main-light);
 }
 
 .inner-section.dark {
-  background: var(--bg-dark);
+  background: var(--bg-dark-slate);
   color: #ffffff;
   border-top: 1px solid var(--border-amber);
   border-bottom: 1px solid var(--border-amber);
@@ -219,26 +219,26 @@
 }
 
 .product-card-modern {
-  background: var(--bg-card);
-  border: 1px solid var(--border-amber);
+  background: #ffffff;
+  border: 1px solid var(--border-light);
   border-radius: 8px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .product-card-modern:hover {
   transform: translateY(-6px);
   border-color: var(--amber-primary);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--amber-primary);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08), 0 0 0 1px var(--amber-primary);
 }
 
 .product-card-image {
   position: relative;
   height: 220px;
-  background: #06090d;
+  background: #0f172a;
   overflow: hidden;
 }
 
@@ -257,7 +257,7 @@
   position: absolute;
   top: 14px;
   left: 14px;
-  background: rgba(6, 9, 13, 0.92);
+  background: rgba(9, 13, 20, 0.88);
   backdrop-filter: blur(8px);
   color: var(--amber-light);
   font-family: var(--font-display);
@@ -280,13 +280,13 @@
 .product-card-body h3 {
   font-size: 20px;
   font-weight: 700;
-  color: #ffffff;
+  color: #0f172a;
   margin: 0 0 8px;
   line-height: 1.3;
 }
 
 .product-card-body p {
-  color: #94a3b8;
+  color: #475569;
   font-size: 14px;
   line-height: 1.6;
   margin: 0 0 20px;
@@ -297,7 +297,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid #f1f5f9;
   padding-top: 16px;
   margin-top: auto;
 }
@@ -306,7 +306,7 @@
   font-family: var(--font-display);
   font-size: 13px;
   font-weight: 700;
-  color: var(--amber-light);
+  color: #0f172a;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -314,7 +314,7 @@
 }
 
 .product-card-modern:hover .product-card-link {
-  color: #ffffff;
+  color: var(--amber-hover);
 }
 
 /* ==========================================================================
@@ -322,10 +322,10 @@
    ========================================================================== */
 .quality-section-wrap {
   padding: 100px 0;
-  background: var(--bg-surface);
-  border-top: 1px solid var(--border-amber);
-  border-bottom: 1px solid var(--border-amber);
-  color: #ffffff;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  color: #0f172a;
 }
 
 .quality-grid-split {
@@ -337,21 +337,21 @@
 
 .quality-visual {
   height: 500px;
-  background: radial-gradient(circle at 50% 50%, #162032 0%, #06090d 100%);
+  background: radial-gradient(circle at 50% 50%, #f1f5f9 0%, #e2e8f0 100%);
   position: relative;
   display: grid;
   place-items: center;
   overflow: hidden;
   border-radius: 6px;
-  border: 1px solid var(--border-amber);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.05);
 }
 
 .quality-visual::before {
   content: "";
   position: absolute;
   inset: -40%;
-  background: repeating-linear-gradient(110deg, transparent 0 35px, rgba(201, 163, 93, 0.08) 36px 37px);
+  background: repeating-linear-gradient(110deg, transparent 0 35px, rgba(148, 163, 184, 0.15) 36px 37px);
   pointer-events: none;
 }
 
@@ -374,7 +374,7 @@
 .q-ring::before {
   content: "";
   position: absolute;
-  border: 1px solid rgba(201, 163, 93, 0.25);
+  border: 1px solid rgba(203, 213, 225, 0.8);
   border-radius: 50%;
   inset: 32px;
 }
@@ -385,7 +385,7 @@
   inset: 68px;
   border-radius: 50%;
   background: radial-gradient(circle at 35% 25%, #1e2838, #06090d);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
 }
 
 .q-ring-center {
@@ -419,23 +419,22 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.22em;
-  color: var(--amber-light);
+  color: #cbd5e1;
   margin-top: 4px;
 }
 
 .q-tag {
   position: absolute;
-  background: rgba(14, 20, 31, 0.95);
-  backdrop-filter: blur(8px);
+  background: #ffffff;
   padding: 10px 16px;
   text-transform: uppercase;
   font-family: var(--font-display);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: #ffffff;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-  border: 1px solid var(--border-amber);
+  color: #1e293b;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
   border-left: 3px solid var(--amber-primary);
   border-radius: 2px;
   z-index: 10;
@@ -462,7 +461,7 @@
   grid-template-columns: 45px 1fr;
   column-gap: 20px;
   padding: 24px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid #e2e8f0;
 }
 
 .quality-list-row span.row-num {
@@ -475,12 +474,12 @@
 .quality-list-row h3 {
   font-size: 18px;
   font-weight: 700;
-  color: #ffffff;
+  color: #0f172a;
   margin: 0 0 6px;
 }
 
 .quality-list-row p {
-  color: #94a3b8;
+  color: #475569;
   font-size: 14px;
   line-height: 1.6;
   margin: 0;
@@ -530,11 +529,11 @@
    Enquiry Form & Inputs
    ========================================================================== */
 .enquiry-form-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-amber);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 36px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
 }
 
 .form-group {
@@ -548,31 +547,27 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #cbd5e1;
+  color: #334155;
   margin-bottom: 8px;
 }
 
-.form-input,
-.form-select,
-.form-textarea {
+.form-input, .form-select, .form-textarea {
   width: 100%;
   padding: 12px 16px;
   font-family: var(--font-sans);
   font-size: 14px;
-  color: #ffffff;
-  background: #070a0f;
-  border: 1.5px solid rgba(201, 163, 93, 0.25);
+  color: #0f172a;
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
   border-radius: 4px;
   outline: none;
   transition: all 0.2s;
 }
 
-.form-input:focus,
-.form-select:focus,
-.form-textarea:focus {
+.form-input:focus, .form-select:focus, .form-textarea:focus {
   border-color: var(--amber-primary);
-  background: #0b1018;
-  box-shadow: 0 0 0 3px var(--amber-glow);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(201, 163, 93, 0.15);
 }
 
 .form-grid-2 {

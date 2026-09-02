@@ -61,7 +61,7 @@ export default async function GalleryPage() {
         text="A curated perspective on our highway marking compounds, retro-reflective testing, safety hardware installations, and manufacturing facility."
       />
 
-      <section className="py-20 bg-[#090d14] text-white border-b border-[rgba(201,163,93,0.2)]">
+      <section className="py-20 bg-[#f8fafc] text-[#0f172a] border-b border-[#e2e8f0]">
         <div className="container">
           {/* User Uploaded Live Media (if present) */}
           {items.length > 0 && (
@@ -69,7 +69,7 @@ export default async function GalleryPage() {
               <div className="section-label mb-2">
                 <span /> LIVE PROJECT MEDIA
               </div>
-              <h2 className="text-2xl font-bold text-white mb-8 font-serif">
+              <h2 className="text-2xl font-bold text-[#0f172a] mb-8 font-serif">
                 Recent Dispatches & Site Work ({items.length})
               </h2>
 
@@ -77,7 +77,7 @@ export default async function GalleryPage() {
                 {items.map((m) => (
                   <article
                     key={m.id}
-                    className="bg-[#0e141f] rounded-lg border border-[rgba(201,163,93,0.18)] overflow-hidden shadow-lg hover:border-[#c9a35d] transition-colors"
+                    className="bg-white rounded-lg border border-[#e2e8f0] overflow-hidden shadow-sm hover:border-[#c9a35d] transition-colors"
                   >
                     <div className="relative h-60 bg-[#06090d]">
                       {m.mediaType === "video" ? (
@@ -96,11 +96,11 @@ export default async function GalleryPage() {
                       )}
                     </div>
                     <div className="p-5">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#f0d796] mb-1 block">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#c9a35d] mb-1 block">
                         {m.mediaType}
                       </span>
-                      <h3 className="text-base font-bold text-white mb-1 font-serif">{m.title}</h3>
-                      {m.caption && <p className="text-xs text-[#94a3b8]">{m.caption}</p>}
+                      <h3 className="text-base font-bold text-[#0f172a] mb-1 font-serif">{m.title}</h3>
+                      {m.caption && <p className="text-xs text-[#64748b]">{m.caption}</p>}
                     </div>
                   </article>
                 ))}
@@ -113,7 +113,7 @@ export default async function GalleryPage() {
             <div className="section-label mb-2">
               <span /> INFRASTRUCTURE PORTFOLIO
             </div>
-            <h2 className="text-2xl font-bold text-white mb-8 font-serif">
+            <h2 className="text-2xl font-bold text-[#0f172a] mb-8 font-serif">
               Highway Products in Action
             </h2>
 
@@ -121,7 +121,7 @@ export default async function GalleryPage() {
               {curatedShowcase.map((item) => (
                 <article
                   key={item.id}
-                  className="bg-[#0e141f] rounded-lg border border-[rgba(201,163,93,0.18)] overflow-hidden shadow-lg hover:border-[#c9a35d] transition-all hover:-translate-y-1"
+                  className="bg-white rounded-lg border border-[#e2e8f0] overflow-hidden shadow-sm hover:border-[#c9a35d] transition-all hover:-translate-y-1"
                 >
                   <div className="relative h-64 bg-[#06090d]">
                     <Image
@@ -135,8 +135,8 @@ export default async function GalleryPage() {
                     </div>
                   </div>
                   <div className="p-6">
-                    <h3 className="text-lg font-bold text-white mb-2 font-serif">{item.title}</h3>
-                    <p className="text-xs text-[#94a3b8] leading-relaxed">{item.caption}</p>
+                    <h3 className="text-lg font-bold text-[#0f172a] mb-2 font-serif">{item.title}</h3>
+                    <p className="text-xs text-[#64748b] leading-relaxed">{item.caption}</p>
                   </div>
                 </article>
               ))}

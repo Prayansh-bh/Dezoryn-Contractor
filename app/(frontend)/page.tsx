@@ -116,7 +116,7 @@ export default function HomePage() {
       </section>
 
       {/* Trust & Capabilities Strip */}
-      <section className="bg-[#0b1017] border-y border-[rgba(201,163,93,0.22)] py-8 text-white relative z-20">
+      <section className="bg-[#0f172a] border-y border-[rgba(201,163,93,0.25)] py-8 text-white relative z-20">
         <div className="container">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {CAPABILITIES.map(([value, label], idx) => (
@@ -137,20 +137,20 @@ export default function HomePage() {
       </section>
 
       {/* Section 1: About & Sourcing */}
-      <section id="about" className="py-24 bg-[#090d14] text-white border-b border-[rgba(201,163,93,0.2)]">
+      <section id="about" className="py-24 bg-[#f8fafc] text-[#0f172a] border-b border-[#e2e8f0]">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-6">
               <div className="section-label mb-3">
                 <span /> 01 — COMPANY PROFILE
               </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-6 font-serif">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0f172a] tracking-tight leading-tight mb-6 font-serif">
                 Reliable material supply for roads that never pause.
               </h2>
-              <p className="text-[#94a3b8] text-base sm:text-lg leading-relaxed mb-6">
+              <p className="text-[#475569] text-base sm:text-lg leading-relaxed mb-6">
                 Dezoryn Contractor manufactures and supplies highway-use products engineered for demanding traffic loads, extreme weather shifts, and strict project timelines.
               </p>
-              <p className="text-[#94a3b8] text-base leading-relaxed mb-8">
+              <p className="text-[#475569] text-base leading-relaxed mb-8">
                 We collaborate directly with road contractors, EPC concessionaires, State PWD vendors, and infrastructure distributors who demand repeatable batch quality, verified retro-reflectivity, and scheduled site dispatches.
               </p>
 
@@ -160,7 +160,7 @@ export default function HomePage() {
                 </Link>
                 <Link
                   href="/quality"
-                  className="text-xs font-bold uppercase tracking-wider text-[#f0d796] hover:text-[#c9a35d] hover:underline"
+                  className="text-xs font-bold uppercase tracking-wider text-[#c9a35d] hover:underline"
                 >
                   Quality Protocol →
                 </Link>
@@ -168,7 +168,7 @@ export default function HomePage() {
             </div>
 
             <div className="lg:col-span-6">
-              <div className="relative h-[380px] sm:h-[450px] rounded-lg overflow-hidden border border-[rgba(201,163,93,0.25)] shadow-2xl">
+              <div className="relative h-[380px] sm:h-[450px] rounded-lg overflow-hidden border border-[#e2e8f0] shadow-xl">
                 <Image
                   src="/images/products/custom-manufacturing.jpg"
                   alt="Dezoryn Automated Highway Material Production Facility"
@@ -193,7 +193,7 @@ export default function HomePage() {
       </section>
 
       {/* Section 2: Products Portfolio */}
-      <section id="products" className="py-24 bg-[#06090d] text-white relative">
+      <section id="products" className="py-24 bg-[#090d14] text-white relative">
         <div className="container">
           <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-6 mb-16">
             <div>
@@ -224,7 +224,7 @@ export default function HomePage() {
       </section>
 
       {/* Section 3: Quality First — Signature QC Radar Visual & Process */}
-      <section id="quality" className="quality-section-wrap text-white">
+      <section id="quality" className="quality-section-wrap text-[#0f172a]">
         <div className="container">
           <div className="quality-grid-split">
             {/* Left: Concentric Dial Visual */}
@@ -246,11 +246,11 @@ export default function HomePage() {
               <div className="section-label mb-3">
                 <span /> 03 — QUALITY FIRST
               </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-6 font-serif">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0f172a] tracking-tight leading-tight mb-6 font-serif">
                 Consistency is not a promise.<br />
                 It is the process.
               </h2>
-              <p className="text-[#94a3b8] text-base sm:text-lg leading-relaxed mb-8">
+              <p className="text-[#475569] text-base sm:text-lg leading-relaxed mb-8">
                 Our production workflow is designed around repeatability, performance and documented checks—so every project receives material aligned with its requirement.
               </p>
 

@@ -99,7 +99,7 @@ export default async function ProductDetailPage({
       </section>
 
       {/* Specifications & Advantages Section */}
-      <section className="py-20 bg-[#090d14] text-white border-b border-[rgba(201,163,93,0.2)]">
+      <section className="py-20 bg-[#f8fafc] text-[#0f172a] border-b border-[#e2e8f0]">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             {/* Advantages */}
@@ -107,7 +107,7 @@ export default async function ProductDetailPage({
               <div className="section-label mb-3">
                 <span /> PERFORMANCE ADVANTAGES
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-6 font-serif">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0f172a] mb-6 font-serif">
                 Engineered for High Traffic & Adverse Weather
               </h2>
 
@@ -115,10 +115,10 @@ export default async function ProductDetailPage({
                 {product.features.map((feature) => (
                   <div
                     key={feature}
-                    className="p-4 rounded-lg bg-[#0e141f] border border-[rgba(201,163,93,0.18)] flex items-start gap-3 shadow-md"
+                    className="p-4 rounded-lg bg-white border border-[#e2e8f0] flex items-start gap-3 shadow-sm"
                   >
                     <CheckCircle2 size={18} className="text-[#c9a35d] shrink-0 mt-0.5" />
-                    <span className="text-sm font-semibold text-slate-200">{feature}</span>
+                    <span className="text-sm font-semibold text-[#1e293b]">{feature}</span>
                   </div>
                 ))}
               </div>
@@ -128,17 +128,17 @@ export default async function ProductDetailPage({
                 <div className="section-label mb-3">
                   <span /> RECOMMENDED APPLICATION ZONES
                 </div>
-                <h3 className="text-xl font-bold text-white mb-4 font-serif">
+                <h3 className="text-xl font-bold text-[#0f172a] mb-4 font-serif">
                   Where this product is deployed:
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {product.uses.map((use, i) => (
                     <div
                       key={use}
-                      className="p-3 bg-[#0e141f] rounded border border-[rgba(201,163,93,0.18)] text-center shadow-md"
+                      className="p-3 bg-white rounded border border-[#e2e8f0] text-center shadow-sm"
                     >
-                      <span className="block text-xs font-bold text-[#f0d796] mb-1">0{i + 1}</span>
-                      <span className="text-xs font-semibold text-slate-300">{use}</span>
+                      <span className="block text-xs font-bold text-[#c9a35d] mb-1">0{i + 1}</span>
+                      <span className="text-xs font-semibold text-[#334155]">{use}</span>
                     </div>
                   ))}
                 </div>
@@ -147,7 +147,7 @@ export default async function ProductDetailPage({
 
             {/* Specifications Matrix */}
             <div className="lg:col-span-5">
-              <div className="p-8 rounded-lg bg-[#0e141f] text-white border border-[rgba(201,163,93,0.25)] shadow-2xl">
+              <div className="p-8 rounded-lg bg-[#090d14] text-white border border-[rgba(201,163,93,0.25)] shadow-2xl">
                 <div className="flex items-center gap-2 text-[#f0d796] text-xs font-bold uppercase tracking-wider mb-6">
                   <Layers size={16} /> Supply Specifications
                 </div>
@@ -188,13 +188,13 @@ export default async function ProductDetailPage({
       </section>
 
       {/* Production & Dispatch Protocol */}
-      <section className="py-16 bg-[#06090d] border-t border-[rgba(201,163,93,0.2)] text-white">
+      <section className="py-16 bg-white border-t border-[#e2e8f0] text-[#0f172a]">
         <div className="container">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <div className="section-label justify-center mb-2">
               <span /> ORDER EXECUTION
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white font-serif">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#0f172a] font-serif">
               From Requirement Review to Site Dispatch
             </h2>
           </div>
@@ -209,11 +209,11 @@ export default async function ProductDetailPage({
             ].map(([num, title, desc]) => (
               <div
                 key={num}
-                className="p-5 rounded-lg bg-[#0e141f] border border-[rgba(201,163,93,0.18)] text-center shadow-lg"
+                className="p-5 rounded-lg bg-[#f8fafc] border border-[#e2e8f0] text-center shadow-sm"
               >
-                <span className="text-[#f0d796] font-black text-sm block mb-1">{num}</span>
-                <strong className="text-white text-sm block">{title}</strong>
-                <span className="text-xs text-[#94a3b8] mt-1 block">{desc}</span>
+                <span className="text-[#c9a35d] font-black text-sm block mb-1">{num}</span>
+                <strong className="text-[#0f172a] text-sm block">{title}</strong>
+                <span className="text-xs text-[#64748b] mt-1 block">{desc}</span>
               </div>
             ))}
           </div>

@@ -53,13 +53,13 @@ export default function QualityPage() {
       />
 
       {/* 5-Stage Protocol */}
-      <section className="py-20 bg-[#090d14] text-white border-b border-[rgba(201,163,93,0.2)]">
+      <section className="py-20 bg-[#f8fafc] text-[#0f172a] border-b border-[#e2e8f0]">
         <div className="container">
           <div className="max-w-2xl mb-14">
             <div className="section-label mb-3">
               <span /> 5-STAGE PROTOCOL
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-serif">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0f172a] tracking-tight font-serif">
               Standardized Quality Assurance Workflow
             </h2>
           </div>
@@ -70,24 +70,24 @@ export default function QualityPage() {
               return (
                 <article
                   key={step.num}
-                  className="p-8 rounded-lg bg-[#0e141f] border border-[rgba(201,163,93,0.18)] hover:border-[#c9a35d] transition-all shadow-lg flex flex-col justify-between"
+                  className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] transition-all shadow-sm flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex justify-between items-center mb-6">
-                      <div className="w-12 h-12 rounded bg-[#070a0f] border border-[rgba(201,163,93,0.25)] flex items-center justify-center text-[#c9a35d]">
+                      <div className="w-12 h-12 rounded bg-[#f8fafc] border border-[#e2e8f0] flex items-center justify-center text-[#c9a35d]">
                         <Icon size={24} />
                       </div>
-                      <span className="text-sm font-black text-[#f0d796]">{step.num}</span>
+                      <span className="text-sm font-black text-[#c9a35d]">{step.num}</span>
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-3 font-serif">{step.title}</h3>
-                    <p className="text-[#94a3b8] text-sm leading-relaxed">{step.desc}</p>
+                    <h3 className="text-xl font-bold text-[#0f172a] mb-3 font-serif">{step.title}</h3>
+                    <p className="text-[#475569] text-sm leading-relaxed">{step.desc}</p>
                   </div>
                 </article>
               );
             })}
 
             {/* Compliance Badge Card */}
-            <article className="p-8 rounded-lg bg-[#0e141f] text-white border border-[rgba(201,163,93,0.25)] flex flex-col justify-between shadow-2xl">
+            <article className="p-8 rounded-lg bg-[#090d14] text-white border border-[rgba(201,163,93,0.25)] flex flex-col justify-between shadow-2xl">
               <div>
                 <ShieldCheck size={32} className="text-[#c9a35d] mb-6" />
                 <h3 className="text-xl font-bold text-white mb-3 font-serif">Specification Compliance</h3>
@@ -104,7 +104,7 @@ export default function QualityPage() {
       </section>
 
       {/* Quality Principle Statement */}
-      <section className="py-20 bg-[#06090d] text-white text-center border-t border-[rgba(201,163,93,0.2)]">
+      <section className="py-20 bg-[#090d14] text-white text-center border-t border-[rgba(201,163,93,0.2)]">
         <div className="container max-w-4xl mx-auto">
           <span className="text-xs font-bold uppercase tracking-widest text-[#f0d796] block mb-4">
             OUR QUALITY COMMITMENT

@@ -18,7 +18,7 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Details & Logistics Strip */}
-      <section className="py-16 bg-[#06090d] border-t border-[rgba(201,163,93,0.22)] text-white">
+      <section className="py-16 bg-[#090d14] border-t border-[rgba(201,163,93,0.22)] text-white">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="p-6 rounded-lg bg-[#0e141f] border border-[rgba(201,163,93,0.18)] flex items-start gap-4 shadow-lg">
