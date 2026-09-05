@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test, { describe, before, after } from "node:test";
 import { PrismaClient } from "@prisma/client";
-import { DEFAULT_PRODUCTS, DEFAULT_SITE_SETTINGS } from "../shared/constants/index.js";
+import { DEFAULT_PRODUCTS, DEFAULT_SITE_SETTINGS } from "../shared/constants";
 
 const prisma = new PrismaClient();
 const BACKEND_URL = process.env.TEST_BACKEND_URL || "http://localhost:5000";
