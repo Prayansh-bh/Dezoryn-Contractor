@@ -16,7 +16,7 @@ export async function getActiveGalleryItems(): Promise<GalleryItem[]> {
   try {
     return await prisma.galleryItem.findMany({
       where: { active: true },
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
       select: {
         id: true,
         title: true,
@@ -38,7 +38,7 @@ export async function getActiveGalleryItems(): Promise<GalleryItem[]> {
 
 export async function getAllGalleryItems(): Promise<GalleryItem[]> {
   return prisma.galleryItem.findMany({
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
     select: {
       id: true,
       title: true,

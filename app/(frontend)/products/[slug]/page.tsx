@@ -29,7 +29,10 @@ export default async function ProductDetailPage({
   }
 
   const imageSrc =
-    PRODUCT_IMAGES[product.slug] || "/images/products/thermoplastic-paint.jpg";
+    product.imageUrl ||
+    PRODUCT_IMAGES[product.slug] ||
+    "/images/products/product-placeholder.jpg";
+  const isUploadedImage = imageSrc.startsWith("/uploads/");
 
   return (
     <SiteShell>
@@ -84,6 +87,7 @@ export default async function ProductDetailPage({
                   src={imageSrc}
                   alt={product.name}
                   fill
+                  unoptimized={isUploadedImage}
                   priority
                   className="object-cover"
                 />

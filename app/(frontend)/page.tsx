@@ -2,77 +2,44 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
-  BadgeCheck,
   Building2,
   ChevronDown,
   Factory,
-  Gauge,
-  MapPin,
+  PackageX,
   Plane,
   Route,
   ShieldCheck,
-  Sparkles,
   Truck,
-  Warehouse,
 } from "lucide-react";
 import { SiteHeader } from "@frontend/components/site-header";
 import { SiteFooter } from "@frontend/components/site-footer";
 import { EnquiryForm } from "@frontend/components/enquiry-form";
 import { HomeProductCard } from "@frontend/components/product-card";
 import { HeroVideoHighway } from "@frontend/components/hero-video-highway";
+import { QcRadarVisual } from "@frontend/components/qc-radar-visual";
+import { CapabilitiesStrip } from "@frontend/components/metric-odometer";
+import { HighwayFlowLine } from "@frontend/components/highway-flow-line";
 import { CAPABILITIES } from "@shared/constants";
+import { getSettings } from "@backend/services/settings.service";
+import { getActiveProducts } from "@backend/services/products.service";
+import { getActiveGalleryItems } from "@backend/services/gallery.service";
 
-const products = [
-  {
-    no: "01",
-    slug: "thermoplastic-road-marking-paint",
-    title: "Thermoplastic Road Marking Paint",
-    text: "Hot-applied road marking compound engineered for sharp lines, dependable adhesion and long service life under heavy highway traffic.",
-    tag: "MORTH Clause 803 Compliant",
-  },
-  {
-    no: "02",
-    slug: "reflective-glass-beads",
-    title: "Reflective Glass Beads",
-    text: "Precision-graded drop-on and intermix glass beads that return headlight illumination to drivers for safer night-time navigation.",
-    tag: "High Retro-Reflectivity",
-  },
-  {
-    no: "03",
-    slug: "kerb-barrier-coatings",
-    title: "Kerb & Barrier Coatings",
-    text: "High-contrast durable coatings for concrete kerbs, medians and metal crash barriers developed to retain visual clarity across all weather.",
-    tag: "All-Weather UV Resistance",
-  },
-  {
-    no: "04",
-    slug: "road-studs-delineators",
-    title: "Road Studs & Delineators",
-    text: "High-impact road guidance products for curves, medians and lane boundaries where dependable visibility and clear direction matter.",
-    tag: "Impact Resistant & Solar",
-  },
-  {
-    no: "05",
-    slug: "traffic-safety-products",
-    title: "Traffic Safety Products",
-    text: "A coordinated range of cones, bollards, barricades and reflectors for highway projects, diversions and active construction corridors.",
-    tag: "Heavy-Duty Polymer",
-  },
-  {
-    no: "06",
-    slug: "custom-manufacturing",
-    title: "Project-Specific Manufacturing",
-    text: "Specification-led production, packaging and dispatch planning for contractors whose project requirements require custom batch planning.",
-    tag: "Custom Formulation",
-  },
-];
+export const dynamic = "force-dynamic";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [settings, products, galleryItems] = await Promise.all([
+    getSettings(),
+    getActiveProducts(),
+    getActiveGalleryItems(),
+  ]);
+
+  const featuredItems = galleryItems.filter((item) => item.featured);
+
   return (
     <div className="flex flex-col min-h-screen">
-      <SiteHeader />
+      <SiteHeader settings={settings} />
 
-      {/* Hero Section — Exact Original Front-Page Fold */}
+      {/* Hero Section — Exact Original Front-Page Fold with Telemetry HUD */}
       <section id="home" className="hero">
         <HeroVideoHighway />
         <div className="hero-overlay" />
@@ -82,14 +49,19 @@ export default function HomePage() {
             <span /> HIGHWAY SAFETY PRODUCT MANUFACTURER
           </div>
           <h1>
-            Built for the road.
-            <br />
-            <em>Engineered for scale.</em>
+            {settings.hero_title ? (
+              settings.hero_title
+            ) : (
+              <>
+                Built for the road.
+                <br />
+                <em>Engineered for scale.</em>
+              </>
+            )}
           </h1>
           <p>
-            Premium road-marking and highway safety products manufactured for
-            contractors, infrastructure companies and large-scale projects across
-            India.
+            {settings.hero_text ||
+              "Premium road-marking and highway safety products manufactured for contractors, infrastructure companies and large-scale projects across India."}
           </p>
           <div className="hero-actions">
             <Link className="btn btn-primary" href="/products">
@@ -110,33 +82,15 @@ export default function HomePage() {
         </div>
         <a
           href="#products"
-          className="group hidden md:flex absolute right-12 bottom-10 z-10 items-center gap-2 text-xs uppercase font-bold tracking-widest text-[#64748b] hover:text-[#c9a35d] transition-colors cursor-pointer"
+          className="group hidden md:flex absolute right-9 bottom-4 z-10 w-[160px] items-center justify-between text-[10px] uppercase font-bold tracking-widest text-[#64748b] hover:text-[#c9a35d] transition-colors cursor-pointer"
         >
           <span>Scroll to Explore</span>
           <ChevronDown size={14} className="animate-bounce text-[#64748b] group-hover:text-[#c9a35d] transition-colors" />
         </a>
       </section>
 
-      {/* Trust & Capabilities Strip */}
-      <section className="bg-[#f8fafc] border-y border-[#e2e8f0] py-12 text-[#0f172a] relative z-20">
-        <div className="container">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-            {CAPABILITIES.map(([value, label], idx) => (
-              <div
-                key={label}
-                className="flex flex-col justify-center border-l-2 border-[#c9a35d] pl-6 py-2"
-              >
-                <span className="text-[#c9a35d] font-black text-2xl lg:text-3xl tracking-tight font-display">
-                  {value}
-                </span>
-                <span className="text-xs uppercase tracking-wider text-[#64748b] font-semibold mt-1.5">
-                  {label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Trust & Capabilities Strip with Animated Metric Odometer */}
+      <CapabilitiesStrip capabilities={CAPABILITIES} />
 
       {/* Section 1: About & Sourcing */}
       <section id="about" className="py-24 bg-[#ffffff] text-[#0f172a] border-b border-[#e2e8f0]">
@@ -170,12 +124,12 @@ export default function HomePage() {
             </div>
 
             <div className="lg:col-span-6">
-              <div className="relative h-[380px] sm:h-[450px] rounded-lg overflow-hidden border border-[#e2e8f0] shadow-xl">
+              <div className="relative h-[380px] sm:h-[450px] rounded-lg overflow-hidden border border-[#e2e8f0] shadow-xl group">
                 <Image
                   src="/images/products/custom-manufacturing.jpg"
                   alt="Dezoryn Automated Highway Material Production Facility"
                   fill
-                  className="object-cover"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#06090d]/95 via-[#06090d]/40 to-transparent flex flex-col justify-end p-8 text-white">
                   <div className="flex items-center gap-2 text-[#f0d796] text-xs font-bold uppercase tracking-widest mb-1">
@@ -211,17 +165,47 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="catalog-grid">
-            {products.map((p, i) => (
-              <HomeProductCard key={p.no} product={p} index={i} />
-            ))}
-          </div>
+          {products.length > 0 ? (
+            <div className="catalog-grid">
+              {products.map((p, i) => (
+                <HomeProductCard
+                  key={p.slug}
+                  product={{
+                    no: String(i + 1).padStart(2, "0"),
+                    slug: p.slug,
+                    title: p.name,
+                    text: p.description,
+                    tag: p.kicker || "Highway Grade",
+                    imageUrl: p.imageUrl,
+                  }}
+                  index={i}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white rounded-lg border border-[#e2e8f0] p-12 text-center shadow-sm max-w-2xl mx-auto my-8">
+              <div className="w-14 h-14 rounded-full bg-[#f8fafc] border border-[#e2e8f0] flex items-center justify-center mx-auto mb-4 text-[#c9a35d]">
+                <PackageX size={26} />
+              </div>
+              <h3 className="text-lg font-bold text-[#0f172a] font-serif mb-2">
+                Highway Catalog Under Batch Update
+              </h3>
+              <p className="text-xs text-[#64748b] leading-relaxed max-w-md mx-auto mb-6">
+                Our manufacturing lines and technical product specifications are currently being updated. Contact our sales engineering team for custom batch requirements and direct material dispatch schedules.
+              </p>
+              <Link href="/contact" className="btn btn-primary inline-flex items-center gap-2">
+                Discuss Bulk Requirement <ArrowRight size={15} />
+              </Link>
+            </div>
+          )}
 
-          <div className="mt-14 text-center">
-            <Link href="/products" className="btn btn-primary">
-              View Complete Product Specifications <ArrowRight size={16} />
-            </Link>
-          </div>
+          {products.length > 0 && (
+            <div className="mt-14 text-center">
+              <Link href="/products" className="btn btn-primary">
+                View Complete Product Specifications <ArrowRight size={16} />
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
@@ -229,19 +213,8 @@ export default function HomePage() {
       <section id="quality" className="quality-section-wrap text-[#0f172a]">
         <div className="container">
           <div className="quality-grid-split">
-            {/* Left: Concentric Dial Visual */}
-            <div className="quality-visual">
-              <div className="q-ring">
-                <div className="q-ring-center">
-                  <Gauge />
-                  <strong>QC</strong>
-                  <span>at every batch</span>
-                </div>
-              </div>
-              <span className="q-tag q1">Raw material check</span>
-              <span className="q-tag q2">Batch traceability</span>
-              <span className="q-tag q3">Dispatch verification</span>
-            </div>
+            {/* Left: Concentric Dial Visual with 3D GPU Scroll Depth Animation */}
+            <QcRadarVisual />
 
             {/* Right: Copy & Structured Steps */}
             <div>
@@ -257,24 +230,24 @@ export default function HomePage() {
               </p>
 
               <div>
-                <div className="quality-list-row">
+                <div className="quality-list-row group/row hover:bg-slate-50 transition-colors p-2 rounded">
                   <span className="row-num">01</span>
                   <div>
-                    <h3>Controlled sourcing</h3>
+                    <h3 className="group-hover/row:text-[#c9a35d] transition-colors">Controlled sourcing</h3>
                     <p>Selected raw materials and defined incoming checks.</p>
                   </div>
                 </div>
-                <div className="quality-list-row">
+                <div className="quality-list-row group/row hover:bg-slate-50 transition-colors p-2 rounded">
                   <span className="row-num">02</span>
                   <div>
-                    <h3>Process discipline</h3>
+                    <h3 className="group-hover/row:text-[#c9a35d] transition-colors">Process discipline</h3>
                     <p>Monitored production parameters and batch records.</p>
                   </div>
                 </div>
-                <div className="quality-list-row">
+                <div className="quality-list-row group/row hover:bg-slate-50 transition-colors p-2 rounded">
                   <span className="row-num">03</span>
                   <div>
-                    <h3>Pre-dispatch review</h3>
+                    <h3 className="group-hover/row:text-[#c9a35d] transition-colors">Pre-dispatch review</h3>
                     <p>Quantity, packaging and order details verified before movement.</p>
                   </div>
                 </div>
@@ -284,9 +257,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Section 4: Applications & Corridors */}
-      <section className="py-24 bg-[#f8fafc] text-[#0f172a] border-b border-[#e2e8f0]">
-        <div className="container">
+      {/* Section 4: Applications & Corridors with Highway Flow Track */}
+      <section className="py-24 bg-[#f8fafc] text-[#0f172a] border-b border-[#e2e8f0] relative">
+        <HighwayFlowLine />
+        <div className="container relative z-10">
           <div className="max-w-2xl mb-16">
             <div className="section-label mb-3">
               <span /> 04 — SECTOR APPLICABILITY
@@ -297,9 +271,9 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] transition-all flex flex-col justify-between h-[240px] shadow-sm">
+            <div className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between h-[240px] shadow-sm hover:shadow-md group">
               <div>
-                <Route size={32} className="text-[#c9a35d] mb-4" />
+                <Route size={32} className="text-[#c9a35d] mb-4 transition-transform duration-300 group-hover:scale-110" />
                 <h3 className="text-lg font-bold text-[#0f172a]">National & State Highways</h3>
               </div>
               <span className="text-xs text-[#64748b] uppercase tracking-wider font-semibold">
@@ -307,9 +281,9 @@ export default function HomePage() {
               </span>
             </div>
 
-            <div className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] transition-all flex flex-col justify-between h-[240px] shadow-sm">
+            <div className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between h-[240px] shadow-sm hover:shadow-md group">
               <div>
-                <Truck size={32} className="text-[#c9a35d] mb-4" />
+                <Truck size={32} className="text-[#c9a35d] mb-4 transition-transform duration-300 group-hover:scale-110" />
                 <h3 className="text-lg font-bold text-[#0f172a]">Expressways & Corridors</h3>
               </div>
               <span className="text-xs text-[#64748b] uppercase tracking-wider font-semibold">
@@ -317,9 +291,9 @@ export default function HomePage() {
               </span>
             </div>
 
-            <div className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] transition-all flex flex-col justify-between h-[240px] shadow-sm">
+            <div className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between h-[240px] shadow-sm hover:shadow-md group">
               <div>
-                <Building2 size={32} className="text-[#c9a35d] mb-4" />
+                <Building2 size={32} className="text-[#c9a35d] mb-4 transition-transform duration-300 group-hover:scale-110" />
                 <h3 className="text-lg font-bold text-[#0f172a]">Urban Roads & Smart Cities</h3>
               </div>
               <span className="text-xs text-[#64748b] uppercase tracking-wider font-semibold">
@@ -327,9 +301,9 @@ export default function HomePage() {
               </span>
             </div>
 
-            <div className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] transition-all flex flex-col justify-between h-[240px] shadow-sm">
+            <div className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between h-[240px] shadow-sm hover:shadow-md group">
               <div>
-                <Plane size={32} className="text-[#c9a35d] mb-4" />
+                <Plane size={32} className="text-[#c9a35d] mb-4 transition-transform duration-300 group-hover:scale-110" />
                 <h3 className="text-lg font-bold text-[#0f172a]">Airports & Industrial Parks</h3>
               </div>
               <span className="text-xs text-[#64748b] uppercase tracking-wider font-semibold">
@@ -340,12 +314,86 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Section 5: B2B Quotation Form */}
+      {/* Section 5: Featured Project Media (Rendered when database has featured items) */}
+      {featuredItems.length > 0 && (
+        <section id="gallery-featured" className="py-24 bg-[#090d16] text-[#f8fafc] border-b border-[#1e293b] relative overflow-hidden">
+          <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none" />
+          <div className="container relative z-10">
+            <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-6 mb-16">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#c9a35d]/10 border border-[#c9a35d]/30 text-[#f0d796] font-bold text-xs uppercase tracking-widest mb-3">
+                  <span className="inline-block w-2 h-2 rounded-full bg-[#c9a35d] animate-pulse" /> 05 — SITE WORK & DISPATCHES
+                </div>
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-serif">
+                  Featured Project Applications
+                </h2>
+              </div>
+              <p className="text-[#94a3b8] max-w-md text-sm sm:text-base leading-relaxed">
+                Direct field dispatches, automated thermoplastic screeding, and highway safety hardware installations across active project corridors.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredItems.map((m) => (
+                <article
+                  key={m.id}
+                  className="bg-[#0f172a] rounded-lg border border-[rgba(201,163,93,0.3)] overflow-hidden shadow-xl hover:border-[#c9a35d] transition-all hover:-translate-y-1 group"
+                >
+                  <div className="relative h-64 bg-[#06090d]">
+                    {m.mediaType === "video" ? (
+                      <video
+                        src={`/api/media/${m.id}`}
+                        controls
+                        preload="metadata"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <img
+                        src={`/api/media/${m.id}`}
+                        alt={m.title}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    )}
+                    <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
+                      <span className="inline-flex items-center gap-1 bg-[#c9a35d] text-[#090d16] px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider shadow-md">
+                        ★ FEATURED
+                      </span>
+                    </div>
+                    <div className="absolute top-3 right-3 bg-[#090d16]/90 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-[#cbd5e1] border border-white/10 z-10">
+                      {m.mediaType}
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-lg font-bold text-white mb-2 font-serif group-hover:text-[#f0d796] transition-colors">
+                      {m.title}
+                    </h3>
+                    {m.caption && (
+                      <p className="text-xs text-[#94a3b8] leading-relaxed line-clamp-2">
+                        {m.caption}
+                      </p>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-14 text-center">
+              <Link href="/gallery" className="btn btn-primary inline-flex items-center gap-2">
+                Explore Full Projects & Media Gallery <ArrowRight size={16} />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Section 6: B2B Quotation Form */}
       <section id="quote" className="py-24 bg-[#ffffff] text-[#0f172a] relative">
         <EnquiryForm />
       </section>
 
-      <SiteFooter />
+      <SiteFooter settings={settings} />
     </div>
   );
 }
+

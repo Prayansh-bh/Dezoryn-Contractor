@@ -1,4 +1,11 @@
-export type { CreateEnquiryInput, SaveProductInput, SiteSettingsInput } from "../schemas";
+export type {
+  CreateEnquiryInput,
+  SaveProductInput,
+  SiteSettingsInput,
+  LoginInput,
+  ChangePasswordInput,
+  ChangeEmailInput,
+} from "../schemas";
 
 export interface Product {
   id: number;
@@ -11,6 +18,7 @@ export interface Product {
   specs: string[];
   active: boolean;
   sortOrder: number;
+  imageUrl?: string | null;
   createdAt?: string | Date;
   updatedAt?: string | Date;
 }
@@ -50,12 +58,26 @@ export interface AdminUser {
   email: string;
   name: string;
   role: string;
-  createdAt: string | Date;
+  createdAt?: string | Date;
+}
+
+export interface AdminUserProfile {
+  id: number;
+  email: string;
+  name: string;
+  role: string;
+}
+
+export interface AdminAuthResponse {
+  accessToken: string;
+  user: AdminUserProfile;
 }
 
 export interface AdminSession {
+  id?: number;
   email: string;
   displayName: string;
+  role?: string;
   isAdmin: boolean;
 }
 

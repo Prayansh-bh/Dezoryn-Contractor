@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { getActiveGalleryItems } from "@backend/services/gallery.service";
 import { SiteShell, PageHero, PageCta } from "@frontend/components/site-shell";
 
@@ -6,51 +5,6 @@ export const dynamic = "force-dynamic";
 
 export default async function GalleryPage() {
   const items = await getActiveGalleryItems();
-
-  const curatedShowcase = [
-    {
-      id: "c1",
-      title: "Thermoplastic Expressway Paving & Marking",
-      caption: "High-speed automated application on 8-lane corridor.",
-      image: "/images/products/thermoplastic-paint.jpg",
-      tag: "Road Marking",
-    },
-    {
-      id: "c2",
-      title: "Retro-Reflective Micro Glass Beads Lab QC",
-      caption: "Testing optical retroreflectivity under directional light beam.",
-      image: "/images/products/reflective-glass-beads.jpg",
-      tag: "Quality Control",
-    },
-    {
-      id: "c3",
-      title: "High-Contrast Kerb & Divider Barrier Coatings",
-      caption: "Long-lasting UV-resistant kerb paint on highway median.",
-      image: "/images/products/kerb-barrier-coatings.jpg",
-      tag: "Barrier Coatings",
-    },
-    {
-      id: "c4",
-      title: "Solar & Cat-Eye Highway Road Studs",
-      caption: "Lane delineation and night curve warning studs.",
-      image: "/images/products/road-studs-delineators.jpg",
-      tag: "Highway Hardware",
-    },
-    {
-      id: "c5",
-      title: "Project Safety Hardware & Barricades",
-      caption: "Heavy-duty traffic cones and high-visibility work zone bollards.",
-      image: "/images/products/traffic-safety-products.jpg",
-      tag: "Traffic Safety",
-    },
-    {
-      id: "c6",
-      title: "Automated Material Batching Facility",
-      caption: "Standardized chemical blending and temperature-controlled compounding.",
-      image: "/images/products/custom-manufacturing.jpg",
-      tag: "Manufacturing",
-    },
-  ];
 
   return (
     <SiteShell>
@@ -63,85 +17,74 @@ export default async function GalleryPage() {
 
       <section className="py-20 bg-[#f8fafc] text-[#0f172a] border-b border-[#e2e8f0]">
         <div className="container">
-          {/* User Uploaded Live Media (if present) */}
-          {items.length > 0 && (
-            <div className="mb-16">
-              <div className="section-label mb-2">
-                <span /> LIVE PROJECT MEDIA
-              </div>
-              <h2 className="text-2xl font-bold text-[#0f172a] mb-8 font-serif">
-                Recent Dispatches & Site Work ({items.length})
-              </h2>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {items.map((m) => (
-                  <article
-                    key={m.id}
-                    className="bg-white rounded-lg border border-[#e2e8f0] overflow-hidden shadow-sm hover:border-[#c9a35d] transition-colors"
-                  >
-                    <div className="relative h-60 bg-[#06090d]">
-                      {m.mediaType === "video" ? (
-                        <video
-                          src={`/api/media/${m.id}`}
-                          controls
-                          preload="metadata"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <img
-                          src={`/api/media/${m.id}`}
-                          alt={m.title}
-                          className="w-full h-full object-cover"
-                        />
-                      )}
-                    </div>
-                    <div className="p-5">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#c9a35d] mb-1 block">
-                        {m.mediaType}
-                      </span>
-                      <h3 className="text-base font-bold text-[#0f172a] mb-1 font-serif">{m.title}</h3>
-                      {m.caption && <p className="text-xs text-[#64748b]">{m.caption}</p>}
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Curated Infrastructure Showcase */}
-          <div>
+          <div className="mb-12">
             <div className="section-label mb-2">
-              <span /> INFRASTRUCTURE PORTFOLIO
+              <span /> LIVE PROJECT DISPATCHES & SITE APPLICATIONS
             </div>
-            <h2 className="text-2xl font-bold text-[#0f172a] mb-8 font-serif">
-              Highway Products in Action
+            <h2 className="text-2xl font-bold text-[#0f172a] mb-2 font-serif">
+              Project Media & Infrastructure Gallery {items.length > 0 ? `(${items.length})` : ""}
             </h2>
+            <p className="text-xs text-[#64748b] max-w-xl">
+              Verified highway installation media, laboratory reflectance benchmarks, and automated material batching photographs.
+            </p>
+          </div>
 
+          {items.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {curatedShowcase.map((item) => (
+              {items.map((m) => (
                 <article
-                  key={item.id}
-                  className="bg-white rounded-lg border border-[#e2e8f0] overflow-hidden shadow-sm hover:border-[#c9a35d] transition-all hover:-translate-y-1"
+                  key={m.id}
+                  className="bg-white rounded-lg border border-[#e2e8f0] overflow-hidden shadow-sm hover:border-[#c9a35d] transition-all hover:-translate-y-1 group"
                 >
                   <div className="relative h-64 bg-[#06090d]">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="absolute top-3 left-3 bg-[#06090d]/90 backdrop-blur-md px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider text-[#f0d796] border border-[rgba(201,163,93,0.35)]">
-                      {item.tag}
+                    {m.mediaType === "video" ? (
+                      <video
+                        src={`/api/media/${m.id}`}
+                        controls
+                        preload="metadata"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <img
+                        src={`/api/media/${m.id}`}
+                        alt={m.title}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    )}
+                    {m.featured && (
+                      <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+                        <span className="inline-flex items-center gap-1 bg-[#fffbeb] text-[#d97706] border border-[#fde68a] px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider shadow-sm">
+                          ★ FEATURED
+                        </span>
+                      </div>
+                    )}
+                    <div className="absolute top-3 right-3 bg-[#06090d]/80 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-[#cbd5e1] border border-white/10 z-10">
+                      {m.mediaType}
                     </div>
                   </div>
                   <div className="p-6">
-                    <h3 className="text-lg font-bold text-[#0f172a] mb-2 font-serif">{item.title}</h3>
-                    <p className="text-xs text-[#64748b] leading-relaxed">{item.caption}</p>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#c9a35d] mb-1.5 block">
+                      {m.mediaType === "video" ? "Field Application Video" : "Site Photography"}
+                    </span>
+                    <h3 className="text-base font-bold text-[#0f172a] mb-1.5 font-serif group-hover:text-[#c9a35d] transition-colors">
+                      {m.title}
+                    </h3>
+                    {m.caption && <p className="text-xs text-[#64748b] leading-relaxed line-clamp-2">{m.caption}</p>}
                   </div>
                 </article>
               ))}
             </div>
-          </div>
+          ) : (
+            <div className="bg-white rounded-lg border border-[#e2e8f0] p-12 text-center shadow-sm max-w-2xl mx-auto my-8">
+              <p className="text-sm font-semibold text-[#0f172a] mb-1">
+                Live Dispatch Feed Being Updated
+              </p>
+              <p className="text-xs text-[#64748b] max-w-md mx-auto leading-relaxed">
+                Recent project videos and batch dispatch photographs are currently being compiled. Contact our sales engineering team for site test certificates and material verification datasheets.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 

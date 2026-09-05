@@ -1,93 +1,112 @@
-# vinext-starter
+# Dezoryn Contractor
 
-A clean full-stack starter running on [vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and Drizzle support.
+> Industrial Highway Infrastructure & Product Manufacturer Platform.
 
-## Prerequisites
+Dezoryn Contractor is a full-stack, enterprise-grade digital platform engineered for industrial highway product manufacturing, automated lead procurement, project media showcasing, and comprehensive administrative operations.
 
-- Node.js `>=22.13.0`
-- Linux with `flock`, `curl`, and GNU `timeout`
+---
 
-## Sites Lifecycle
+## 🏛️ System Architecture
 
-The Sites lifecycle CLI runs the locked dependency install before returning this checkout. Edit the source under `app/`, then checkpoint when a coherent milestone is ready to inspect or share. The remote Sites builder runs `npm run build` against the pushed commit. Do not repeat install or build as a normal pre-checkpoint step.
+The repository is structured as a unified monorepo containing three interconnected applications:
 
-This starter does not use `wrangler.jsonc`.
-
-`install:ci` is intentionally a single, non-retrying `npm ci`. It refuses a concurrent install for the same project, consumes a matching image-seeded npm cache with `--prefer-offline` while retaining registry fallback for a missing cache object, otherwise downloads and verifies the complete vinext tarball recorded in `package-lock.json`, limits npm to one socket, and terminates a stalled install. `build` applies a short timeout. These helpers target Linux and use GNU `timeout`; they are not native macOS scripts.
-
-Scripts that need writable project-scoped home, npm, XDG, and temporary paths use `scripts/sites-env.sh`. The `dev` and `start` scripts honor the caller's runtime environment and keep Wrangler logs inside the checkout. The generated `.sites-runtime/` directory is disposable and ignored by Git.
-
-## Included Shape
-
-- edit site code under `app/`
-- `app/chatgpt-auth.ts` provides optional dispatch-owned ChatGPT sign-in helpers
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/index.ts` reads the D1 binding from the Cloudflare Worker environment
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
-
-## Workspace Auth Headers
-
-OpenAI workspace sites can read the current user's email from `oai-authenticated-user-email`.
-
-SIWC-authenticated workspace sites may also receive `oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty `name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by `oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
+```
+dezoryn-contractor/
+├── app/                  # Next.js 16 (App Router) Public Highway Platform
+├── frontend/             # High-Performance UI Components & Dynamic Visuals
+├── admin/                # React + Vite Standalone Admin Control Portal (Port 3001)
+├── backend/              # Express.js + Prisma ORM Standalone REST API (Port 5000)
+├── shared/               # Shared TypeScript Types, Zod Schemas & Constants
+├── prisma/               # PostgreSQL Database Schema & Versioned Migrations
+└── tests/                # Automated Regression & Forensic Test Suites
 ```
 
-## Optional Dispatch-Owned ChatGPT Sign-In
+1. **Public Web Portal (`/app`, `/frontend`)**:
+   - Next.js 16 with Turbopack, responsive multi-page layout, product catalog, interactive BOQ quotation desk, and showcase gallery.
+2. **Admin Control Centre (`/admin`)**:
+   - Independent Single-Page Application (SPA) powered by React & Vite.
+   - Comprehensive dashboard for managing products, gallery media, incoming quotation leads, website SEO metadata, and Brevo SMTP settings.
+3. **Backend API Server (`/backend`)**:
+   - Standalone Express.js REST API service with JWT authentication (short-lived access tokens + rotating HTTP-only refresh tokens), strict origin validation, rate limiting, and PostgreSQL persistence via Prisma ORM.
+4. **Email Notification Engine (`Brevo + Nodemailer`)**:
+   - Automatic transactional email dispatches for new quotation requests with HTML sanitization, recipient configuration, and live connection diagnostics.
 
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs optional or required ChatGPT sign-in:
+---
 
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send anonymous visitors through Sign in with ChatGPT.
-- In a Server Component, start sign-in with `<a href={chatGPTSignInPath(returnTo)} target="_top">`. The auth helper module is server-only; do not import it into a Client Component.
-- Do not use `fetch`, XHR, a client-side router, or a framework link that can prefetch the sign-in route. SIWC must start as a top-level navigation.
-- Never request the AuthAPI authorization endpoint directly. The dispatch-owned `/signin-with-chatgpt` route must start the SIWC flow.
-- Use `chatGPTSignOutPath(returnTo)` for browser sign-out links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because they depend on per-request identity headers.
+## 🚀 Getting Started
 
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the OAuth cookies, and identity header injection. Do not implement app routes for those reserved paths. Routes that do not import and call the helper remain anonymous-compatible.
+### Prerequisites
+- **Node.js**: `>= 22.13.0`
+- **PostgreSQL**: `>= 14.0` (Running locally or hosted)
 
-SIWC establishes identity only; it does not prove workspace membership. Use the Sites hosting platform's access policy controls for workspace-wide restrictions, or enforce explicit server-side membership or allowlist checks.
+### 1. Installation
+Clone the repository and install dependencies:
+```bash
+npm install
+npm run install:all
+```
 
-Use SIWC for account pages, user-specific dashboards, saved records, and write actions tied to the current ChatGPT user. Leave public content anonymous.
+### 2. Environment Configuration
+Copy `.env.example` to `.env` (and `backend/.env`):
+```bash
+cp .env.example .env
+```
 
-## Diagnostic Commands
+Configure your environment variables:
+```env
+# Database
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/dezoryn_db?schema=public"
 
-- `npm run install:ci`: perform the one bounded lockfile install
-- `npm run dev`: start the Vite/Vinext development server
-- `npm run build`: build the deployable Sites artifact
-- `npm run start`: start the built Vinext application
-- `npm test`: build and verify the rendered development-preview metadata
-- `npm run db:generate`: generate Drizzle migrations after schema changes
+# Authentication
+JWT_ACCESS_SECRET="your-256-bit-access-secret"
+JWT_REFRESH_SECRET="your-256-bit-refresh-secret"
 
-Use build commands for targeted diagnosis after a remote failure, not as part of the normal checkpoint path.
+# URLs & CORS
+NEXT_PUBLIC_API_URL="http://localhost:5000"
+ADMIN_BASE_URL="http://localhost:3001"
+CORS_ORIGINS="http://localhost:3000,http://localhost:3001"
+```
 
-The timeout defaults can be overridden for a controlled canary with `SITES_INSTALL_TIMEOUT`, `SITES_INSTALL_KILL_AFTER`, `SITES_BUILD_TIMEOUT`, and `SITES_BUILD_KILL_AFTER`. A timeout fails the command; the helpers never retry an unchanged install or build.
+### 3. Database Migration & Seeding
+Apply version-controlled Prisma migrations and seed default administrative credentials:
+```bash
+npm run db:deploy
+npm run db:seed
+```
 
-## Learn More
+### 4. Running the Development Environment
+Launch all 3 services concurrently with a single command:
+```bash
+npm run dev
+```
+- **Public Portal**: `http://localhost:3000`
+- **Admin Control Centre**: `http://localhost:3001`
+- **Backend REST API**: `http://localhost:5000`
 
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+---
+
+## 🧪 Testing & Verification
+
+Run the full automated test suite (43 test cases across Auth, Data Persistence, Email, Gallery, and Products):
+```bash
+npm test
+```
+
+Build all production workspaces:
+```bash
+npm run build
+```
+
+---
+
+## 🔒 Security Posture
+
+- **Zero Secret Exposure**: Database credentials, SMTP secrets, and JWT private keys are strictly masked and never returned to the frontend.
+- **CSRF & Origin Protection**: Strict exact-origin verification and URL hostname checking prevent malicious cross-site origins.
+- **Rate Limiting**: Public quotation forms and authentication endpoints are protected by IP-based rate limiting.
+- **Atomic Operations**: Product sortOrder ordering and media mutations are wrapped in transactional PostgreSQL exclusive locks.
+
+---
+
+## 📄 License
+Private & Confidential — Dezoryn Contractor.

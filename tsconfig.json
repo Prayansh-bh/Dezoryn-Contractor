@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,14 +23,30 @@
       }
     ],
     "paths": {
-      "@frontend/*": ["./frontend/*"],
-      "@admin/*": ["./admin/*"],
-      "@backend/*": ["./backend/src/*"],
-      "@shared/*": ["./shared/*"],
-      "@/components/*": ["./frontend/components/*"],
-      "@/hooks/*": ["./frontend/hooks/*"],
-      "@/lib/*": ["./frontend/lib/*"],
-      "@/*": ["./*"]
+      "@frontend/*": [
+        "./frontend/*"
+      ],
+      "@admin/*": [
+        "./admin/*"
+      ],
+      "@backend/*": [
+        "./backend/src/*"
+      ],
+      "@shared/*": [
+        "./shared/*"
+      ],
+      "@/components/*": [
+        "./frontend/components/*"
+      ],
+      "@/hooks/*": [
+        "./frontend/hooks/*"
+      ],
+      "@/lib/*": [
+        "./frontend/lib/*"
+      ],
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "include": [
@@ -35,15 +55,14 @@
     "app/**/*.tsx",
     "frontend/**/*.ts",
     "frontend/**/*.tsx",
-    "admin/**/*.ts",
-    "admin/**/*.tsx",
-    "backend/**/*.ts",
-    "backend/**/*.tsx",
     "shared/**/*.ts",
     "shared/**/*.tsx",
-    "prisma/**/*.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "backend",
+    "admin"
+  ]
 }

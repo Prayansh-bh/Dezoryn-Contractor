@@ -3,16 +3,27 @@ import Link from "next/link";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import { SiteHeader } from "./site-header";
 import { SiteFooter } from "./site-footer";
+import { getSettings } from "@backend/services/settings.service";
+import type { SiteSettings } from "@shared/types";
 
-export function SiteShell({ children }: { children: ReactNode }) {
+export async function SiteShell({
+  children,
+  settings: propSettings,
+}: {
+  children: ReactNode;
+  settings?: SiteSettings;
+}) {
+  const settings = propSettings || (await getSettings());
+
   return (
     <div className="flex flex-col min-h-screen">
-      <SiteHeader />
+      <SiteHeader settings={settings} />
       <main className="flex-grow">{children}</main>
-      <SiteFooter />
+      <SiteFooter settings={settings} />
     </div>
   );
 }
+
 
 export function PageHero({
   eyebrow,

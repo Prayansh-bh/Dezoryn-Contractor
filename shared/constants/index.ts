@@ -163,7 +163,29 @@ export const DEFAULT_SITE_SETTINGS: Record<string, string> = {
   hero_text: "Premium highway products for infrastructure projects across India.",
   meta_title: "Dezoryn Contractor | Highway Product Manufacturer",
   meta_description: "Manufacturer and bulk supplier of highway safety products across India.",
+  // Email & Brevo SMTP Notification Settings
+  email_notifications_enabled: "false",
+  brevo_smtp_host: "smtp-relay.brevo.com",
+  brevo_smtp_port: "587",
+  brevo_smtp_user: "",
+  brevo_smtp_key: "",
+  email_from_address: "sales@dezoryn.com",
+  email_from_name: "Dezoryn Contractor Commercial Desk",
+  email_admin_recipient: "sales@dezoryn.com",
+  email_customer_autoresponder: "false",
 };
+
+export const PUBLIC_SETTINGS_KEYS: string[] = [
+  "company_name",
+  "email",
+  "phone",
+  "address",
+  "whatsapp",
+  "hero_title",
+  "hero_text",
+  "meta_title",
+  "meta_description",
+];
 
 export const CAPABILITIES: [string, string][] = [
   ["Batch-controlled", "Manufacturing"],

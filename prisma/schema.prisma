@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../backend/src/generated/prisma"
 }
 
 datasource db {
@@ -20,6 +21,8 @@ model Enquiry {
   status    String   @default("new")
   createdAt DateTime @default(now()) @map("created_at")
 
+  @@index([createdAt])
+  @@index([status])
   @@map("enquiries")
 }
 
@@ -29,6 +32,7 @@ model Product {
   name        String
   kicker      String   @default("")
   description String
+  imageUrl    String?  @map("image_url")
   features    Json     @default("[]")
   uses        Json     @default("[]")
   specs       Json     @default("[]")
@@ -37,6 +41,8 @@ model Product {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
+  @@index([sortOrder])
+  @@index([active])
   @@map("products")
 }
 
@@ -53,6 +59,8 @@ model GalleryItem {
   active      Boolean  @default(true)
   createdAt   DateTime @default(now()) @map("created_at")
 
+  @@index([active, featured, createdAt])
+  @@index([createdAt])
   @@map("gallery_items")
 }
 
@@ -65,11 +73,37 @@ model SiteSetting {
 }
 
 model AdminUser {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String   @default("")
-  role      String   @default("admin")
-  createdAt DateTime @default(now()) @map("created_at")
+  id                  Int                 @id @default(autoincrement())
+  email               String              @unique
+  passwordHash        String              @default("") @map("password_hash")
+  name                String              @default("")
+  role                String              @default("admin")
+  tokenVersion        Int                 @default(0) @map("token_version")
+  failedLoginAttempts Int                 @default(0) @map("failed_login_attempts")
+  lockUntil           DateTime?           @map("lock_until")
+  lastLoginAt         DateTime?           @map("last_login_at")
+  createdAt           DateTime            @default(now()) @map("created_at")
+  updatedAt           DateTime            @default(now()) @updatedAt @map("updated_at")
+  refreshTokens       AdminRefreshToken[]
 
   @@map("admin_users")
+}
+
+model AdminRefreshToken {
+  id         Int       @id @default(autoincrement())
+  userId     Int       @map("user_id")
+  user       AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash  String    @unique @map("token_hash")
+  familyId   String    @map("family_id")
+  isRevoked  Boolean   @default(false) @map("is_revoked")
+  expiresAt  DateTime  @map("expires_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  replacedBy String?   @map("replaced_by")
+  userAgent  String?   @map("user_agent")
+  ipAddress  String?   @map("ip_address")
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@index([familyId])
+  @@map("admin_refresh_tokens")
 }

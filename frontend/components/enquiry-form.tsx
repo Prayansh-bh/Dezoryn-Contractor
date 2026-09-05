@@ -2,7 +2,15 @@
 
 import { FormEvent, Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ArrowRight, CheckCircle2, Loader2, PackageCheck, ShieldAlert } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  FileCheck2,
+  Loader2,
+  PackageCheck,
+  ShieldAlert,
+  ShieldCheck,
+} from "lucide-react";
 import { DEFAULT_PRODUCTS } from "@shared/constants";
 
 function EnquiryFormInner() {
@@ -68,18 +76,18 @@ function EnquiryFormInner() {
           </p>
 
           <div className="space-y-4 border-t border-[#e2e8f0] pt-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded bg-[#f8fafc] border border-[#e2e8f0] flex items-center justify-center shrink-0">
-                <PackageCheck size={20} className="text-[#c9a35d]" />
+            <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#f8fafc] transition-colors">
+              <div className="w-10 h-10 rounded bg-[#f8fafc] border border-[#e2e8f0] flex items-center justify-center shrink-0 text-[#c9a35d]">
+                <PackageCheck size={20} />
               </div>
               <div>
                 <strong className="block text-sm text-[#0f172a]">Bulk B2B Supply Model</strong>
                 <span className="text-xs text-[#64748b]">Competitive rate structures for EPCs & infrastructure contractors</span>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded bg-[#f8fafc] border border-[#e2e8f0] flex items-center justify-center shrink-0">
-                <CheckCircle2 size={20} className="text-[#c9a35d]" />
+            <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#f8fafc] transition-colors">
+              <div className="w-10 h-10 rounded bg-[#f8fafc] border border-[#e2e8f0] flex items-center justify-center shrink-0 text-[#c9a35d]">
+                <CheckCircle2 size={20} />
               </div>
               <div>
                 <strong className="block text-sm text-[#0f172a]">MORTH Specification Verification</strong>
@@ -91,15 +99,18 @@ function EnquiryFormInner() {
 
         {/* Right Col: Form Card */}
         <div className="lg:col-span-7">
-          <div className="enquiry-form-card">
+          <div className="enquiry-form-card transition-all duration-500">
             {status === "success" ? (
-              <div className="text-center py-12">
-                <div className="w-16 h-16 bg-[#f8fafc] text-[#c9a35d] border border-[#e2e8f0] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle2 size={36} />
+              <div className="text-center py-12 animate-in fade-in zoom-in-95 duration-500">
+                <div className="relative w-20 h-20 bg-[#f8fafc] text-[#c9a35d] border-2 border-[#c9a35d] rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg">
+                  <FileCheck2 size={40} className="text-[#c9a35d]" />
+                  <span className="absolute -bottom-2 bg-[#0f172a] text-[#f0d796] text-[9px] font-black uppercase px-2 py-0.5 rounded tracking-widest border border-[#c9a35d]">
+                    VERIFIED
+                  </span>
                 </div>
                 <h3 className="text-2xl font-bold text-[#0f172a] mb-2 font-serif">Quotation Request Received</h3>
                 <p className="text-[#475569] max-w-md mx-auto mb-6 text-sm leading-relaxed">
-                  Thank you. Our highway technical desk is reviewing your requirements and will reach out with a detailed BOQ quote shortly.
+                  Thank you. Our highway technical desk is reviewing your requirements and will reach out with a detailed BOQ proposal and MTC compliance documents shortly.
                 </p>
                 <button
                   type="button"
@@ -193,19 +204,26 @@ function EnquiryFormInner() {
                   </div>
                 </div>
 
-                {/* Quick Quantity Chips */}
-                <div className="flex items-center gap-2 mb-4 flex-wrap">
+                {/* Quick Quantity Chips with Spring Physics */}
+                <div className="flex items-center gap-2 mb-5 flex-wrap">
                   <span className="text-xs text-[#64748b] font-semibold uppercase">Quick volume:</span>
-                  {quickQuantities.map((q) => (
-                    <button
-                      key={q}
-                      type="button"
-                      onClick={() => setQuantity(q)}
-                      className="text-xs font-semibold px-2.5 py-1 bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] hover:text-[#b88a3d] rounded border border-[#cbd5e1] transition-colors"
-                    >
-                      {q}
-                    </button>
-                  ))}
+                  {quickQuantities.map((q) => {
+                    const isSelected = quantity === q;
+                    return (
+                      <button
+                        key={q}
+                        type="button"
+                        onClick={() => setQuantity(q)}
+                        className={`text-xs font-semibold px-3 py-1 rounded border transition-all duration-200 active:scale-95 ${
+                          isSelected
+                            ? "bg-[#0f172a] text-[#f0d796] border-[#0f172a] shadow-sm scale-105"
+                            : "bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#0f172a] hover:text-[#b88a3d] border-[#cbd5e1]"
+                        }`}
+                      >
+                        {q}
+                      </button>
+                    );
+                  })}
                 </div>
 
                 <div className="form-group">
@@ -231,7 +249,7 @@ function EnquiryFormInner() {
                 </div>
 
                 {status === "error" && (
-                  <div className="flex items-center gap-2 p-3 bg-red-50 text-red-700 text-sm rounded border border-red-200 mb-4">
+                  <div className="flex items-center gap-2 p-3 bg-red-50 text-red-700 text-sm rounded border border-red-200 mb-4 animate-in fade-in">
                     <ShieldAlert size={18} className="shrink-0" />
                     <span>{errorMessage}</span>
                   </div>
@@ -268,3 +286,4 @@ export function EnquiryForm() {
     </Suspense>
   );
 }
+

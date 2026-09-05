@@ -1,6 +1,6 @@
 # dependencies
-/node_modules
-/.pnp
+node_modules/
+.pnp
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -9,15 +9,21 @@
 !.yarn/versions
 
 # testing
-/coverage
+coverage/
 
-# next.js
-/.next/
-/out/
+# next.js & builds
+.next/
+out/
+dist/
+build/
+backend/src/generated/
+uploads/
+backend/uploads/
 
 # misc
 .DS_Store
 *.pem
+.vscode/
 
 # debug
 npm-debug.log*
@@ -28,15 +34,13 @@ yarn-error.log*
 # env files
 .env
 .env*.local
+backend/.env
 !.env.example
 
-# vercel
+# vercel & runtime
 .vercel
-
-# typescript
 next-env.d.ts
-/dist/
-/.wrangler/
-/.sites-runtime/
-/outputs/
-/work/
+.wrangler/
+.sites-runtime/
+outputs/
+work/

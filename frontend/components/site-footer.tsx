@@ -1,7 +1,15 @@
 import Link from "next/link";
 import { ArrowUpRight, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
+import type { SiteSettings } from "@shared/types";
 
-export function SiteFooter() {
+export function SiteFooter({ settings }: { settings?: SiteSettings }) {
+  const email = settings?.email || "sales@dezoryn.com";
+  const phone = settings?.phone || "+91 98765 43210";
+  const address =
+    settings?.address ||
+    "Highway Industrial Corridor, Pan-India Dispatch Network";
+  const companyName = settings?.company_name || "Dezoryn";
+
   return (
     <footer>
       <div className="container">
@@ -10,10 +18,10 @@ export function SiteFooter() {
           <div className="footer-col">
             <Link href="/" className="brand mb-4 inline-flex">
               <div className="brand-mark">
-                <span className="sr-only">Dezoryn</span>
+                <span className="sr-only">{companyName}</span>
               </div>
               <div className="brand-info">
-                <b>DEZORYN</b>
+                <b>{companyName.toUpperCase()}</b>
                 <small>CONTRACTOR</small>
               </div>
             </Link>
@@ -55,15 +63,15 @@ export function SiteFooter() {
           <div className="footer-col">
             <h4>B2B Project Desk</h4>
             <div className="footer-links">
-              <a href="mailto:sales@dezoryn.com" className="flex items-center gap-2">
-                <Mail size={14} className="text-[#c9a35d]" /> sales@dezoryn.com
+              <a href={`mailto:${email}`} className="flex items-center gap-2">
+                <Mail size={14} className="text-[#c9a35d]" /> {email}
               </a>
-              <a href="tel:+919876543210" className="flex items-center gap-2">
-                <Phone size={14} className="text-[#c9a35d]" /> +91 98765 43210
+              <a href={`tel:${phone.replace(/\s+/g, "")}`} className="flex items-center gap-2">
+                <Phone size={14} className="text-[#c9a35d]" /> {phone}
               </a>
               <div className="flex items-start gap-2 text-sm text-[#64748b]">
                 <MapPin size={16} className="text-[#c9a35d] shrink-0 mt-0.5" />
-                <span>Highway Industrial Corridor, Pan-India Dispatch Network</span>
+                <span>{address}</span>
               </div>
               <Link href="/contact" className="mt-2 inline-flex items-center gap-1.5 text-[#c9a35d] font-bold text-xs uppercase tracking-wider hover:underline">
                 Request Project BOQ Quote <ArrowUpRight size={14} />
@@ -73,7 +81,7 @@ export function SiteFooter() {
         </div>
 
         <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} Dezoryn Contractor. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} {companyName} Contractor. All rights reserved.</span>
           <span className="flex items-center gap-4">
             <span>MORTH & IRC Specification Aligned</span>
             <span>•</span>
@@ -84,3 +92,4 @@ export function SiteFooter() {
     </footer>
   );
 }
+

@@ -1,10 +1,17 @@
-import { Mail, MapPin, PackageCheck, Phone, ShieldCheck } from "lucide-react";
+import { Mail, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
 import { SiteShell, PageHero } from "@frontend/components/site-shell";
 import { EnquiryForm } from "@frontend/components/enquiry-form";
+import { getSettings } from "@backend/services/settings.service";
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const settings = await getSettings();
+  const email = settings.email || "sales@dezoryn.com";
+  const phone = settings.phone || "+91 98765 43210";
+  const whatsapp = settings.whatsapp || phone;
+  const address = settings.address || "Highway Industrial Corridor, Pan-India Dispatch Network";
+
   return (
-    <SiteShell>
+    <SiteShell settings={settings}>
       <PageHero
         eyebrow="COMMERCIAL DESK & QUOTATIONS"
         breadcrumbCurrent="Contact Us"
@@ -20,7 +27,7 @@ export default function ContactPage() {
       {/* Contact Details & Logistics Strip */}
       <section className="py-16 bg-[#f8fafc] border-t border-[#e2e8f0] text-[#0f172a]">
         <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="p-6 rounded-lg bg-white border border-[#e2e8f0] flex items-start gap-4 shadow-sm">
               <div className="w-12 h-12 rounded bg-[#f8fafc] border border-[#e2e8f0] flex items-center justify-center text-[#c9a35d] shrink-0">
                 <Mail size={22} />
@@ -30,10 +37,10 @@ export default function ContactPage() {
                   Email Enquiries
                 </span>
                 <a
-                  href="mailto:sales@dezoryn.com"
-                  className="text-base font-bold text-[#0f172a] hover:text-[#c9a35d] transition-colors"
+                  href={`mailto:${email}`}
+                  className="text-base font-bold text-[#0f172a] hover:text-[#c9a35d] transition-colors break-all"
                 >
-                  sales@dezoryn.com
+                  {email}
                 </a>
                 <span className="text-xs text-[#64748b] block mt-1">
                   Direct response within 4 working hours
@@ -50,13 +57,35 @@ export default function ContactPage() {
                   Direct B2B Hotline
                 </span>
                 <a
-                  href="tel:+919876543210"
+                  href={`tel:${phone.replace(/\s+/g, "")}`}
                   className="text-base font-bold text-[#0f172a] hover:text-[#c9a35d] transition-colors"
                 >
-                  +91 98765 43210
+                  {phone}
                 </a>
                 <span className="text-xs text-[#64748b] block mt-1">
                   Mon – Sat, 9:00 AM – 7:00 PM IST
+                </span>
+              </div>
+            </div>
+
+            <div className="p-6 rounded-lg bg-white border border-[#e2e8f0] flex items-start gap-4 shadow-sm">
+              <div className="w-12 h-12 rounded bg-[#f8fafc] border border-[#e2e8f0] flex items-center justify-center text-[#c9a35d] shrink-0">
+                <MessageCircle size={22} />
+              </div>
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#64748b] block mb-1">
+                  WhatsApp Support
+                </span>
+                <a
+                  href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-base font-bold text-[#0f172a] hover:text-[#c9a35d] transition-colors"
+                >
+                  {whatsapp}
+                </a>
+                <span className="text-xs text-[#64748b] block mt-1">
+                  Instant message dispatch
                 </span>
               </div>
             </div>
@@ -67,13 +96,13 @@ export default function ContactPage() {
               </div>
               <div>
                 <span className="text-xs font-bold uppercase tracking-wider text-[#64748b] block mb-1">
-                  Supply Coverage
+                  Office / Factory Address
                 </span>
-                <strong className="text-base font-bold text-[#0f172a] block">
-                  Pan-India Freight Logistics
+                <strong className="text-sm font-bold text-[#0f172a] block leading-snug">
+                  {address}
                 </strong>
                 <span className="text-xs text-[#64748b] block mt-1">
-                  Scheduled dispatches to all major highway corridors
+                  Pan-India Freight Logistics
                 </span>
               </div>
             </div>
@@ -83,3 +112,4 @@ export default function ContactPage() {
     </SiteShell>
   );
 }
+

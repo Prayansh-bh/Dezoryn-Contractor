@@ -1,13 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRight, Mail, Menu, Phone, ShieldCheck, X } from "lucide-react";
+import type { SiteSettings } from "@shared/types";
 
-export function SiteHeader() {
+export function SiteHeader({ settings }: { settings?: SiteSettings }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const pathname = usePathname();
+
+  const email = settings?.email || "sales@dezoryn.com";
+  const phone = settings?.phone || "+91 98765 43210";
+  const companyName = settings?.company_name || "DEZORYN";
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalScroll > 0) {
+        setScrollProgress((window.scrollY / totalScroll) * 100);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navLinks = [
     { label: "Home", href: "/" },
@@ -28,25 +46,25 @@ export function SiteHeader() {
             <span>ISO COMPLIANT • PAN-INDIA PROJECT DISPATCH • EPC BULK SUPPLY</span>
           </div>
           <div className="topbar-links">
-            <a href="mailto:sales@dezoryn.com">
-              <Mail size={13} className="text-amber-500" /> sales@dezoryn.com
+            <a href={`mailto:${email}`}>
+              <Mail size={13} className="text-amber-500" /> {email}
             </a>
             <span className="opacity-30">|</span>
-            <a href="tel:+919876543210">
-              <Phone size={13} className="text-amber-500" /> +91 98765 43210
+            <a href={`tel:${phone.replace(/\s+/g, "")}`}>
+              <Phone size={13} className="text-amber-500" /> {phone}
             </a>
           </div>
         </div>
       </header>
 
-      <nav className="nav">
+      <nav className="nav relative">
         <div className="container nav-inner">
-          <Link href="/" className="brand" aria-label="Dezoryn Contractor Home">
+          <Link href="/" className="brand" aria-label={`${companyName} Contractor Home`}>
             <div className="brand-mark">
-              <span className="sr-only">Dezoryn</span>
+              <span className="sr-only">{companyName}</span>
             </div>
             <div className="brand-info">
-              <b>DEZORYN</b>
+              <b>{companyName.toUpperCase()}</b>
               <small>CONTRACTOR</small>
             </div>
           </Link>
@@ -85,7 +103,15 @@ export function SiteHeader() {
             {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
+
+        {/* 2px Aztec Gold Scroll Progress Hairline */}
+        <div
+          className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-[#c9a35d] to-[#f1d99b] transition-all duration-150 ease-out pointer-events-none"
+          style={{ width: `${scrollProgress}%`, opacity: scrollProgress > 1 ? 1 : 0 }}
+          aria-hidden="true"
+        />
       </nav>
     </>
   );
 }
+

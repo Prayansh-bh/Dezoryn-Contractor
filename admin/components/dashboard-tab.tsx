@@ -3,7 +3,13 @@ import { StatCard } from "./stat-card";
 import { EnquiryTable } from "./enquiry-table";
 import type { AdminDashboardData } from "@shared/types";
 
-export function DashboardTab({ data }: { data: AdminDashboardData }) {
+export function DashboardTab({
+  data,
+  action,
+}: {
+  data: AdminDashboardData;
+  action?: (payload: any) => Promise<boolean>;
+}) {
   const enquiries = data.enquiries || [];
   const pending = enquiries.filter((x) => x.status === "new").length;
   const activeProducts = (data.products || []).filter((x) => x.active).length;
@@ -24,8 +30,9 @@ export function DashboardTab({ data }: { data: AdminDashboardData }) {
             <h2>Recent enquiries</h2>
           </div>
         </div>
-        <EnquiryTable rows={enquiries.slice(0, 6)} />
+        <EnquiryTable rows={enquiries.slice(0, 6)} action={action} />
       </section>
     </>
   );
 }
+

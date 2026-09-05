@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { HeroTelemetryHud } from "./hero-telemetry-hud";
 
 export function HeroVideoHighway() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -21,21 +22,21 @@ export function HeroVideoHighway() {
 
       // Accelerate playback proportionally to scroll speed
       if (delta > 0) {
-        targetPlaybackRate = Math.min(1.0 + delta * 0.04, 3.0);
+        targetPlaybackRate = Math.min(1.0 + delta * 0.035, 2.8);
       } else if (delta < 0) {
-        targetPlaybackRate = Math.max(0.4, 1.0 + delta * 0.03);
+        targetPlaybackRate = Math.max(0.5, 1.0 + delta * 0.025);
       }
     }
 
     function update() {
       if (video) {
         // Smoothly ease playback rate back towards normal 1.0x cruise speed
-        currentPlaybackRate += (targetPlaybackRate - currentPlaybackRate) * 0.1;
-        targetPlaybackRate += (1.0 - targetPlaybackRate) * 0.05;
+        currentPlaybackRate += (targetPlaybackRate - currentPlaybackRate) * 0.08;
+        targetPlaybackRate += (1.0 - targetPlaybackRate) * 0.04;
 
         // Apply safely to video element
         if (Number.isFinite(currentPlaybackRate) && currentPlaybackRate > 0.1) {
-          video.playbackRate = Math.max(0.2, Math.min(currentPlaybackRate, 4.0));
+          video.playbackRate = Math.max(0.3, Math.min(currentPlaybackRate, 3.5));
         }
       }
       animationFrameId = requestAnimationFrame(update);
@@ -65,11 +66,13 @@ export function HeroVideoHighway() {
         muted
         playsInline
         preload="auto"
-        className="w-full h-full object-cover object-center"
+        className="w-full h-full object-cover object-center transition-transform duration-700 ease-out"
         style={{
-          filter: "contrast(1.05) brightness(1.02)",
+          filter: "contrast(1.06) brightness(1.02)",
         }}
       />
+      <HeroTelemetryHud />
     </div>
   );
 }
+

@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import {
   Box,
@@ -21,14 +19,18 @@ import { SettingsTab } from "./settings-tab";
 import { ProductEditorModal } from "./product-editor-modal";
 import type { AdminDashboardData, Product } from "@shared/types";
 
+import { fetchAdminData, postAdminAction } from "../src/api";
+
 type Tab = "dashboard" | "products" | "gallery" | "enquiries" | "settings";
 
 export function AdminPanel({
-  user,
-  signOut,
+  user = "Dezoryn Administrator",
+  signOut = "http://localhost:3000",
+  onSignOut,
 }: {
-  user: string;
-  signOut: string;
+  user?: string;
+  signOut?: string;
+  onSignOut?: () => void;
 }) {
   const [tab, setTab] = useState<Tab>("dashboard");
   const [data, setData] = useState<AdminDashboardData | null>(null);
@@ -39,13 +41,10 @@ export function AdminPanel({
   async function load() {
     setLoading(true);
     try {
-      const r = await fetch("/api/admin");
-      if (r.ok) {
-        const json = await r.json();
-        setData(json);
-      }
-    } catch {
-      setNotice("Failed to load admin data");
+      const json = await fetchAdminData();
+      setData(json);
+    } catch (err: any) {
+      setNotice(err.message || "Failed to load admin data. Is backend server running on port 5000?");
     } finally {
       setLoading(false);
     }
@@ -55,28 +54,35 @@ export function AdminPanel({
     load();
   }, []);
 
+  // Auto-dismiss notice banner after 4 seconds
+  useEffect(() => {
+    if (!notice) return;
+    const timer = setTimeout(() => {
+      setNotice("");
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, [notice]);
+
   async function action(payload: any): Promise<boolean> {
     setNotice("");
     try {
-      const r = await fetch("/api/admin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!r.ok) {
-        setNotice("Action failed");
-        return false;
-      }
-
+      await postAdminAction(payload);
       setNotice("Saved successfully");
       await load();
       return true;
-    } catch {
-      setNotice("Action failed. Check network connection.");
+    } catch (err: any) {
+      setNotice(err.message || "Action failed. Check backend connection.");
       return false;
     }
   }
+
+  const companyName = data?.settings?.company_name || "Dezoryn";
+
+  useEffect(() => {
+    if (companyName) {
+      document.title = `${companyName} | Control Centre`;
+    }
+  }, [companyName]);
 
   const nav = [
     ["dashboard", LayoutDashboard, "Dashboard"],
@@ -89,7 +95,7 @@ export function AdminPanel({
   if (loading && !data) {
     return (
       <div className="admin-loading">
-        <RefreshCw className="spin" /> Loading admin panel…
+        <RefreshCw className="spin text-[#c9a35d]" /> Loading Control Centre…
       </div>
     );
   }
@@ -97,11 +103,13 @@ export function AdminPanel({
   return (
     <div className="admin-app">
       <aside className="admin-side">
-        <a className="admin-brand" href="/">
-          <span>DC</span>
-          <div>
-            <b>DEZORYN</b>
-            <small>ADMIN CONTROL</small>
+        <a className="admin-brand" href="http://localhost:3000" target="_blank" rel="noreferrer">
+          <div className="admin-brand-mark">
+            <span className="sr-only">{companyName}</span>
+          </div>
+          <div className="admin-brand-info">
+            <b>{companyName.toUpperCase()}</b>
+            <small>CONTROL CENTRE</small>
           </div>
         </a>
         <nav>
@@ -116,40 +124,63 @@ export function AdminPanel({
           ))}
         </nav>
         <div className="admin-user">
-          <span>{user}</span>
-          <a href={signOut}>
-            <LogOut /> Sign out
-          </a>
+          <span>{user === "Dezoryn Administrator" ? `${companyName} Administrator` : user}</span>
+          {onSignOut ? (
+            <button
+              type="button"
+              onClick={onSignOut}
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "inherit",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "4px",
+                fontSize: "inherit",
+              }}
+            >
+              <LogOut size={14} /> Sign out
+            </button>
+          ) : (
+            <a href={signOut}>
+              <LogOut size={14} /> Exit
+            </a>
+          )}
         </div>
       </aside>
 
       <main className="admin-main">
         <header>
           <div>
-            <span>DEZORYN CONTROL CENTRE</span>
+            <div className="section-label">
+              <span /> {companyName.toUpperCase()} CONTROL PORTAL
+            </div>
             <h1>{nav.find((n) => n[0] === tab)?.[2]}</h1>
           </div>
           <div>
-            <a className="admin-view" href="/" target="_blank">
-              <Eye /> View website
+            <a className="admin-view" href="http://localhost:3000" target="_blank" rel="noreferrer">
+              <Eye size={15} className="text-[#c9a35d]" /> View Website
             </a>
-            <button className="admin-refresh" onClick={load}>
-              <RefreshCw className={loading ? "spin" : ""} />
+            <button className="admin-refresh" onClick={load} title="Refresh data">
+              <RefreshCw size={16} className={loading ? "spin" : ""} />
             </button>
           </div>
         </header>
 
         {notice && (
           <div className="admin-notice">
-            <CheckCircle2 />
-            {notice}
+            <CheckCircle2 size={18} className="text-[#c9a35d] shrink-0" />
+            <span>{notice}</span>
             <button onClick={() => setNotice("")}>
-              <X />
+              <X size={16} />
             </button>
           </div>
         )}
 
-        {data && tab === "dashboard" && <DashboardTab data={data} />}
+        {data && tab === "dashboard" && (
+          <DashboardTab data={data} action={action} />
+        )}
         {data && tab === "products" && (
           <ProductsTab data={data} edit={setProduct} action={action} />
         )}
@@ -182,3 +213,4 @@ export function AdminPanel({
     </div>
   );
 }
+

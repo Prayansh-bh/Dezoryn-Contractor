@@ -370,6 +370,140 @@
   transition: transform 0.4s ease;
 }
 
+.qc-stage {
+  width: 290px;
+  height: 290px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hover Highlight on Entire Visual & Stage */
+.qc-stage:hover,
+.quality-visual:hover .qc-stage {
+  transform: scale(1.025);
+}
+
+.qc-unified-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform, opacity;
+  border: 1px solid rgba(201, 163, 93, 0.7);
+  box-shadow: 0 0 15px rgba(201, 163, 93, 0.15);
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.qc-unified-ring.ring-2 {
+  border-color: rgba(220, 200, 160, 0.75);
+}
+
+.qc-unified-ring.ring-3 {
+  border-color: rgba(203, 213, 225, 0.8);
+}
+
+/* Interactive Hover Glow on Rings */
+.quality-visual:hover .qc-unified-ring,
+.qc-stage:hover .qc-unified-ring {
+  border-color: rgba(201, 163, 93, 0.95);
+  box-shadow: 0 0 28px rgba(201, 163, 93, 0.35), inset 0 0 10px rgba(201, 163, 93, 0.15);
+}
+
+/* 360° Rotating Phosphor Beam Ray */
+.qc-radar-beam {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  background: conic-gradient(
+    from 0deg,
+    rgba(201, 163, 93, 0) 0deg,
+    rgba(201, 163, 93, 0) 290deg,
+    rgba(201, 163, 93, 0.08) 325deg,
+    rgba(201, 163, 93, 0.28) 355deg,
+    rgba(241, 217, 155, 0.65) 360deg
+  );
+  will-change: transform;
+}
+
+/* SVG Laser Connector Lines to Callout Tags */
+.qc-laser-line {
+  stroke: rgba(201, 163, 93, 0.45);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 6;
+  animation: laser-pulse 2.8s linear infinite;
+}
+
+.qc-laser-line.line-q1 {
+  animation-delay: 0s;
+}
+
+.qc-laser-line.line-q2 {
+  animation-delay: 0.9s;
+}
+
+.qc-laser-line.line-q3 {
+  animation-delay: 1.8s;
+}
+
+@keyframes laser-pulse {
+  0% {
+    stroke-dashoffset: 20;
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.85;
+    stroke: rgba(201, 163, 93, 0.85);
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.3;
+  }
+}
+
+/* Highway Road Marking Flow Dashes */
+.highway-flow-dashes {
+  animation: highway-flow 1.8s linear infinite;
+}
+
+@keyframes highway-flow {
+  0% {
+    stroke-dashoffset: 44;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+
+.qc-ring-core {
+  position: absolute;
+  inset: 68px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 25%, #1e2838, #06090d);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+  z-index: 3;
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+}
+
+.quality-visual:hover .qc-ring-core,
+.qc-stage:hover .qc-ring-core {
+  box-shadow: 0 28px 65px rgba(0, 0, 0, 0.55), 0 0 28px rgba(201, 163, 93, 0.3);
+}
+
+.quality-visual:hover .q-ring-center svg,
+.qc-stage:hover .q-ring-center svg {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
 .q-ring:hover {
   transform: scale(1.02);
 }
@@ -426,6 +560,40 @@
   margin-top: 4px;
 }
 
+/* Professional Levitation Keyframes for Callout Tags */
+@keyframes q-levitate-1 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.07);
+  }
+  50% {
+    transform: translate3d(0, -7px, 0);
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.11), 0 0 15px rgba(201, 163, 93, 0.08);
+  }
+}
+
+@keyframes q-levitate-2 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.07);
+  }
+  50% {
+    transform: translate3d(0, 8px, 0);
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.11), 0 0 15px rgba(201, 163, 93, 0.08);
+  }
+}
+
+@keyframes q-levitate-3 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.07);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0);
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.11), 0 0 15px rgba(201, 163, 93, 0.08);
+  }
+}
+
 .q-tag {
   position: absolute;
   background: #ffffff;
@@ -439,24 +607,29 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
   border: 1px solid #e2e8f0;
   border-left: 3px solid var(--amber-primary);
-  border-radius: 2px;
+  border-radius: 3px;
   z-index: 10;
   white-space: nowrap;
+  will-change: transform, box-shadow;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .q-tag.q1 {
   top: 65px;
   left: 32px;
+  animation: q-levitate-1 5.2s ease-in-out infinite;
 }
 
 .q-tag.q2 {
   right: 28px;
   top: 185px;
+  animation: q-levitate-2 6.0s ease-in-out infinite 1.2s;
 }
 
 .q-tag.q3 {
   bottom: 65px;
   left: 45px;
+  animation: q-levitate-3 5.6s ease-in-out infinite 2.4s;
 }
 
 .quality-list-row {
@@ -714,12 +887,18 @@ footer {
     height: 420px;
   }
 
-  .q-ring {
+  .q-ring,
+  .qc-stage {
     width: 230px;
     height: 230px;
   }
 
-  .q-ring::after {
+  .qc-ring-middle-base {
+    inset: 26px;
+  }
+
+  .q-ring::after,
+  .qc-ring-core {
     inset: 52px;
   }
 

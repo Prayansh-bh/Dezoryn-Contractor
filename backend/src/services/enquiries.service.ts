@@ -32,3 +32,10 @@ export async function updateEnquiryStatus(id: number, status: string): Promise<E
     data: { status },
   });
 }
+
+export async function deleteEnquiry(id: number): Promise<Enquiry> {
+  return prisma.enquiry.delete({
+    where: { id },
+  });
+}
+
