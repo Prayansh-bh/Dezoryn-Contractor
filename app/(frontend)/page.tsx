@@ -334,27 +334,34 @@ export default async function HomePage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredItems.map((m) => (
-                <article
-                  key={m.id}
-                  className="bg-[#0f172a] rounded-lg border border-[rgba(201,163,93,0.3)] overflow-hidden shadow-xl hover:border-[#c9a35d] transition-all hover:-translate-y-1 group"
-                >
-                  <div className="relative h-64 bg-[#06090d]">
-                    {m.mediaType === "video" ? (
-                      <video
-                        src={`/api/media/${m.id}`}
-                        controls
-                        preload="metadata"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <img
-                        src={`/api/media/${m.id}`}
-                        alt={m.title}
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    )}
+              {featuredItems.map((m) => {
+                const backendBase =
+                  process.env.NEXT_PUBLIC_BACKEND_URL ||
+                  (process.env.NODE_ENV === "production"
+                    ? "https://dezoryn-backend.onrender.com"
+                    : "");
+                const mediaUrl = `${backendBase}/api/media/${m.id}`;
+                return (
+                  <article
+                    key={m.id}
+                    className="bg-[#0f172a] rounded-lg border border-[rgba(201,163,93,0.3)] overflow-hidden shadow-xl hover:border-[#c9a35d] transition-all hover:-translate-y-1 group"
+                  >
+                    <div className="relative h-64 bg-[#06090d]">
+                      {m.mediaType === "video" ? (
+                        <video
+                          src={mediaUrl}
+                          controls
+                          preload="metadata"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <img
+                          src={mediaUrl}
+                          alt={m.title}
+                          loading="lazy"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      )}
                     <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
                       <span className="inline-flex items-center gap-1 bg-[#c9a35d] text-[#090d16] px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider shadow-md">
                         ★ FEATURED
@@ -364,18 +371,19 @@ export default async function HomePage() {
                       {m.mediaType}
                     </div>
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-lg font-bold text-white mb-2 font-serif group-hover:text-[#f0d796] transition-colors">
-                      {m.title}
-                    </h3>
-                    {m.caption && (
-                      <p className="text-xs text-[#94a3b8] leading-relaxed line-clamp-2">
-                        {m.caption}
-                      </p>
-                    )}
-                  </div>
-                </article>
-              ))}
+                    <div className="p-6">
+                      <h3 className="text-lg font-bold text-white mb-2 font-serif group-hover:text-[#f0d796] transition-colors">
+                        {m.title}
+                      </h3>
+                      {m.caption && (
+                        <p className="text-xs text-[#94a3b8] leading-relaxed line-clamp-2">
+                          {m.caption}
+                        </p>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
             </div>
 
             <div className="mt-14 text-center">

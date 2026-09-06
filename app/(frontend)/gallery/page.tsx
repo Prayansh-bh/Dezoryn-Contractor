@@ -5,6 +5,11 @@ export const dynamic = "force-dynamic";
 
 export default async function GalleryPage() {
   const items = await getActiveGalleryItems();
+  const backendBase =
+    process.env.NEXT_PUBLIC_BACKEND_URL ||
+    (process.env.NODE_ENV === "production"
+      ? "https://dezoryn-backend.onrender.com"
+      : "");
 
   return (
     <SiteShell>
@@ -31,27 +36,29 @@ export default async function GalleryPage() {
 
           {items.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {items.map((m) => (
-                <article
-                  key={m.id}
-                  className="bg-white rounded-lg border border-[#e2e8f0] overflow-hidden shadow-sm hover:border-[#c9a35d] transition-all hover:-translate-y-1 group"
-                >
-                  <div className="relative h-64 bg-[#06090d]">
-                    {m.mediaType === "video" ? (
-                      <video
-                        src={`/api/media/${m.id}`}
-                        controls
-                        preload="metadata"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <img
-                        src={`/api/media/${m.id}`}
-                        alt={m.title}
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    )}
+              {items.map((m) => {
+                const mediaUrl = `${backendBase}/api/media/${m.id}`;
+                return (
+                  <article
+                    key={m.id}
+                    className="bg-white rounded-lg border border-[#e2e8f0] overflow-hidden shadow-sm hover:border-[#c9a35d] transition-all hover:-translate-y-1 group"
+                  >
+                    <div className="relative h-64 bg-[#06090d]">
+                      {m.mediaType === "video" ? (
+                        <video
+                          src={mediaUrl}
+                          controls
+                          preload="metadata"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <img
+                          src={mediaUrl}
+                          alt={m.title}
+                          loading="lazy"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      )}
                     {m.featured && (
                       <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
                         <span className="inline-flex items-center gap-1 bg-[#fffbeb] text-[#d97706] border border-[#fde68a] px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider shadow-sm">
@@ -63,17 +70,18 @@ export default async function GalleryPage() {
                       {m.mediaType}
                     </div>
                   </div>
-                  <div className="p-6">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#c9a35d] mb-1.5 block">
-                      {m.mediaType === "video" ? "Field Application Video" : "Site Photography"}
-                    </span>
-                    <h3 className="text-base font-bold text-[#0f172a] mb-1.5 font-serif group-hover:text-[#c9a35d] transition-colors">
-                      {m.title}
-                    </h3>
-                    {m.caption && <p className="text-xs text-[#64748b] leading-relaxed line-clamp-2">{m.caption}</p>}
-                  </div>
-                </article>
-              ))}
+                    <div className="p-6">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#c9a35d] mb-1.5 block">
+                        {m.mediaType === "video" ? "Field Application Video" : "Site Photography"}
+                      </span>
+                      <h3 className="text-base font-bold text-[#0f172a] mb-1.5 font-serif group-hover:text-[#c9a35d] transition-colors">
+                        {m.title}
+                      </h3>
+                      {m.caption && <p className="text-xs text-[#64748b] leading-relaxed line-clamp-2">{m.caption}</p>}
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           ) : (
             <div className="bg-white rounded-lg border border-[#e2e8f0] p-12 text-center shadow-sm max-w-2xl mx-auto my-8">
