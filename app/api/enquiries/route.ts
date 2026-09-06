@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createEnquirySchema } from "@shared/schemas";
 import { createEnquiry } from "@backend/services/enquiries.service";
+import { sendEnquiryNotifications } from "@backend/services/email.service";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,12 @@ export async function POST(request: NextRequest) {
     const validatedData = createEnquirySchema.parse(body);
 
     const enquiry = await createEnquiry(validatedData);
+
+    // Asynchronously dispatch email notification (non-blocking)
+    sendEnquiryNotifications(enquiry).catch((err) => {
+      console.warn("⚠️ [EmailService] Asynchronous email dispatch error:", err.message);
+    });
+
     return NextResponse.json(
       { success: true, message: "Enquiry submitted successfully", enquiryId: enquiry.id },
       { status: 201 }
