@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getGalleryItemById } from "@backend/services/gallery.service";
-import { getMediaFile } from "@backend/storage/local-storage.service";
 import fs from "fs/promises";
 import path from "path";
 
@@ -17,23 +16,42 @@ export async function GET(
       return new NextResponse("Invalid ID", { status: 400 });
     }
 
+    // 1. Fetch from live backend API first
+    try {
+      const backendRes = await fetch(
+        `https://dezoryn-backend.onrender.com/api/media/${mediaId}`,
+        { next: { revalidate: 86400 } }
+      );
+      if (backendRes.ok) {
+        const arrayBuffer = await backendRes.arrayBuffer();
+        const contentType = backendRes.headers.get("content-type") || "image/jpeg";
+        return new NextResponse(new Uint8Array(arrayBuffer), {
+          headers: {
+            "Content-Type": contentType,
+            "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",
+          },
+        });
+      }
+    } catch (e) {
+      // Continue to local database/filesystem fallback
+    }
+
+    // 2. Query database item
     const item = await getGalleryItemById(mediaId);
     if (!item || !item.active) {
       return new NextResponse("Not found", { status: 404 });
     }
 
-    let fileBuffer: Buffer | null = null;
-    if (item.objectKey) {
-      try {
-        fileBuffer = await getMediaFile(item.objectKey);
-      } catch {
-        // Continue fallback
-      }
+    if (item.fileData) {
+      return new NextResponse(new Uint8Array(Buffer.from(item.fileData)), {
+        headers: {
+          "Content-Type": item.contentType,
+          "Cache-Control": "public, max-age=86400",
+        },
+      });
     }
-    if (!fileBuffer && item.fileData) {
-      fileBuffer = Buffer.from(item.fileData);
-    }
-    if (!fileBuffer && item.fileName) {
+
+    if (item.fileName) {
       const candidatePaths = [
         path.join(process.cwd(), "public", "images", "products", item.fileName),
         path.join(process.cwd(), "backend", "uploads", "gallery", item.fileName),
@@ -41,40 +59,22 @@ export async function GET(
       ];
       for (const p of candidatePaths) {
         try {
-          fileBuffer = await fs.readFile(p);
-          if (fileBuffer) break;
+          const fileBuffer = await fs.readFile(p);
+          if (fileBuffer) {
+            return new NextResponse(new Uint8Array(fileBuffer), {
+              headers: {
+                "Content-Type": item.contentType,
+                "Cache-Control": "public, max-age=86400",
+              },
+            });
+          }
         } catch {
-          // Continue searching
+          // continue
         }
       }
     }
 
-    // Direct proxy fallback to deployed backend if not found on local disk
-    if (!fileBuffer) {
-      try {
-        const backendRes = await fetch(`https://dezoryn-backend.onrender.com/api/media/${mediaId}`);
-        if (backendRes.ok) {
-          const arrayBuffer = await backendRes.arrayBuffer();
-          return new NextResponse(arrayBuffer, {
-            headers: {
-              "Content-Type": backendRes.headers.get("content-type") || item.contentType,
-              "Cache-Control": "public, max-age=86400",
-            },
-          });
-        }
-      } catch (proxyErr) {
-        console.error("Proxy fetch error:", proxyErr);
-      }
-      return new NextResponse("Media file not found", { status: 404 });
-    }
-
-    return new NextResponse(new Uint8Array(fileBuffer), {
-      headers: {
-        "Content-Type": item.contentType,
-        "Cache-Control": "public, max-age=86400",
-        "Content-Disposition": `inline; filename="${item.fileName.replace(/"/g, "")}"`,
-      },
-    });
+    return new NextResponse("Media not found", { status: 404 });
   } catch (error) {
     console.error("Error serving media route:", error);
     return new NextResponse("Server error", { status: 500 });
