@@ -38,6 +38,128 @@ export function createTransporter(settings: Record<string, string>) {
   });
 }
 
+export interface EmailPayload {
+  from: { name: string; email: string };
+  to: { name?: string; email: string }[];
+  subject: string;
+  html: string;
+  text?: string;
+}
+
+/**
+ * Formats low-level SMTP and API errors into actionable administrator messages
+ */
+export function formatEmailError(err: any): string {
+  const msg = err?.message || String(err);
+  if (
+    err?.code === "EAUTH" ||
+    msg.includes("535") ||
+    msg.includes("Authentication failed") ||
+    msg.includes("Key not found") ||
+    msg.includes("unauthorized")
+  ) {
+    return "Brevo Authentication Failed: Invalid Brevo SMTP User (Login) or API/SMTP Key. In your Brevo dashboard, go to 'SMTP & API' → 'SMTP' tab, copy the exact SMTP Login and generate a new Master SMTP Key (xsmtpsib-...), then save them in settings.";
+  }
+  if (msg.includes("unverified") || msg.includes("sender") || msg.includes("Sender is not allowed")) {
+    return `Brevo Sender Error: ${msg}. Make sure your 'Sender Email Address' is added as a Verified Sender in Brevo (Brevo Dashboard → Senders & IP → Senders).`;
+  }
+  if (err?.code === "ETIMEDOUT" || err?.code === "ECONNREFUSED" || err?.code === "ESOCKET") {
+    return `Brevo Connection Timeout (${err.code}): Unable to connect to Brevo SMTP host over TCP port. Ensure network connectivity or rely on HTTPS API delivery.`;
+  }
+  return msg;
+}
+
+/**
+ * Dispatches transactional email via Brevo REST API (HTTPS port 443)
+ * Essential for cloud hosts (Vercel, Render, AWS Lambda) where SMTP TCP ports 587/465 are firewalled.
+ */
+export async function sendViaBrevoRestApi(
+  apiKey: string,
+  payload: EmailPayload
+): Promise<{ success: boolean; messageId: string }> {
+  const cleanKey = apiKey.trim();
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": cleanKey,
+      "Content-Type": "application/json",
+      accept: "application/json",
+    },
+    body: JSON.stringify({
+      sender: payload.from,
+      to: payload.to,
+      subject: payload.subject,
+      htmlContent: payload.html,
+      textContent: payload.text,
+    }),
+  });
+
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    const errorMsg = data.message || `Brevo REST API error (${res.status})`;
+    throw new Error(formatEmailError(new Error(errorMsg)));
+  }
+
+  return {
+    success: true,
+    messageId: data.messageId || "brevo-rest-api",
+  };
+}
+
+/**
+ * Universal email dispatcher with automatic HTTPS fallback
+ */
+export async function dispatchEmail(
+  settings: Record<string, string>,
+  payload: EmailPayload
+): Promise<{ success: boolean; messageId: string; transport: string }> {
+  const apiKey = (settings.brevo_smtp_key || process.env.BREVO_SMTP_KEY || "").trim();
+  const transporter = createTransporter(settings);
+
+  // If transporter cannot be initialized (e.g. user missing but key present), use REST API directly
+  if (!transporter) {
+    if (apiKey) {
+      const restRes = await sendViaBrevoRestApi(apiKey, payload);
+      return { ...restRes, transport: "Brevo REST API (HTTPS)" };
+    }
+    throw new Error("Brevo SMTP credentials not configured. Please enter your Brevo Key in settings.");
+  }
+
+  // Attempt SMTP first; if cloud host blocks TCP port 587/465 (ETIMEDOUT / ECONNREFUSED), seamlessly fallback to HTTPS
+  try {
+    const info = await transporter.sendMail({
+      from: `"${payload.from.name}" <${payload.from.email}>`,
+      to: payload.to.map((t) => (t.name ? `"${t.name}" <${t.email}>` : t.email)).join(", "),
+      subject: payload.subject,
+      html: payload.html,
+      text: payload.text,
+    });
+    return {
+      success: true,
+      messageId: info.messageId,
+      transport: `SMTP Relay (${settings.brevo_smtp_host || "smtp-relay.brevo.com"}:${settings.brevo_smtp_port || 587})`,
+    };
+  } catch (smtpErr: any) {
+    const isNetworkError =
+      smtpErr?.code === "ETIMEDOUT" ||
+      smtpErr?.code === "ECONNREFUSED" ||
+      smtpErr?.code === "ESOCKET" ||
+      smtpErr?.code === "EHOSTUNREACH" ||
+      smtpErr?.code === "ENETUNREACH" ||
+      String(smtpErr?.message).includes("Timeout") ||
+      String(smtpErr?.message).includes("Greeting never received");
+
+    if (isNetworkError && apiKey) {
+      console.warn("⚠️ [EmailService] Cloud host blocked SMTP port (ETIMEDOUT). Seamlessly dispatching via Brevo HTTPS REST API...");
+      const restRes = await sendViaBrevoRestApi(apiKey, payload);
+      return { ...restRes, transport: "Brevo REST API (HTTPS Fallback)" };
+    }
+
+    throw new Error(formatEmailError(smtpErr));
+  }
+}
+
 /**
  * Dispatches transactional email notifications when a new quote request is submitted
  */
@@ -57,9 +179,9 @@ export async function sendEnquiryNotifications(enquiry: Enquiry): Promise<{
       return { success: true, skipped: true, reason: "notifications_disabled" };
     }
 
-    const transporter = createTransporter(settings);
-    if (!transporter) {
-      console.warn("⚠️ [EmailService] Brevo SMTP credentials not configured in settings. Skipping email dispatch.");
+    const apiKey = (settings.brevo_smtp_key || process.env.BREVO_SMTP_KEY || "").trim();
+    if (!apiKey) {
+      console.warn("⚠️ [EmailService] Brevo key not configured in settings. Skipping email dispatch.");
       return { success: true, skipped: true, reason: "smtp_not_configured" };
     }
 
@@ -169,9 +291,9 @@ export async function sendEnquiryNotifications(enquiry: Enquiry): Promise<{
     `;
 
     // Send admin lead email
-    await transporter.sendMail({
-      from: `"${fromName}" <${fromAddress}>`,
-      to: toAddress,
+    await dispatchEmail(settings, {
+      from: { name: fromName, email: fromAddress },
+      to: [{ email: toAddress }],
       subject: `[New Lead #ENQ-${enquiry.id}] BOQ Quote Request - ${enquiry.company} (${enquiry.product})`,
       html: adminHtml,
       text: `New BOQ Quotation Request from ${enquiry.name} (${enquiry.company})\nPhone: ${enquiry.phone}\nEmail: ${enquiry.email}\nProduct: ${enquiry.product}\nQuantity: ${enquiry.quantity}\nLocation: ${enquiry.location}\nNotes: ${enquiry.message || "None"}`,
@@ -236,9 +358,9 @@ export async function sendEnquiryNotifications(enquiry: Enquiry): Promise<{
       `;
 
       try {
-        await transporter.sendMail({
-          from: `"${fromName}" <${fromAddress}>`,
-          to: enquiry.email,
+        await dispatchEmail(settings, {
+          from: { name: fromName, email: fromAddress },
+          to: [{ name: enquiry.name, email: enquiry.email }],
           subject: `Quotation Request Received - ${companyName} (Ref #ENQ-${enquiry.id})`,
           html: customerHtml,
           text: `Dear ${enquiry.name},\n\nThank you for reaching out to ${companyName}. We have received your quotation request for ${enquiry.product} (${enquiry.quantity}). Our sales team will get back to you shortly.`,
@@ -258,29 +380,6 @@ export async function sendEnquiryNotifications(enquiry: Enquiry): Promise<{
 }
 
 /**
- * Formats low-level SMTP and API errors into actionable administrator messages
- */
-export function formatEmailError(err: any): string {
-  const msg = err?.message || String(err);
-  if (
-    err?.code === "EAUTH" ||
-    msg.includes("535") ||
-    msg.includes("Authentication failed") ||
-    msg.includes("Key not found") ||
-    msg.includes("unauthorized")
-  ) {
-    return "Brevo Authentication Failed (535): Invalid Brevo SMTP User (Login) or SMTP Key. In your Brevo dashboard, go to 'SMTP & API' → 'SMTP' tab, copy the exact SMTP Login and generate a new Master SMTP Key (xsmtpsib-...), then save them in settings.";
-  }
-  if (msg.includes("unverified") || msg.includes("sender")) {
-    return `Brevo Sender Error: ${msg}. Make sure your 'Sender Email Address' is added as a Verified Sender in Brevo (Brevo Dashboard → Senders & IP → Senders).`;
-  }
-  if (err?.code === "ETIMEDOUT" || err?.code === "ECONNREFUSED" || err?.code === "ESOCKET") {
-    return `Brevo Connection Timeout (${err.code}): Unable to connect to Brevo SMTP host. Verify host/port settings or check network connectivity.`;
-  }
-  return msg;
-}
-
-/**
  * Diagnostic test email function for Admin Portal verification
  */
 export async function sendTestEmail(targetEmail: string): Promise<{
@@ -288,6 +387,7 @@ export async function sendTestEmail(targetEmail: string): Promise<{
   messageId?: string;
   host?: string;
   port?: number;
+  transport?: string;
 }> {
   const cleanEmail = (targetEmail || "").trim();
   if (!cleanEmail || !cleanEmail.includes("@")) {
@@ -295,20 +395,12 @@ export async function sendTestEmail(targetEmail: string): Promise<{
   }
 
   const settings = await getSettings();
-  const transporter = createTransporter(settings);
+  const apiKey = (settings.brevo_smtp_key || process.env.BREVO_SMTP_KEY || "").trim();
 
-  if (!transporter) {
+  if (!apiKey) {
     throw new Error(
-      "Brevo SMTP is not configured. Please enter both Brevo SMTP User (Login) and Brevo SMTP Key in the settings above."
+      "Brevo Master Key is not configured. Please enter your Brevo Key in the settings above."
     );
-  }
-
-  // 1. Verify SMTP handshake
-  try {
-    await transporter.verify();
-  } catch (verifyErr: any) {
-    console.error("❌ [EmailService] SMTP verification failed:", verifyErr);
-    throw new Error(formatEmailError(verifyErr));
   }
 
   const companyName = (settings.company_name || "Dezoryn Contractor").trim();
@@ -322,12 +414,11 @@ export async function sendTestEmail(targetEmail: string): Promise<{
 <html>
 <body style="font-family: sans-serif; padding: 20px; color: #0f172a;">
   <div style="max-width: 500px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; background: #ffffff;">
-    <h2 style="color: #059669; margin-top: 0;">✓ Brevo SMTP Connection Successful</h2>
+    <h2 style="color: #059669; margin-top: 0;">✓ Brevo Connection Successful</h2>
     <p style="font-size: 14px; color: #475569;">
-      This test message confirms that your <strong>Brevo (Sendinblue) SMTP Relay</strong> is properly authenticated and communicating with <strong>${escapeHtml(companyName)}</strong>.
+      This test message confirms that your <strong>Brevo (Sendinblue) Service</strong> is properly authenticated and communicating with <strong>${escapeHtml(companyName)}</strong>.
     </p>
     <div style="background: #f8fafc; border-left: 3px solid #059669; padding: 12px; font-size: 13px; margin: 16px 0;">
-      <div>• <strong>Host:</strong> ${escapeHtml(host)}:${port}</div>
       <div>• <strong>Sender:</strong> ${escapeHtml(fromName)} &lt;${escapeHtml(fromAddress)}&gt;</div>
       <div>• <strong>Timestamp:</strong> ${new Date().toISOString()}</div>
     </div>
@@ -339,24 +430,19 @@ export async function sendTestEmail(targetEmail: string): Promise<{
 </html>
   `;
 
-  // 2. Dispatch verification test email
-  try {
-    const info = await transporter.sendMail({
-      from: `"${fromName}" <${fromAddress}>`,
-      to: cleanEmail,
-      subject: `[Test] Brevo SMTP Verification - ${companyName}`,
-      html: testHtml,
-      text: `Brevo SMTP Connection Verified successfully on ${host}:${port} at ${new Date().toISOString()}`,
-    });
+  const result = await dispatchEmail(settings, {
+    from: { name: fromName, email: fromAddress },
+    to: [{ email: cleanEmail }],
+    subject: `[Test] Brevo Connection Verification - ${companyName}`,
+    html: testHtml,
+    text: `Brevo Connection Verified successfully at ${new Date().toISOString()}`,
+  });
 
-    return {
-      success: true,
-      messageId: info.messageId,
-      host,
-      port,
-    };
-  } catch (sendErr: any) {
-    console.error("❌ [EmailService] Test email send failed:", sendErr);
-    throw new Error(formatEmailError(sendErr));
-  }
+  return {
+    success: true,
+    messageId: result.messageId,
+    host,
+    port,
+    transport: result.transport,
+  };
 }
