@@ -38,7 +38,7 @@ const defaultAllowedOrigins = [
 
 const envAllowedOrigins = (process.env.CORS_ORIGINS || "")
   .split(",")
-  .map((o) => o.trim())
+  .map((o) => o.trim().replace(/\/$/, ""))
   .filter(Boolean);
 
 const allowedOrigins = Array.from(new Set([...defaultAllowedOrigins, ...envAllowedOrigins]));
@@ -46,23 +46,33 @@ const allowedOrigins = Array.from(new Set([...defaultAllowedOrigins, ...envAllow
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow non-browser requests without origin (e.g. curl, test suites)
+      // Allow non-browser requests without origin (e.g. curl, server-to-server, health checks)
       if (!origin) {
         return callback(null, true);
       }
-      if (allowedOrigins.includes(origin)) {
+
+      const normalizedOrigin = origin.replace(/\/$/, "");
+
+      // Check exact match in configured allowed origins
+      if (allowedOrigins.some((o) => o.toLowerCase() === normalizedOrigin.toLowerCase())) {
         return callback(null, true);
       }
-      if (process.env.NODE_ENV !== "production") {
-        try {
-          const { hostname } = new URL(origin);
-          if (hostname === "localhost" || hostname === "127.0.0.1") {
-            return callback(null, true);
-          }
-        } catch {
-          // invalid url
+
+      // Automatically allow all Vercel deployments, Render services, and local development
+      try {
+        const { hostname } = new URL(origin);
+        if (
+          hostname === "localhost" ||
+          hostname === "127.0.0.1" ||
+          hostname.endsWith(".vercel.app") ||
+          hostname.endsWith(".onrender.com")
+        ) {
+          return callback(null, true);
         }
+      } catch {
+        // invalid url
       }
+
       return callback(new Error("CORS origin denied by security policy"), false);
     },
     credentials: true,
