@@ -258,6 +258,29 @@ export async function sendEnquiryNotifications(enquiry: Enquiry): Promise<{
 }
 
 /**
+ * Formats low-level SMTP and API errors into actionable administrator messages
+ */
+export function formatEmailError(err: any): string {
+  const msg = err?.message || String(err);
+  if (
+    err?.code === "EAUTH" ||
+    msg.includes("535") ||
+    msg.includes("Authentication failed") ||
+    msg.includes("Key not found") ||
+    msg.includes("unauthorized")
+  ) {
+    return "Brevo Authentication Failed (535): Invalid Brevo SMTP User (Login) or SMTP Key. In your Brevo dashboard, go to 'SMTP & API' → 'SMTP' tab, copy the exact SMTP Login and generate a new Master SMTP Key (xsmtpsib-...), then save them in settings.";
+  }
+  if (msg.includes("unverified") || msg.includes("sender")) {
+    return `Brevo Sender Error: ${msg}. Make sure your 'Sender Email Address' is added as a Verified Sender in Brevo (Brevo Dashboard → Senders & IP → Senders).`;
+  }
+  if (err?.code === "ETIMEDOUT" || err?.code === "ECONNREFUSED" || err?.code === "ESOCKET") {
+    return `Brevo Connection Timeout (${err.code}): Unable to connect to Brevo SMTP host. Verify host/port settings or check network connectivity.`;
+  }
+  return msg;
+}
+
+/**
  * Diagnostic test email function for Admin Portal verification
  */
 export async function sendTestEmail(targetEmail: string): Promise<{
@@ -276,12 +299,17 @@ export async function sendTestEmail(targetEmail: string): Promise<{
 
   if (!transporter) {
     throw new Error(
-      "Brevo SMTP is not configured. Please enter both Brevo SMTP User (Login) and Brevo SMTP Key."
+      "Brevo SMTP is not configured. Please enter both Brevo SMTP User (Login) and Brevo SMTP Key in the settings above."
     );
   }
 
-  // Verify SMTP handshake
-  await transporter.verify();
+  // 1. Verify SMTP handshake
+  try {
+    await transporter.verify();
+  } catch (verifyErr: any) {
+    console.error("❌ [EmailService] SMTP verification failed:", verifyErr);
+    throw new Error(formatEmailError(verifyErr));
+  }
 
   const companyName = (settings.company_name || "Dezoryn Contractor").trim();
   const fromAddress = (settings.email_from_address || "sales@dezoryn.com").trim();
@@ -311,18 +339,24 @@ export async function sendTestEmail(targetEmail: string): Promise<{
 </html>
   `;
 
-  const info = await transporter.sendMail({
-    from: `"${fromName}" <${fromAddress}>`,
-    to: cleanEmail,
-    subject: `[Test] Brevo SMTP Verification - ${companyName}`,
-    html: testHtml,
-    text: `Brevo SMTP Connection Verified successfully on ${host}:${port} at ${new Date().toISOString()}`,
-  });
+  // 2. Dispatch verification test email
+  try {
+    const info = await transporter.sendMail({
+      from: `"${fromName}" <${fromAddress}>`,
+      to: cleanEmail,
+      subject: `[Test] Brevo SMTP Verification - ${companyName}`,
+      html: testHtml,
+      text: `Brevo SMTP Connection Verified successfully on ${host}:${port} at ${new Date().toISOString()}`,
+    });
 
-  return {
-    success: true,
-    messageId: info.messageId,
-    host,
-    port,
-  };
+    return {
+      success: true,
+      messageId: info.messageId,
+      host,
+      port,
+    };
+  } catch (sendErr: any) {
+    console.error("❌ [EmailService] Test email send failed:", sendErr);
+    throw new Error(formatEmailError(sendErr));
+  }
 }
