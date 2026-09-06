@@ -108,13 +108,20 @@ export async function sendViaBrevoRestApi(
 }
 
 /**
- * Universal email dispatcher with automatic HTTPS fallback
+ * Universal email dispatcher with automatic HTTPS and multi-port fallback
  */
 export async function dispatchEmail(
   settings: Record<string, string>,
   payload: EmailPayload
 ): Promise<{ success: boolean; messageId: string; transport: string }> {
   const apiKey = (settings.brevo_smtp_key || process.env.BREVO_SMTP_KEY || "").trim();
+
+  // 1. If an API Key (xkeysib-...) is provided, use HTTPS REST API directly (fastest, unblockable across all cloud hosts)
+  if (apiKey.startsWith("xkeysib-")) {
+    const restRes = await sendViaBrevoRestApi(apiKey, payload);
+    return { ...restRes, transport: "Brevo REST API (HTTPS Port 443)" };
+  }
+
   const transporter = createTransporter(settings);
 
   // If transporter cannot be initialized (e.g. user missing but key present), use REST API directly
@@ -123,10 +130,10 @@ export async function dispatchEmail(
       const restRes = await sendViaBrevoRestApi(apiKey, payload);
       return { ...restRes, transport: "Brevo REST API (HTTPS)" };
     }
-    throw new Error("Brevo SMTP credentials not configured. Please enter your Brevo Key in settings.");
+    throw new Error("Brevo credentials not configured. Please enter your Brevo Key in settings.");
   }
 
-  // Attempt SMTP first; if cloud host blocks TCP port 587/465 (ETIMEDOUT / ECONNREFUSED), seamlessly fallback to HTTPS
+  // 2. Attempt primary SMTP Relay
   try {
     const info = await transporter.sendMail({
       from: `"${payload.from.name}" <${payload.from.email}>`,
@@ -150,10 +157,48 @@ export async function dispatchEmail(
       String(smtpErr?.message).includes("Timeout") ||
       String(smtpErr?.message).includes("Greeting never received");
 
-    if (isNetworkError && apiKey) {
-      console.warn("⚠️ [EmailService] Cloud host blocked SMTP port (ETIMEDOUT). Seamlessly dispatching via Brevo HTTPS REST API...");
-      const restRes = await sendViaBrevoRestApi(apiKey, payload);
-      return { ...restRes, transport: "Brevo REST API (HTTPS Fallback)" };
+    if (isNetworkError) {
+      // Try fallback port 465 direct SSL if primary was 587
+      const primaryPort = Number(settings.brevo_smtp_port || 587);
+      if (primaryPort !== 465 && settings.brevo_smtp_user && apiKey) {
+        try {
+          console.warn("⚠️ [EmailService] SMTP port 587 timed out. Retrying over SMTPS direct SSL port 465...");
+          const sslTransporter = nodemailer.createTransport({
+            host: settings.brevo_smtp_host || "smtp-relay.brevo.com",
+            port: 465,
+            secure: true,
+            auth: { user: settings.brevo_smtp_user.trim(), pass: apiKey },
+            connectionTimeout: 8000,
+            greetingTimeout: 8000,
+          });
+          const info = await sslTransporter.sendMail({
+            from: `"${payload.from.name}" <${payload.from.email}>`,
+            to: payload.to.map((t) => (t.name ? `"${t.name}" <${t.email}>` : t.email)).join(", "),
+            subject: payload.subject,
+            html: payload.html,
+            text: payload.text,
+          });
+          return {
+            success: true,
+            messageId: info.messageId,
+            transport: "SMTP Relay SSL (smtp-relay.brevo.com:465)",
+          };
+        } catch (sslErr: any) {
+          console.warn("⚠️ [EmailService] Port 465 also blocked. Attempting HTTPS REST API fallback...");
+        }
+      }
+
+      // Try REST API fallback
+      if (apiKey) {
+        try {
+          const restRes = await sendViaBrevoRestApi(apiKey, payload);
+          return { ...restRes, transport: "Brevo REST API (HTTPS Fallback)" };
+        } catch (restErr: any) {
+          throw new Error(
+            "Brevo Cloud Firewall Warning: Outbound SMTP ports (587/465) are blocked by the cloud hosting firewall. To enable unblockable HTTPS email delivery, please create an API Key (xkeysib-...) from Brevo Dashboard → 'SMTP & API' → 'API Keys' tab and enter it as your Brevo Master Key."
+          );
+        }
+      }
     }
 
     throw new Error(formatEmailError(smtpErr));

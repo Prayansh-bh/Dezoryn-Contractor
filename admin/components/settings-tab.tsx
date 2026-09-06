@@ -351,13 +351,13 @@ export function SettingsTab({
               />
             </label>
             <label>
-              Brevo Master SMTP Key <small>(API / SMTP Key from Brevo Dashboard)</small>
+              Brevo Master Key <small>(API Key <code>xkeysib-...</code> for HTTPS or SMTP Key <code>xsmtpsib-...</code>)</small>
               <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
                 <input
                   type={showKey ? "text" : "password"}
                   value={s.brevo_smtp_key || ""}
                   onChange={(e) => setS({ ...s, brevo_smtp_key: e.target.value })}
-                  placeholder={(data.settings as any)?.has_brevo_smtp_key ? "•••••••••••• (Configured — enter new to replace)" : "Enter Brevo SMTP Key (xsmtpsib-...)"}
+                  placeholder={(data.settings as any)?.has_brevo_smtp_key ? "•••••••••••• (Configured — enter new to replace)" : "Enter API Key (xkeysib-...) or SMTP Key (xsmtpsib-...)"}
                   style={{ paddingRight: "40px" }}
                 />
                 <button
