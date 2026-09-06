@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
-const BACKEND_URL = process.env.BACKEND_INTERNAL_URL || "http://localhost:5000";
+const BACKEND_URL =
+  process.env.BACKEND_INTERNAL_URL ||
+  process.env.BACKEND_URL ||
+  process.env.NEXT_PUBLIC_BACKEND_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://dezoryn-backend.onrender.com"
+    : "http://localhost:5000");
 const ADMIN_BASE_URL = process.env.ADMIN_BASE_URL || "http://localhost:3001";
 
 const nextConfig: NextConfig = {
