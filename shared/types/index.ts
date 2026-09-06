@@ -45,7 +45,7 @@ export interface GalleryItem {
   objectKey?: string;
   fileName: string;
   contentType: string;
-  fileData?: Buffer | Uint8Array | null;
+  fileData?: Uint8Array | ArrayBuffer | any;
   featured: boolean;
   active: boolean;
   createdAt: string | Date;

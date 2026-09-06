@@ -23,7 +23,7 @@ export const saveProductSchema = z.object({
     .trim()
     .min(1, "Slug is required")
     .max(200)
-    .transform((val) =>
+    .transform((val: string) =>
       val
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
