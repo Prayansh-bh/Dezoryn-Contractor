@@ -335,10 +335,20 @@ export async function sendEnquiryNotifications(enquiry: Enquiry): Promise<{
 </html>
     `;
 
+    const recipientList = toAddress
+      .split(",")
+      .map((e) => e.trim())
+      .filter((e) => e.includes("@"))
+      .map((email) => ({ email }));
+
+    if (recipientList.length === 0) {
+      recipientList.push({ email: fromAddress || "sales@dezoryn.com" });
+    }
+
     // Send admin lead email
     await dispatchEmail(settings, {
       from: { name: fromName, email: fromAddress },
-      to: [{ email: toAddress }],
+      to: recipientList,
       subject: `[New Lead #ENQ-${enquiry.id}] BOQ Quote Request - ${enquiry.company} (${enquiry.product})`,
       html: adminHtml,
       text: `New BOQ Quotation Request from ${enquiry.name} (${enquiry.company})\nPhone: ${enquiry.phone}\nEmail: ${enquiry.email}\nProduct: ${enquiry.product}\nQuantity: ${enquiry.quantity}\nLocation: ${enquiry.location}\nNotes: ${enquiry.message || "None"}`,

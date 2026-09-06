@@ -12,10 +12,12 @@ export async function POST(request: NextRequest) {
 
     const enquiry = await createEnquiry(validatedData);
 
-    // Asynchronously dispatch email notification (non-blocking)
-    sendEnquiryNotifications(enquiry).catch((err) => {
+    // Ensure email dispatch completes before serverless execution context finishes
+    try {
+      await sendEnquiryNotifications(enquiry);
+    } catch (err: any) {
       console.warn("⚠️ [EmailService] Asynchronous email dispatch error:", err.message);
-    });
+    }
 
     return NextResponse.json(
       { success: true, message: "Enquiry submitted successfully", enquiryId: enquiry.id },

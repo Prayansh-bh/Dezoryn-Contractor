@@ -83,10 +83,12 @@ publicRouter.post("/enquiries", enquiryLimiter, async (req, res) => {
     // 1. Commit lead to PostgreSQL database first
     const enquiry = await createEnquiry(parsed.data);
 
-    // 2. Asynchronously dispatch email notification (non-blocking)
-    sendEnquiryNotifications(enquiry).catch((err) => {
+    // 2. Dispatch email notification
+    try {
+      await sendEnquiryNotifications(enquiry);
+    } catch (err: any) {
       console.warn("⚠️ [EmailService] Asynchronous email dispatch error:", err.message);
-    });
+    }
 
     res.status(201).json({
       message: "Enquiry submitted successfully",
