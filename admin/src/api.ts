@@ -3,10 +3,31 @@ let activeRefreshPromise: Promise<string> | null = null;
 
 export function setInMemoryToken(token: string | null) {
   inMemoryToken = token;
+  if (typeof window !== "undefined") {
+    try {
+      if (token) {
+        sessionStorage.setItem("dezoryn_admin_token", token);
+        localStorage.setItem("dezoryn_admin_token", token);
+      } else {
+        sessionStorage.removeItem("dezoryn_admin_token");
+        localStorage.removeItem("dezoryn_admin_token");
+      }
+    } catch {}
+  }
 }
 
 export function getInMemoryToken(): string | null {
-  return inMemoryToken;
+  if (inMemoryToken) return inMemoryToken;
+  if (typeof window !== "undefined") {
+    try {
+      const saved = sessionStorage.getItem("dezoryn_admin_token") || localStorage.getItem("dezoryn_admin_token");
+      if (saved) {
+        inMemoryToken = saved;
+        return saved;
+      }
+    } catch {}
+  }
+  return null;
 }
 
 export async function authenticatedFetch(
@@ -15,11 +36,12 @@ export async function authenticatedFetch(
 ): Promise<Response> {
   const headers = new Headers(options.headers || {});
 
-  if (inMemoryToken) {
-    headers.set("Authorization", `Bearer ${inMemoryToken}`);
+  const token = getInMemoryToken();
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
   }
 
-  let res = await fetch(url, { ...options, headers });
+  let res = await fetch(url, { ...options, headers, credentials: "include" });
 
   // Handle 401 Unauthorized by executing single-flight token refresh
   if (res.status === 401 && !url.includes("/api/auth/")) {
@@ -27,6 +49,7 @@ export async function authenticatedFetch(
       activeRefreshPromise = fetch("/api/auth/refresh", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
       })
         .then(async (refreshRes) => {
           if (!refreshRes.ok) {
@@ -45,7 +68,7 @@ export async function authenticatedFetch(
     try {
       const newToken = await activeRefreshPromise;
       headers.set("Authorization", `Bearer ${newToken}`);
-      res = await fetch(url, { ...options, headers });
+      res = await fetch(url, { ...options, headers, credentials: "include" });
     } catch {
       // Refresh failed; propagate original 401 or throw session error
       return res;

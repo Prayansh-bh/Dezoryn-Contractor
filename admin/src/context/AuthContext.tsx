@@ -15,7 +15,15 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AdminUserProfile | null>(null);
+  const [user, setUser] = useState<AdminUserProfile | null>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = sessionStorage.getItem("dezoryn_admin_user") || localStorage.getItem("dezoryn_admin_user");
+        if (saved) return JSON.parse(saved);
+      } catch {}
+    }
+    return null;
+  });
   const [isLoading, setIsLoading] = useState(true);
 
   // Silent session restoration via HttpOnly refresh cookie on initial mount
@@ -27,6 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const res = await fetch("/api/auth/refresh", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
         });
 
         if (res.ok) {
@@ -34,14 +43,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (isMounted && data.accessToken && data.user) {
             setInMemoryToken(data.accessToken);
             setUser(data.user);
+            try {
+              sessionStorage.setItem("dezoryn_admin_user", JSON.stringify(data.user));
+              localStorage.setItem("dezoryn_admin_user", JSON.stringify(data.user));
+            } catch {}
           }
         } else {
+          // If refresh fails but token and user exist in storage, keep session alive
+          const currentToken = getInMemoryToken();
+          if (!currentToken) {
+            setInMemoryToken(null);
+            if (isMounted) setUser(null);
+            try {
+              sessionStorage.removeItem("dezoryn_admin_user");
+              localStorage.removeItem("dezoryn_admin_user");
+            } catch {}
+          }
+        }
+      } catch {
+        const currentToken = getInMemoryToken();
+        if (!currentToken) {
           setInMemoryToken(null);
           if (isMounted) setUser(null);
         }
-      } catch {
-        setInMemoryToken(null);
-        if (isMounted) setUser(null);
       } finally {
         if (isMounted) setIsLoading(false);
       }
@@ -59,6 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(credentials),
       });
 
@@ -70,6 +95,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setInMemoryToken(data.accessToken);
       setUser(data.user);
+      try {
+        sessionStorage.setItem("dezoryn_admin_user", JSON.stringify(data.user));
+        localStorage.setItem("dezoryn_admin_user", JSON.stringify(data.user));
+      } catch {}
       return { ok: true };
     } catch {
       return { ok: false, error: "Network error. Is the backend server running?" };
@@ -81,12 +110,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await fetch("/api/auth/logout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
       });
     } catch {
       // Ignore network errors during logout
     } finally {
       setInMemoryToken(null);
       setUser(null);
+      try {
+        sessionStorage.removeItem("dezoryn_admin_user");
+        localStorage.removeItem("dezoryn_admin_user");
+      } catch {}
     }
   }
 
@@ -99,6 +133,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           "Content-Type": "application/json",
           Authorization: token ? `Bearer ${token}` : "",
         },
+        credentials: "include",
         body: JSON.stringify(data),
       });
 
@@ -126,6 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           "Content-Type": "application/json",
           Authorization: token ? `Bearer ${token}` : "",
         },
+        credentials: "include",
         body: JSON.stringify(data),
       });
 
@@ -139,6 +175,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       if (result.user) {
         setUser(result.user);
+        try {
+          sessionStorage.setItem("dezoryn_admin_user", JSON.stringify(result.user));
+          localStorage.setItem("dezoryn_admin_user", JSON.stringify(result.user));
+        } catch {}
       }
 
       return { ok: true };

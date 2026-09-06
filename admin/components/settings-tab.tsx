@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Save,
   KeyRound,
@@ -30,6 +30,19 @@ export function SettingsTab({
     ...DEFAULT_SITE_SETTINGS,
     ...(data.settings || {}),
   });
+
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [emailSaveLoading, setEmailSaveLoading] = useState(false);
+
+  // Sync state whenever settings refresh from backend
+  useEffect(() => {
+    if (data?.settings) {
+      setS((prev) => ({
+        ...prev,
+        ...data.settings,
+      }));
+    }
+  }, [data?.settings]);
 
   // Email SMTP Test State
   const [showKey, setShowKey] = useState(false);
@@ -163,9 +176,14 @@ export function SettingsTab({
           </div>
         </div>
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            action({ action: "save_settings", settings: s });
+            setSaveLoading(true);
+            try {
+              await action({ action: "save_settings", settings: s });
+            } finally {
+              setSaveLoading(false);
+            }
           }}
         >
           <div className="form-row">
@@ -241,8 +259,9 @@ export function SettingsTab({
               />
             </label>
           </div>
-          <button className="admin-primary">
-            <Save /> Save website details
+          <button className="admin-primary" disabled={saveLoading} style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+            {saveLoading ? <Loader2 size={16} className="spin" /> : <Save size={16} />}
+            <span>{saveLoading ? "Saving details…" : "Save website details"}</span>
           </button>
         </form>
       </section>
@@ -257,9 +276,14 @@ export function SettingsTab({
         </div>
 
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            action({ action: "save_settings", settings: s });
+            setEmailSaveLoading(true);
+            try {
+              await action({ action: "save_settings", settings: s });
+            } finally {
+              setEmailSaveLoading(false);
+            }
           }}
         >
           {/* Enable Notifications Switch */}
@@ -404,8 +428,9 @@ export function SettingsTab({
             </div>
           </div>
 
-          <button className="admin-primary">
-            <Save /> Save email configuration
+          <button className="admin-primary" disabled={emailSaveLoading} style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+            {emailSaveLoading ? <Loader2 size={16} className="spin" /> : <Save size={16} />}
+            <span>{emailSaveLoading ? "Saving configuration…" : "Save email configuration"}</span>
           </button>
         </form>
 

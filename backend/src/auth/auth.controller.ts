@@ -12,14 +12,28 @@ import {
 import type { AuthenticatedRequest } from "./jwt-auth.middleware";
 import { prisma } from "../db/prisma";
 
-export const getCookieOptions = () => ({
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: ((process.env.COOKIE_SAME_SITE as any) || (process.env.NODE_ENV === "production" ? "strict" : "lax")) as "lax" | "strict" | "none",
-  domain: process.env.COOKIE_DOMAIN || undefined,
-  path: "/api/auth",
-  maxAge: 7 * 24 * 60 * 60 * 1000,
-});
+export const getCookieOptions = () => {
+  const isProd = process.env.NODE_ENV === "production";
+  return {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: ((process.env.COOKIE_SAME_SITE as any) || (isProd ? "none" : "lax")) as "lax" | "strict" | "none",
+    domain: process.env.COOKIE_DOMAIN || undefined,
+    path: "/api/auth",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  };
+};
+
+export const getClearCookieOptions = () => {
+  const isProd = process.env.NODE_ENV === "production";
+  return {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: ((process.env.COOKIE_SAME_SITE as any) || (isProd ? "none" : "lax")) as "lax" | "strict" | "none",
+    domain: process.env.COOKIE_DOMAIN || undefined,
+    path: "/api/auth",
+  };
+};
 
 export async function loginHandler(req: Request, res: Response) {
   try {
@@ -66,7 +80,7 @@ export async function refreshHandler(req: Request, res: Response) {
       user,
     });
   } catch (error: any) {
-    res.clearCookie("refreshToken", { path: "/api/auth" });
+    res.clearCookie("refreshToken", getClearCookieOptions());
     return res.status(401).json({ error: error.message || "Invalid refresh token" });
   }
 }
@@ -77,10 +91,10 @@ export async function logoutHandler(req: Request, res: Response) {
     if (token) {
       await revokeRefreshTokenSession(token);
     }
-    res.clearCookie("refreshToken", { path: "/api/auth" });
+    res.clearCookie("refreshToken", getClearCookieOptions());
     return res.status(200).json({ ok: true, message: "Logged out successfully" });
   } catch (error: any) {
-    res.clearCookie("refreshToken", { path: "/api/auth" });
+    res.clearCookie("refreshToken", getClearCookieOptions());
     return res.status(200).json({ ok: true });
   }
 }
