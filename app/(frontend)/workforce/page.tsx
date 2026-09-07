@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -16,10 +17,28 @@ import {
   Wrench,
 } from "lucide-react";
 import { SiteShell, PageHero } from "@frontend/components/site-shell";
+import { JsonLdScript } from "@frontend/components/json-ld-script";
+import { SITE_CONFIG, absoluteUrl } from "@frontend/lib/seo-config";
+import { getBreadcrumbJsonLd, getWorkforceServiceJsonLd } from "@frontend/lib/json-ld";
 import { getSettings } from "@backend/services/settings.service";
 import { getWorkforceSummary } from "@backend/services/workforce.service";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Highway Workforce & Certified Road Marking Labour Exchange",
+  description:
+    "Pan-India on-demand exchange for highway contractors: certified thermoplastic applicator operators, road stud fixing crews, heavy plant operators, and verified labour contractors.",
+  alternates: {
+    canonical: "/workforce",
+  },
+  openGraph: {
+    title: `Highway Workforce & Certified Road Marking Labour Exchange | ${SITE_CONFIG.name}`,
+    description:
+      "Rapid site deployment of verified highway construction gangs, machine technicians, and EPC project labor across India.",
+    url: absoluteUrl("/workforce"),
+  },
+};
 
 export default async function WorkforceHubPage() {
   const [settings, summary] = await Promise.all([
@@ -43,15 +62,23 @@ export default async function WorkforceHubPage() {
     })),
   ]);
 
+  const companyName = settings.company_name || "Dezoryn Contractor";
+
+  const breadcrumbJsonLd = getBreadcrumbJsonLd([
+    { name: "Home", url: "/" },
+    { name: "Workforce & Labour Hub", url: "/workforce" },
+  ]);
+  const workforceServiceJsonLd = getWorkforceServiceJsonLd(settings);
+
   const tradesGrid = [
     {
       title: "Bar Bending & Structural Rebar",
-      desc: "Skilled rebar fabricators for bridge piers, culverts, raft foundations, and deck slabs.",
-      icon: Wrench,
-      highlight: "Over 800+ Active Artisans",
+      desc: "Skilled rebar technicians for highway bridges, culverts, retaining walls & flyover piers.",
+      icon: Users,
+      highlight: "800+ Verified Workers",
     },
     {
-      title: "Highway Paving & Asphalt Compaction",
+      title: "Asphalt Paver & Roller Operators",
       desc: "Licensed asphalt paver operators, pneumatic tyre rollers, and tandem vibratory crew.",
       icon: Truck,
       highlight: "EPC Highway Certified",
@@ -60,7 +87,7 @@ export default async function WorkforceHubPage() {
       title: "W-Beam Crash Barrier Erection",
       desc: "Specialized post hydraulic ramming crews, torque tightening, and median beam alignment.",
       icon: ShieldCheck,
-      highlight: "Dezoryn Core Competency",
+      highlight: `${companyName} Core Competency`,
     },
     {
       title: "Thermoplastic Road Marking Applicators",
@@ -84,11 +111,12 @@ export default async function WorkforceHubPage() {
 
   return (
     <SiteShell settings={settings}>
+      <JsonLdScript data={[breadcrumbJsonLd, workforceServiceJsonLd]} />
       <PageHero
         eyebrow="INDUSTRIAL WORKFORCE & CONTRACTOR EXCHANGE"
         breadcrumbCurrent="Workforce & Labour Exchange"
         title="Deploy Skilled Highway Infrastructure Crews."
-        text="Dezoryn bridges EPC contractors, specialized manpower supply agencies, and skilled artisans across India. Source verified labour crews or register your agency to fulfill major national highway and infrastructure projects."
+        text={`${companyName} bridges EPC contractors, specialized manpower supply agencies, and skilled artisans across India. Source verified labour crews or register your agency to fulfill major national highway and infrastructure projects.`}
       />
 
       {/* Industrial Telemetry Metrics Strip */}
@@ -218,7 +246,7 @@ export default async function WorkforceHubPage() {
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 size={14} className="text-[#c9a35d] shrink-0" />
-                    <span>Verified Dezoryn Partner status</span>
+                    <span>{`Verified ${companyName} Partner status`}</span>
                   </li>
                 </ul>
               </div>
@@ -357,7 +385,7 @@ export default async function WorkforceHubPage() {
                   Direct Operations Support
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Dedicated Dezoryn workforce coordinator assigned to oversee shift strength and camp management.
+                  {`Dedicated ${companyName} workforce coordinator assigned to oversee shift strength and camp management.`}
                 </p>
               </div>
             </div>

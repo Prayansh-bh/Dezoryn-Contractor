@@ -1,23 +1,54 @@
-import { getActiveGalleryItems } from "@backend/services/gallery.service";
+import type { Metadata } from "next";
 import { SiteShell, PageHero, PageCta } from "@frontend/components/site-shell";
+import { JsonLdScript } from "@frontend/components/json-ld-script";
+import { SITE_CONFIG, absoluteUrl } from "@frontend/lib/seo-config";
+import { getBreadcrumbJsonLd } from "@frontend/lib/json-ld";
+import { getActiveGalleryItems } from "@backend/services/gallery.service";
+import { getSettings } from "@backend/services/settings.service";
 
 export const dynamic = "force-dynamic";
 
+export const metadata: Metadata = {
+  title: "Highway Infrastructure Projects & Media Gallery",
+  description:
+    "Explore photographs and video documentation of our highway safety products, automated thermoplastic manufacturing lines, and nationwide project dispatches.",
+  alternates: {
+    canonical: "/gallery",
+  },
+  openGraph: {
+    title: `Highway Infrastructure Projects & Media Gallery | ${SITE_CONFIG.name}`,
+    description:
+      "Visual record of highway marking application, retro-reflectivity benchmarks, and industrial site dispatches.",
+    url: absoluteUrl("/gallery"),
+  },
+};
+
 export default async function GalleryPage() {
-  const items = await getActiveGalleryItems();
+  const [items, settings] = await Promise.all([
+    getActiveGalleryItems(),
+    getSettings(),
+  ]);
+  const companyName = settings.company_name || "Dezoryn Contractor";
+
   const backendBase =
     process.env.NEXT_PUBLIC_BACKEND_URL ||
     (process.env.NODE_ENV === "production"
       ? "https://dezoryn-backend.onrender.com"
       : "");
 
+  const breadcrumbJsonLd = getBreadcrumbJsonLd([
+    { name: "Home", url: "/" },
+    { name: "Project Gallery", url: "/gallery" },
+  ]);
+
   return (
-    <SiteShell>
+    <SiteShell settings={settings}>
+      <JsonLdScript data={breadcrumbJsonLd} />
       <PageHero
         eyebrow="PROJECTS & MEDIA GALLERY"
         breadcrumbCurrent="Gallery"
         title="Visual Showcase of Highway Applications and Manufacturing Work."
-        text="A curated perspective on our highway marking compounds, retro-reflective testing, safety hardware installations, and manufacturing facility."
+        text={`A curated perspective on ${companyName}'s highway marking compounds, retro-reflective testing, safety hardware installations, and manufacturing facility.`}
       />
 
       <section className="py-20 bg-[#f8fafc] text-[#0f172a] border-b border-[#e2e8f0]">

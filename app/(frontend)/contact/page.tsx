@@ -1,7 +1,26 @@
+import type { Metadata } from "next";
 import { Mail, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
 import { SiteShell, PageHero } from "@frontend/components/site-shell";
 import { EnquiryForm } from "@frontend/components/enquiry-form";
+import { JsonLdScript } from "@frontend/components/json-ld-script";
+import { SITE_CONFIG, absoluteUrl } from "@frontend/lib/seo-config";
+import { getBreadcrumbJsonLd } from "@frontend/lib/json-ld";
 import { getSettings } from "@backend/services/settings.service";
+
+export const metadata: Metadata = {
+  title: "Commercial Quotation & BOQ Sourcing Desk",
+  description:
+    "Request commercial BOQ quotations, batch technical data sheets (TDS), and bulk consignment dispatch schedules from Dezoryn Contractor commercial sales team.",
+  alternates: {
+    canonical: "/contact",
+  },
+  openGraph: {
+    title: `Commercial Quotation & BOQ Sourcing Desk | ${SITE_CONFIG.name}`,
+    description:
+      "Direct B2B procurement line for highway contractors, EPC infrastructure firms, and government road authorities.",
+    url: absoluteUrl("/contact"),
+  },
+};
 
 export default async function ContactPage() {
   const settings = await getSettings();
@@ -10,8 +29,14 @@ export default async function ContactPage() {
   const whatsapp = settings.whatsapp || phone;
   const address = settings.address || "Highway Industrial Corridor, Pan-India Dispatch Network";
 
+  const breadcrumbJsonLd = getBreadcrumbJsonLd([
+    { name: "Home", url: "/" },
+    { name: "Contact & Quotations", url: "/contact" },
+  ]);
+
   return (
     <SiteShell settings={settings}>
+      <JsonLdScript data={breadcrumbJsonLd} />
       <PageHero
         eyebrow="COMMERCIAL DESK & QUOTATIONS"
         breadcrumbCurrent="Contact Us"

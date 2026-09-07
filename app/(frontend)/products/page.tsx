@@ -1,16 +1,40 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, PackageX } from "lucide-react";
 import { getActiveProducts } from "@backend/services/products.service";
 import { SiteShell, PageHero, PageCta } from "@frontend/components/site-shell";
 import { ProductCard } from "@frontend/components/product-card";
+import { JsonLdScript } from "@frontend/components/json-ld-script";
+import { SITE_CONFIG, absoluteUrl } from "@frontend/lib/seo-config";
+import { getBreadcrumbJsonLd } from "@frontend/lib/json-ld";
 
 export const dynamic = "force-dynamic";
 
+export const metadata: Metadata = {
+  title: "Highway Safety Products & Road Marking Catalog",
+  description:
+    "Explore our complete industrial product line: MORTH 803 thermoplastic road marking paint, BS 6088 reflective glass beads, solar road studs, and barrier coatings.",
+  alternates: {
+    canonical: "/products",
+  },
+  openGraph: {
+    title: `Highway Safety Products & Road Marking Catalog | ${SITE_CONFIG.name}`,
+    description:
+      "Bulk supply catalog of certified thermoplastic road paint, reflective glass beads, and road studs for EPC contractors.",
+    url: absoluteUrl("/products"),
+  },
+};
+
 export default async function ProductsPage() {
   const products = await getActiveProducts();
+  const breadcrumbJsonLd = getBreadcrumbJsonLd([
+    { name: "Home", url: "/" },
+    { name: "Products", url: "/products" },
+  ]);
 
   return (
     <SiteShell>
+      <JsonLdScript data={breadcrumbJsonLd} />
       <PageHero
         eyebrow="PRODUCT PORTFOLIO"
         breadcrumbCurrent="Products"

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   CheckCircle2,
   ClipboardCheck,
@@ -8,8 +9,37 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { SiteShell, PageHero, PageCta } from "@frontend/components/site-shell";
+import { JsonLdScript } from "@frontend/components/json-ld-script";
+import { SITE_CONFIG, absoluteUrl } from "@frontend/lib/seo-config";
+import { getBreadcrumbJsonLd } from "@frontend/lib/json-ld";
 
-export default function QualityPage() {
+import { getSettings } from "@backend/services/settings.service";
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Quality Assurance & MORTH/IRC Testing Standards",
+  description:
+    "Explore our 5-stage quality assurance protocol: raw material verification, digital thermal compounding, retro-reflectivity testing (ASTM E1710), softening point, and NABL certified MTCs.",
+  alternates: {
+    canonical: "/quality",
+  },
+  openGraph: {
+    title: `Quality Assurance & MORTH/IRC Testing Standards | ${SITE_CONFIG.name}`,
+    description:
+      "Engineered compliance for highway authorities: luminance factor, skid resistance (BPN), and durability under heavy axle vehicular traffic.",
+    url: absoluteUrl("/quality"),
+  },
+};
+
+export default async function QualityPage() {
+  const settings = await getSettings();
+
+  const breadcrumbJsonLd = getBreadcrumbJsonLd([
+    { name: "Home", url: "/" },
+    { name: "Quality & Testing", url: "/quality" },
+  ]);
+
   const steps = [
     {
       icon: Search,
@@ -44,7 +74,8 @@ export default function QualityPage() {
   ];
 
   return (
-    <SiteShell>
+    <SiteShell settings={settings}>
+      <JsonLdScript data={breadcrumbJsonLd} />
       <PageHero
         eyebrow="MANUFACTURING & QUALITY"
         breadcrumbCurrent="Quality Protocol"

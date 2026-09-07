@@ -14,25 +14,26 @@ import type { WorkforceSummary } from "@shared/types";
 
 interface HomeWorkforceSectionProps {
   summary?: WorkforceSummary;
+  companyName?: string;
 }
-
-const TRADES_SHOWCASE = [
-  { name: "Bar Bending & Structural Rebar", count: "800+ Active" },
-  { name: "Highway Paver & Roller Operators", count: "EPC Certified" },
-  { name: "W-Beam Crash Barrier Crews", count: "Dezoryn Core" },
-  { name: "Thermoplastic Road Marking Applicators", count: "MORTH Trained" },
-  { name: "Hydra, Crane & Heavy Earthmoving", count: "Licensed" },
-  { name: "Kerb Stone & Cast-in-Situ Masons", count: "Slipform Master" },
-];
 
 /**
  * HomeWorkforceSection
  * Single Responsibility: Present the 3-Way Industrial Workforce & Contractor Labour Exchange
  * gateway on the homepage with executive white architectural styling, live telemetry, and trade disciplines.
  */
-export function HomeWorkforceSection({ summary }: HomeWorkforceSectionProps) {
+export function HomeWorkforceSection({ summary, companyName = "Dezoryn" }: HomeWorkforceSectionProps) {
   const workforcePool = summary?.totalWorkforcePool || 2450;
   const verifiedAgencies = summary?.verifiedAgencies || 38;
+
+  const tradesShowcase = [
+    { name: "Bar Bending & Structural Rebar", count: "800+ Active" },
+    { name: "Highway Paver & Roller Operators", count: "EPC Certified" },
+    { name: "W-Beam Crash Barrier Crews", count: `${companyName} Core` },
+    { name: "Thermoplastic Road Marking Applicators", count: "MORTH Trained" },
+    { name: "Hydra, Crane & Heavy Earthmoving", count: "Licensed" },
+    { name: "Kerb Stone & Cast-in-Situ Masons", count: "Slipform Master" },
+  ];
 
   return (
     <section
@@ -51,7 +52,7 @@ export function HomeWorkforceSection({ summary }: HomeWorkforceSectionProps) {
             </h2>
           </div>
           <p className="text-[#475569] max-w-lg text-sm sm:text-base leading-relaxed">
-            Dezoryn bridges EPC contractors, specialized manpower supply agencies, and skilled artisans across India with transparent tracking dockets, compliance verification, and rapid project mobilization.
+            {companyName} bridges EPC contractors, specialized manpower supply agencies, and skilled artisans across India with transparent tracking dockets, compliance verification, and rapid project mobilization.
           </p>
         </div>
 
@@ -256,7 +257,7 @@ export function HomeWorkforceSection({ summary }: HomeWorkforceSectionProps) {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            {TRADES_SHOWCASE.map((t, idx) => (
+            {tradesShowcase.map((t, idx) => (
               <div
                 key={idx}
                 className="p-3 rounded-lg bg-[#f8fafc] border border-[#e2e8f0] text-center hover:border-[#c9a35d] hover:bg-white transition-all shadow-2xs"

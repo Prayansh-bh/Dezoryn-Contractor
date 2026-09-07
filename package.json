@@ -16,7 +16,7 @@
     "build:admin": "npm run build --prefix admin",
     "build:frontend": "prisma generate && next build",
     "postinstall": "prisma generate",
-    "test": "tsx --test --test-concurrency=1 tests/rendered-html.test.ts tests/admin-auth.test.mjs tests/data-persistence.test.ts tests/product-images.test.mjs tests/gallery-featured.test.mjs tests/email-notifications.test.mjs tests/workforce-exchange.test.ts tests/responsive-audit.test.ts tests/certificates.test.ts",
+    "test": "tsx --test --test-concurrency=1 tests/rendered-html.test.ts tests/admin-auth.test.mjs tests/data-persistence.test.ts tests/product-images.test.mjs tests/gallery-featured.test.mjs tests/email-notifications.test.mjs tests/workforce-exchange.test.ts tests/responsive-audit.test.ts tests/certificates.test.ts tests/seo-verification.test.mjs tests/site-settings-propagation.test.mjs",
 
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "prisma generate",

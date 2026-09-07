@@ -40,6 +40,7 @@ export default async function HomePage() {
   ]);
 
   const featuredItems = galleryItems.filter((item) => item.featured);
+  const companyName = settings.company_name || "Dezoryn Contractor";
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -110,7 +111,7 @@ export default async function HomePage() {
                 Reliable material supply for roads that never pause.
               </h2>
               <p className="text-[#475569] text-base sm:text-lg leading-relaxed mb-6">
-                Dezoryn Contractor manufactures and supplies highway-use products engineered for demanding traffic loads, extreme weather shifts, and strict project timelines.
+                {companyName} manufactures and supplies highway-use products engineered for demanding traffic loads, extreme weather shifts, and strict project timelines.
               </p>
               <p className="text-[#475569] text-base leading-relaxed mb-8">
                 We collaborate directly with road contractors, EPC concessionaires, State PWD vendors, and infrastructure distributors who demand repeatable batch quality, verified retro-reflectivity, and scheduled site dispatches.
@@ -133,7 +134,7 @@ export default async function HomePage() {
               <div className="relative h-[280px] sm:h-[420px] rounded-lg overflow-hidden border border-[#e2e8f0] shadow-xl group">
                 <Image
                   src="/images/products/custom-manufacturing.jpg"
-                  alt="Dezoryn Automated Highway Material Production Facility"
+                  alt={`${companyName} Automated Highway Material Production Facility`}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -321,7 +322,7 @@ export default async function HomePage() {
       </section>
 
       {/* Section 5: Industrial Workforce & Contractor Labour Exchange */}
-      <HomeWorkforceSection summary={workforceSummary} />
+      <HomeWorkforceSection summary={workforceSummary} companyName={companyName} />
 
       {/* Section 6: Featured Project Media (Rendered when database has featured items) */}
       {featuredItems.length > 0 && (
@@ -404,7 +405,7 @@ export default async function HomePage() {
       )}
 
       {/* Section 7: Verified Quality & Compliance Accreditations */}
-      <HomeCertificatesSection certificates={certificates} />
+      <HomeCertificatesSection certificates={certificates} companyName={companyName} />
 
       {/* Section 8: B2B Quotation Form */}
       <section id="quote" className="py-24 bg-[#ffffff] text-[#0f172a] relative">

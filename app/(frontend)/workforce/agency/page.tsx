@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AgencyRegisterPage() {
   const settings = await getSettings();
+  const companyName = settings.company_name || "Dezoryn Contractor";
 
   return (
     <SiteShell settings={settings}>
@@ -13,12 +14,12 @@ export default async function AgencyRegisterPage() {
         eyebrow="MANPOWER CONTRACTORS & SUBCONTRACTORS"
         breadcrumbCurrent="Agency Registration"
         title="Register Your Labour Agency & Crew Pool."
-        text="Join the Dezoryn network as an approved manpower supply partner. Gain direct access to long-term staffing packages on national highways, bridges, and industrial development sites across India."
+        text={`Join the ${companyName} network as an approved manpower supply partner. Gain direct access to long-term staffing packages on national highways, bridges, and industrial development sites across India.`}
       />
 
       <section className="py-20 bg-[#f8fafc] text-[#0f172a]">
         <div className="container max-w-4xl">
-          <AgencyRegisterForm />
+          <AgencyRegisterForm companyName={companyName} />
         </div>
       </section>
     </SiteShell>

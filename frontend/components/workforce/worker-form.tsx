@@ -27,7 +27,7 @@ const WORKER_TRADES = [
   { id: "civil_helper", title: "General Construction Helper", desc: "Site assistance, concrete mixing & load carrying" },
 ];
 
-export function WorkerRegisterForm() {
+export function WorkerRegisterForm({ companyName = "Dezoryn Contractor" }: { companyName?: string } = {}) {
   const [selectedTrade, setSelectedTrade] = useState("Bar Bender / Rebar Specialist");
   const [canRelocate, setCanRelocate] = useState(true);
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
@@ -85,7 +85,7 @@ export function WorkerRegisterForm() {
           SKILL REGISTRATION COMPLETE
         </span>
         <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 font-serif">
-          Profile Registered in Dezoryn Skill Registry
+          Profile Registered in {companyName} Skill Registry
         </h3>
         <p className="text-slate-300 text-sm md:text-base leading-relaxed mb-6">
           You are now enrolled for <strong>{selectedTrade}</strong> project site placements. When contractors or agencies in your area need skilled hands, our team will connect directly with you on phone/WhatsApp.
@@ -120,7 +120,7 @@ export function WorkerRegisterForm() {
           <HardHat size={16} /> <span>Direct Skilled & Semi-Skilled Labour Desk</span>
         </div>
         <h3 className="text-2xl md:text-3xl font-bold text-[#0f172a] font-serif">
-          Join the Dezoryn Construction Workforce
+          Join the {companyName} Construction Workforce
         </h3>
         <p className="text-sm text-[#64748b] mt-1">
           Free direct registration for machine operators, bar benders, masons, welders, and highway artisans looking for project work across India.

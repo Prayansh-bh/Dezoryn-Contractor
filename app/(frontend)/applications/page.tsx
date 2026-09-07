@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -9,8 +10,38 @@ import {
   Warehouse,
 } from "lucide-react";
 import { SiteShell, PageHero, PageCta } from "@frontend/components/site-shell";
+import { JsonLdScript } from "@frontend/components/json-ld-script";
+import { SITE_CONFIG, absoluteUrl } from "@frontend/lib/seo-config";
+import { getBreadcrumbJsonLd } from "@frontend/lib/json-ld";
 
-export default function ApplicationsPage() {
+import { getSettings } from "@backend/services/settings.service";
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Highway Application Zones: Expressways, Toll Plazas & Runways",
+  description:
+    "Recommended application zones for road marking materials: National Highways, Greenfield Expressways, Smart City junctions, Airport Aprons, and Industrial Logistics Parks.",
+  alternates: {
+    canonical: "/applications",
+  },
+  openGraph: {
+    title: `Highway Application Zones: Expressways, Toll Plazas & Runways | ${SITE_CONFIG.name}`,
+    description:
+      "Formulated for extreme road environments: high-speed multi-lane transit corridors, container yards, and heavy axle loads.",
+    url: absoluteUrl("/applications"),
+  },
+};
+
+export default async function ApplicationsPage() {
+  const settings = await getSettings();
+  const companyName = settings.company_name || "Dezoryn Contractor";
+
+  const breadcrumbJsonLd = getBreadcrumbJsonLd([
+    { name: "Home", url: "/" },
+    { name: "Sectors & Applications", url: "/applications" },
+  ]);
+
   const sectors = [
     {
       icon: Route,
@@ -51,12 +82,13 @@ export default function ApplicationsPage() {
   ];
 
   return (
-    <SiteShell>
+    <SiteShell settings={settings}>
+      <JsonLdScript data={breadcrumbJsonLd} />
       <PageHero
         eyebrow="SECTORS & APPLICATIONS"
         breadcrumbCurrent="Applications"
         title="Engineered for Demanding Traffic & Varied Highway Environments."
-        text="From 8-lane expressways to high-traffic urban junctions and airport aprons, our highway products deliver verified durability, retro-reflectivity, and safety across public and private infrastructure projects."
+        text={`From 8-lane expressways to high-traffic urban junctions and airport aprons, ${companyName} highway products deliver verified durability, retro-reflectivity, and safety across public and private infrastructure projects.`}
       />
 
       <section className="py-20 bg-[#f8fafc] text-[#0f172a] border-b border-[#e2e8f0]">

@@ -207,7 +207,10 @@ publicRouter.get("/certificates/:id/image", async (req, res) => {
       }
     }
 
-    res.status(404).send("Certificate image not found");
+    const fallbackSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="#0f172a"/><rect x="20" y="20" width="560" height="360" fill="none" stroke="#c9a35d" stroke-width="2"/><text x="50%" y="45%" fill="#f1d99b" font-family="serif" font-size="24" text-anchor="middle" font-weight="bold">${(cert.title || "Quality Certificate").replace(/[<>&"]/g, "")}</text><text x="50%" y="60%" fill="#94a3b8" font-family="sans-serif" font-size="14" text-anchor="middle">${(cert.issuer || "Verified Compliance").replace(/[<>&"]/g, "")}</text></svg>`;
+    res.setHeader("Content-Type", "image/svg+xml");
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    return res.send(Buffer.from(fallbackSvg));
   } catch (error) {
     console.error(`❌ [Public Routes GET /api/certificates/${req.params.id}/image] Error:`, error);
     res.status(500).send("Server error");

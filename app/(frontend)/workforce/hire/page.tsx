@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
 
 export default async function HireLabourPage() {
   const settings = await getSettings();
+  const companyName = settings.company_name || "Dezoryn Contractor";
 
   return (
     <SiteShell settings={settings}>
@@ -13,7 +14,7 @@ export default async function HireLabourPage() {
         eyebrow="EPC & MAIN CONTRACTOR REQUISITIONS"
         breadcrumbCurrent="Post Labour Requirement"
         title="Source Certified Highway & Infrastructure Labour."
-        text="Submit your project staffing requisitions for bar benders, paver operators, crash barrier crews, and general civil manpower. Dezoryn pairs you with pre-vetted agencies for fast on-site mobilization."
+        text={`Submit your project staffing requisitions for bar benders, paver operators, crash barrier crews, and general civil manpower. ${companyName} pairs you with pre-vetted agencies for fast on-site mobilization.`}
       />
 
       <section className="py-20 bg-[#f8fafc] text-[#0f172a]">

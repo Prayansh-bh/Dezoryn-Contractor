@@ -39,7 +39,7 @@ const POPULAR_STATES = [
   "Pan-India",
 ];
 
-export function AgencyRegisterForm() {
+export function AgencyRegisterForm({ companyName = "Dezoryn Contractor" }: { companyName?: string } = {}) {
   const [selectedTrades, setSelectedTrades] = useState<string[]>([
     "Bar Bending & Rebar Fitters",
     "Shuttering & Formwork Carpenters",
@@ -129,7 +129,7 @@ export function AgencyRegisterForm() {
           Registration Submitted for Verification
         </h3>
         <p className="text-slate-300 text-sm md:text-base leading-relaxed mb-6">
-          Your agency and crew capacity of <strong>{crewSize} workforce personnel</strong> has been lodged in Dezoryn Contractor Exchange. Our desk will contact you to match with active EPC highway project packages.
+          Your agency and crew capacity of <strong>{crewSize} workforce personnel</strong> has been lodged in {companyName} Exchange. Our desk will contact you to match with active EPC highway project packages.
         </p>
 
         <div className="p-4 rounded-xl bg-slate-900 border border-slate-700/60 inline-flex flex-col items-center gap-1 mb-8">

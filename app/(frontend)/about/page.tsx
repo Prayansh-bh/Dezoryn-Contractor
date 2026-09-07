@@ -1,9 +1,40 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Award, CheckCircle2, Factory, Handshake, ShieldCheck, Truck } from "lucide-react";
 import { SiteShell, PageHero, PageCta } from "@frontend/components/site-shell";
+import { JsonLdScript } from "@frontend/components/json-ld-script";
+import { SITE_CONFIG, absoluteUrl } from "@frontend/lib/seo-config";
+import { getBreadcrumbJsonLd } from "@frontend/lib/json-ld";
 
-export default function AboutPage() {
+import { getSettings } from "@backend/services/settings.service";
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "About Us - Highway Infrastructure & Manufacturing Discipline",
+  description:
+    "Learn about our specialized highway manufacturing firm delivering MORTH & IRC compliant thermoplastic road paint, reflective glass beads, and highway safety products across India.",
+  alternates: {
+    canonical: "/about",
+  },
+  openGraph: {
+    title: `About Us | Industrial Highway Manufacturing Discipline`,
+    description:
+      "Precision compounding, automated batching, and nationwide logistics supporting Indian highway contractors and infrastructure authorities.",
+    url: absoluteUrl("/about"),
+  },
+};
+
+export default async function AboutPage() {
+  const settings = await getSettings();
+  const companyName = settings.company_name || "Dezoryn Contractor";
+
+  const breadcrumbJsonLd = getBreadcrumbJsonLd([
+    { name: "Home", url: "/" },
+    { name: "About Us", url: "/about" },
+  ]);
+
   const pillars = [
     {
       icon: Factory,
@@ -33,12 +64,13 @@ export default function AboutPage() {
   ];
 
   return (
-    <SiteShell>
+    <SiteShell settings={settings}>
+      <JsonLdScript data={breadcrumbJsonLd} />
       <PageHero
-        eyebrow="ABOUT DEZORYN CONTRACTOR"
+        eyebrow={`ABOUT ${companyName.toUpperCase()}`}
         breadcrumbCurrent="About Us"
         title="Engineering Confidence and Safety into Every Kilometre."
-        text="Dezoryn Contractor is a specialized manufacturing company focused on highway safety products and high-performance road-marking materials. We supply road contractors, EPC infrastructure firms, and government authorities across India."
+        text={`${companyName} is a specialized manufacturing company focused on highway safety products and high-performance road-marking materials. We supply road contractors, EPC infrastructure firms, and government authorities across India.`}
       />
 
       {/* Purpose & Manufacturing Setup */}
@@ -75,7 +107,7 @@ export default function AboutPage() {
               <div className="relative h-[400px] rounded-lg overflow-hidden border border-[#e2e8f0] shadow-xl">
                 <Image
                   src="/images/products/custom-manufacturing.jpg"
-                  alt="Dezoryn Manufacturing Facility"
+                  alt={`${companyName} Manufacturing Facility`}
                   fill
                   className="object-cover"
                 />
@@ -93,7 +125,7 @@ export default function AboutPage() {
               <span /> CORE PILLARS
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0f172a] tracking-tight font-serif">
-              What Defines Dezoryn Contractor
+              {`What Defines ${companyName}`}
             </h2>
           </div>
 

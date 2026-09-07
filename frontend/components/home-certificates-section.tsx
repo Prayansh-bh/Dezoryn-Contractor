@@ -15,6 +15,7 @@ import type { Certificate } from "@shared/types";
 
 interface HomeCertificatesSectionProps {
   certificates?: Certificate[];
+  companyName?: string;
 }
 
 const DEFAULT_FALLBACK_CERTIFICATES: Certificate[] = [
@@ -75,6 +76,7 @@ const DEFAULT_FALLBACK_CERTIFICATES: Certificate[] = [
  */
 export function HomeCertificatesSection({
   certificates = [],
+  companyName = "Dezoryn",
 }: HomeCertificatesSectionProps) {
   const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
 
@@ -100,7 +102,7 @@ export function HomeCertificatesSection({
             </h2>
           </div>
           <p className="text-[#475569] max-w-lg text-sm sm:text-base leading-relaxed">
-            Every material batch, compounding recipe, and road safety product manufactured by Dezoryn adheres to rigorous national and international quality benchmarks.
+            Every material batch, compounding recipe, and road safety product manufactured by {companyName} adheres to rigorous national and international quality benchmarks.
           </p>
         </div>
 

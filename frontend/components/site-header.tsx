@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRight, ChevronRight, Mail, Menu, Phone, ShieldCheck, X } from "lucide-react";
 import type { SiteSettings } from "@shared/types";
+import { formatBrandName } from "@frontend/lib/brand";
 
 export function SiteHeader({ settings }: { settings?: SiteSettings }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -13,7 +14,7 @@ export function SiteHeader({ settings }: { settings?: SiteSettings }) {
 
   const email = settings?.email || "sales@dezoryn.com";
   const phone = settings?.phone || "+91 98765 43210";
-  const companyName = settings?.company_name || "DEZORYN";
+  const brand = formatBrandName(settings?.company_name);
 
   useEffect(() => {
     let ticking = false;
@@ -89,13 +90,13 @@ export function SiteHeader({ settings }: { settings?: SiteSettings }) {
 
       <nav className="nav relative">
         <div className="container nav-inner">
-          <Link href="/" className="brand" aria-label={`${companyName} Contractor Home`}>
+          <Link href="/" className="brand" aria-label={`${brand.full} Home`}>
             <div className="brand-mark">
-              <span className="sr-only">{companyName}</span>
+              <span className="sr-only">{brand.full}</span>
             </div>
             <div className="brand-info">
-              <b>{companyName.toUpperCase()}</b>
-              <small>CONTRACTOR</small>
+              <b>{brand.main}</b>
+              <small>{brand.sub}</small>
             </div>
           </Link>
 

@@ -1,9 +1,14 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, CheckCircle2, ChevronRight, FileText, Layers, Package, ShieldCheck } from "lucide-react";
 import { getProductBySlug } from "@backend/services/products.service";
+import { getSettings } from "@backend/services/settings.service";
 import { SiteShell, PageCta } from "@frontend/components/site-shell";
+import { JsonLdScript } from "@frontend/components/json-ld-script";
+import { SITE_CONFIG, absoluteUrl } from "@frontend/lib/seo-config";
+import { getProductJsonLd, getBreadcrumbJsonLd } from "@frontend/lib/json-ld";
 
 export const dynamic = "force-dynamic";
 
@@ -16,17 +21,88 @@ const PRODUCT_IMAGES: Record<string, string> = {
   "custom-manufacturing": "/images/products/custom-manufacturing.jpg",
 };
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const [product, settings] = await Promise.all([
+    getProductBySlug(slug),
+    getSettings(),
+  ]);
+
+  if (!product || !product.active) {
+    return {
+      title: "Product Not Found",
+      description: "The requested highway safety product specification could not be located.",
+    };
+  }
+
+  const companyName = settings.company_name || SITE_CONFIG.name;
+  const title = `${product.name} Manufacturer & Bulk Supply`;
+  const description = `${product.description} Formulated for MORTH Clause 803 / IRC:35 specifications. Pan-India bulk supply for EPC highway contractors.`;
+  const imageSrc =
+    product.imageUrl ||
+    PRODUCT_IMAGES[product.slug] ||
+    SITE_CONFIG.openGraph.defaultImage;
+  const ogImageUrl = imageSrc.startsWith("http") ? imageSrc : absoluteUrl(imageSrc);
+
+  return {
+    title,
+    description,
+    keywords: [
+      product.name.toLowerCase(),
+      `${product.name.toLowerCase()} manufacturer`,
+      `${product.name.toLowerCase()} bulk supply`,
+      "MORTH 803 standard",
+      "IRC 35 compliant",
+      "highway safety contractor supply India",
+      ...(product.features || []).map((f) => f.toLowerCase()),
+    ],
+    alternates: {
+      canonical: `/products/${product.slug}`,
+    },
+    openGraph: {
+      title: `${title} | ${companyName}`,
+      description,
+      url: absoluteUrl(`/products/${product.slug}`),
+      type: "article",
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${product.name} - ${companyName} Industrial Supply`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | ${companyName}`,
+      description,
+      images: [ogImageUrl],
+    },
+  };
+}
+
 export default async function ProductDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const [product, settings] = await Promise.all([
+    getProductBySlug(slug),
+    getSettings(),
+  ]);
 
   if (!product || !product.active) {
     notFound();
   }
+
+  const companyName = settings.company_name || "Dezoryn Contractor";
+  const email = settings.email || "sales@dezoryn.com";
 
   const imageSrc =
     product.imageUrl ||
@@ -34,8 +110,16 @@ export default async function ProductDetailPage({
     "/images/products/product-placeholder.jpg";
   const isUploadedImage = imageSrc.startsWith("/uploads/");
 
+  const productJsonLd = getProductJsonLd(product, settings);
+  const breadcrumbJsonLd = getBreadcrumbJsonLd([
+    { name: "Home", url: "/" },
+    { name: "Products", url: "/products" },
+    { name: product.name, url: `/products/${product.slug}` },
+  ]);
+
   return (
-    <SiteShell>
+    <SiteShell settings={settings}>
+      <JsonLdScript data={[productJsonLd, breadcrumbJsonLd]} />
       {/* Product Hero Section */}
       <section className="bg-slate-950 text-white py-12 sm:py-16 lg:py-24 border-b border-amber-500/20 relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
@@ -72,7 +156,7 @@ export default async function ProductDetailPage({
                   Request Commercial Quotation <ArrowRight size={16} />
                 </Link>
                 <a
-                  href={`mailto:sales@dezoryn.com?subject=Technical Data Sheet Request - ${encodeURIComponent(product.name)}`}
+                  href={`mailto:${email}?subject=Technical Data Sheet Request - ${encodeURIComponent(product.name)}`}
                   className="btn btn-ghost text-xs w-full sm:w-auto text-center"
                 >
                   <FileText size={15} /> Request Technical Data Sheet
@@ -85,7 +169,7 @@ export default async function ProductDetailPage({
               <div className="relative h-[250px] sm:h-[380px] rounded-lg overflow-hidden border border-amber-500/30 shadow-2xl">
                 <Image
                   src={imageSrc}
-                  alt={product.name}
+                  alt={`${product.name} - ${companyName} Industrial Supply`}
                   fill
                   unoptimized={isUploadedImage}
                   priority
