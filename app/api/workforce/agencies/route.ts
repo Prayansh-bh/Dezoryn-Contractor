@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createLabourAgencySchema } from "@shared/schemas";
 import { createLabourAgency } from "@backend/services/workforce.service";
+import { sendLabourAgencyNotifications } from "@backend/services/email.service";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,13 @@ export async function POST(request: NextRequest) {
 
     try {
       const agency = await createLabourAgency(validatedData);
+
+      try {
+        await sendLabourAgencyNotifications(agency);
+      } catch (err: any) {
+        console.warn("⚠️ [EmailService] Asynchronous agency email dispatch error:", err.message);
+      }
+
       return NextResponse.json(
         {
           success: true,

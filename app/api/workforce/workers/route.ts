@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createIndividualWorkerSchema } from "@shared/schemas";
 import { createIndividualWorker } from "@backend/services/workforce.service";
+import { sendIndividualWorkerNotification } from "@backend/services/email.service";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,13 @@ export async function POST(request: NextRequest) {
 
     try {
       const worker = await createIndividualWorker(validatedData);
+
+      try {
+        await sendIndividualWorkerNotification(worker);
+      } catch (err: any) {
+        console.warn("⚠️ [EmailService] Asynchronous worker email dispatch error:", err.message);
+      }
+
       return NextResponse.json(
         {
           success: true,

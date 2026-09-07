@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createLabourRequisitionSchema } from "@shared/schemas";
 import { createLabourRequisition } from "@backend/services/workforce.service";
+import { sendWorkforceRequisitionNotifications } from "@backend/services/email.service";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,12 @@ export async function POST(request: NextRequest) {
     const validatedData = createLabourRequisitionSchema.parse(body);
 
     const requisition = await createLabourRequisition(validatedData);
+
+    try {
+      await sendWorkforceRequisitionNotifications(requisition);
+    } catch (err: any) {
+      console.warn("⚠️ [EmailService] Asynchronous requisition email dispatch error:", err.message);
+    }
 
     return NextResponse.json(
       {

@@ -11,6 +11,11 @@ import {
   createIndividualWorker,
   getWorkforceSummary,
 } from "../services/workforce.service";
+import {
+  sendWorkforceRequisitionNotifications,
+  sendLabourAgencyNotifications,
+  sendIndividualWorkerNotification,
+} from "../services/email.service";
 
 export const workforceRouter = Router();
 
@@ -46,7 +51,15 @@ workforceRouter.post("/requisitions", workforceRateLimiter, async (req, res) => 
       });
     }
 
+    // 1. Commit requisition to PostgreSQL database first
     const requisition = await createLabourRequisition(parsed.data);
+
+    // 2. Asynchronously dispatch email notification
+    try {
+      await sendWorkforceRequisitionNotifications(requisition);
+    } catch (err: any) {
+      console.warn("⚠️ [EmailService] Asynchronous requisition email dispatch error:", err.message);
+    }
 
     res.status(201).json({
       ok: true,
@@ -72,7 +85,16 @@ workforceRouter.post("/agencies", workforceRateLimiter, async (req, res) => {
     }
 
     try {
+      // 1. Commit agency to PostgreSQL database first
       const agency = await createLabourAgency(parsed.data);
+
+      // 2. Asynchronously dispatch agency onboarding notification
+      try {
+        await sendLabourAgencyNotifications(agency);
+      } catch (err: any) {
+        console.warn("⚠️ [EmailService] Asynchronous agency email dispatch error:", err.message);
+      }
+
       res.status(201).json({
         ok: true,
         message: "Agency profile registered successfully. Verification pending.",
@@ -105,7 +127,16 @@ workforceRouter.post("/workers", workforceRateLimiter, async (req, res) => {
     }
 
     try {
+      // 1. Commit worker to PostgreSQL database first
       const worker = await createIndividualWorker(parsed.data);
+
+      // 2. Asynchronously dispatch worker registration alert
+      try {
+        await sendIndividualWorkerNotification(worker);
+      } catch (err: any) {
+        console.warn("⚠️ [EmailService] Asynchronous worker email dispatch error:", err.message);
+      }
+
       res.status(201).json({
         ok: true,
         message: "Worker profile registered successfully in Dezoryn Skill Registry.",

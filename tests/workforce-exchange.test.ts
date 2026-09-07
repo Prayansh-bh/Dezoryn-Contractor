@@ -331,4 +331,34 @@ describe("Industrial Workforce & Labour Exchange Test Suite", () => {
     assert.strictEqual(deletedWorker, null, "Worker must be deleted");
     createdWorkerId = 0;
   });
+
+  test("WORKFORCE-12: Requisition submission succeeds with asynchronous email notification pipeline", async () => {
+    const res = await fetch(`${BACKEND_URL}/api/workforce/requisitions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        companyName: "Afcons Infrastructure",
+        contactPerson: "Rajesh Sharma",
+        phone: "+91 98234 56789",
+        email: "rajesh.sharma@afcons-test.com",
+        projectTitle: "Samruddhi Mahamarg Package 12",
+        projectType: "Expressway",
+        locationState: "Maharashtra",
+        locationCity: "Nagpur Site",
+        totalWorkers: 25,
+        skillsRequired: [{ trade: "Slipform Kerb & Drain Paver Operators", count: 25 }],
+        startDate: "Immediate",
+        amenities: ["Food / Canteen Subsidy"],
+      }),
+    });
+
+    assert.strictEqual(res.status, 201, "Requisition creation must return 201 Created");
+    const body = await res.json();
+    assert.ok(body.requisitionCode, "Must return docket code");
+
+    // Clean up
+    if (body.requisition?.id) {
+      await prisma.labourRequisition.deleteMany({ where: { id: body.requisition.id } });
+    }
+  });
 });
