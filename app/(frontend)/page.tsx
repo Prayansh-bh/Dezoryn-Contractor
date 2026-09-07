@@ -322,19 +322,18 @@ export default async function HomePage() {
 
       {/* Section 6: Featured Project Media (Rendered when database has featured items) */}
       {featuredItems.length > 0 && (
-        <section id="gallery-featured" className="py-24 bg-[#090d16] text-[#f8fafc] border-b border-[#1e293b] relative overflow-hidden">
-          <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none" />
+        <section id="gallery-featured" className="py-24 bg-[#ffffff] text-[#0f172a] border-b border-[#e2e8f0] relative">
           <div className="container relative z-10">
             <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-6 mb-16">
               <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#c9a35d]/10 border border-[#c9a35d]/30 text-[#f0d796] font-bold text-xs uppercase tracking-widest mb-3">
-                  <span className="inline-block w-2 h-2 rounded-full bg-[#c9a35d] animate-pulse" /> 06 — SITE WORK & DISPATCHES
+                <div className="section-label mb-3">
+                  <span /> 06 — SITE WORK & DISPATCHES
                 </div>
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-serif">
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0f172a] tracking-tight font-serif">
                   Featured Project Applications
                 </h2>
               </div>
-              <p className="text-[#94a3b8] max-w-md text-sm sm:text-base leading-relaxed">
+              <p className="text-[#475569] max-w-md text-sm sm:text-base leading-relaxed">
                 Direct field dispatches, automated thermoplastic screeding, and highway safety hardware installations across active project corridors.
               </p>
             </div>
@@ -350,7 +349,7 @@ export default async function HomePage() {
                 return (
                   <article
                     key={m.id}
-                    className="bg-[#0f172a] rounded-lg border border-[rgba(201,163,93,0.3)] overflow-hidden shadow-xl hover:border-[#c9a35d] transition-all hover:-translate-y-1 group"
+                    className="bg-white rounded-lg border border-[#e2e8f0] overflow-hidden shadow-sm hover:border-[#c9a35d] hover:shadow-md transition-all hover:-translate-y-1 group"
                   >
                     <div className="relative h-64 bg-[#06090d]">
                       {m.mediaType === "video" ? (
@@ -369,20 +368,20 @@ export default async function HomePage() {
                         />
                       )}
                     <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
-                      <span className="inline-flex items-center gap-1 bg-[#c9a35d] text-[#090d16] px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider shadow-md">
+                      <span className="inline-flex items-center gap-1 bg-[#fffbeb] text-[#d97706] border border-[#fde68a] px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider shadow-sm">
                         ★ FEATURED
                       </span>
                     </div>
-                    <div className="absolute top-3 right-3 bg-[#090d16]/90 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-[#cbd5e1] border border-white/10 z-10">
+                    <div className="absolute top-3 right-3 bg-[#06090d]/80 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-[#cbd5e1] border border-white/10 z-10">
                       {m.mediaType}
                     </div>
                   </div>
-                    <div className="p-6">
-                      <h3 className="text-lg font-bold text-white mb-2 font-serif group-hover:text-[#f0d796] transition-colors">
+                    <div className="p-6 bg-white">
+                      <h3 className="text-lg font-bold text-[#0f172a] mb-2 font-serif group-hover:text-[#c9a35d] transition-colors">
                         {m.title}
                       </h3>
                       {m.caption && (
-                        <p className="text-xs text-[#94a3b8] leading-relaxed line-clamp-2">
+                        <p className="text-xs text-[#64748b] leading-relaxed line-clamp-2">
                           {m.caption}
                         </p>
                       )}
