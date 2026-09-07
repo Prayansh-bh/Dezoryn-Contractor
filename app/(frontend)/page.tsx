@@ -19,18 +19,21 @@ import { HeroVideoHighway } from "@frontend/components/hero-video-highway";
 import { QcRadarVisual } from "@frontend/components/qc-radar-visual";
 import { CapabilitiesStrip } from "@frontend/components/metric-odometer";
 import { HighwayFlowLine } from "@frontend/components/highway-flow-line";
+import { HomeWorkforceSection } from "@frontend/components/home-workforce-section";
 import { CAPABILITIES } from "@shared/constants";
 import { getSettings } from "@backend/services/settings.service";
 import { getActiveProducts } from "@backend/services/products.service";
 import { getActiveGalleryItems } from "@backend/services/gallery.service";
+import { getWorkforceSummary } from "@backend/services/workforce.service";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [settings, products, galleryItems] = await Promise.all([
+  const [settings, products, galleryItems, workforceSummary] = await Promise.all([
     getSettings(),
     getActiveProducts(),
     getActiveGalleryItems(),
+    getWorkforceSummary().catch(() => undefined),
   ]);
 
   const featuredItems = galleryItems.filter((item) => item.featured);
@@ -314,7 +317,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Section 5: Featured Project Media (Rendered when database has featured items) */}
+      {/* Section 5: Industrial Workforce & Contractor Labour Exchange */}
+      <HomeWorkforceSection summary={workforceSummary} />
+
+      {/* Section 6: Featured Project Media (Rendered when database has featured items) */}
       {featuredItems.length > 0 && (
         <section id="gallery-featured" className="py-24 bg-[#090d16] text-[#f8fafc] border-b border-[#1e293b] relative overflow-hidden">
           <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none" />
@@ -322,7 +328,7 @@ export default async function HomePage() {
             <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-6 mb-16">
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#c9a35d]/10 border border-[#c9a35d]/30 text-[#f0d796] font-bold text-xs uppercase tracking-widest mb-3">
-                  <span className="inline-block w-2 h-2 rounded-full bg-[#c9a35d] animate-pulse" /> 05 — SITE WORK & DISPATCHES
+                  <span className="inline-block w-2 h-2 rounded-full bg-[#c9a35d] animate-pulse" /> 06 — SITE WORK & DISPATCHES
                 </div>
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-serif">
                   Featured Project Applications
