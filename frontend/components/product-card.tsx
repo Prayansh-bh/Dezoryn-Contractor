@@ -24,6 +24,7 @@ function useCardTilt() {
   const [sheenStyle, setSheenStyle] = useState<React.CSSProperties>({ opacity: 0 });
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) return;
     const card = cardRef.current;
     if (!card) return;
 

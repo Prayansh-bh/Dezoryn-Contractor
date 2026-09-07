@@ -37,43 +37,43 @@ export default async function ProductDetailPage({
   return (
     <SiteShell>
       {/* Product Hero Section */}
-      <section className="bg-slate-950 text-white py-16 lg:py-24 border-b border-amber-500/20 relative overflow-hidden">
+      <section className="bg-slate-950 text-white py-12 sm:py-16 lg:py-24 border-b border-amber-500/20 relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
         <div className="container relative z-10">
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-8 uppercase tracking-wider">
+          <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-400 mb-6 sm:mb-8 uppercase tracking-wider">
             <Link href="/" className="hover:text-amber-500 transition-colors">Home</Link>
-            <ChevronRight size={12} className="text-amber-500" />
+            <ChevronRight size={12} className="text-amber-500 shrink-0" />
             <Link href="/products" className="hover:text-amber-500 transition-colors">Products</Link>
-            <ChevronRight size={12} className="text-amber-500" />
-            <span className="text-amber-500">{product.name}</span>
+            <ChevronRight size={12} className="text-amber-500 shrink-0" />
+            <span className="text-amber-500 truncate max-w-[200px] sm:max-w-none">{product.name}</span>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left: Product Info */}
             <div className="lg:col-span-7">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold text-xs uppercase tracking-widest mb-4">
-                <ShieldCheck size={14} /> {product.kicker || "Industrial Grade Specification"}
+                <ShieldCheck size={14} className="shrink-0" /> {product.kicker || "Industrial Grade Specification"}
               </div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight mb-6">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4 sm:mb-6">
                 {product.name}
               </h1>
 
-              <p className="text-slate-300 text-base sm:text-lg leading-relaxed mb-8 max-w-2xl font-normal">
+              <p className="text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed mb-6 sm:mb-8 max-w-2xl font-normal">
                 {product.description}
               </p>
 
-              <div className="flex flex-wrap gap-4 items-center">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
                 <Link
                   href={`/contact?product=${encodeURIComponent(product.name)}`}
-                  className="btn btn-primary"
+                  className="btn btn-primary w-full sm:w-auto text-center"
                 >
                   Request Commercial Quotation <ArrowRight size={16} />
                 </Link>
                 <a
-                  href="mailto:sales@dezoryn.com?subject=Technical Data Sheet Request - "
-                  className="btn btn-ghost text-xs"
+                  href={`mailto:sales@dezoryn.com?subject=Technical Data Sheet Request - ${encodeURIComponent(product.name)}`}
+                  className="btn btn-ghost text-xs w-full sm:w-auto text-center"
                 >
                   <FileText size={15} /> Request Technical Data Sheet
                 </a>
@@ -82,7 +82,7 @@ export default async function ProductDetailPage({
 
             {/* Right: Product Image Box */}
             <div className="lg:col-span-5">
-              <div className="relative h-[340px] sm:h-[400px] rounded-lg overflow-hidden border border-amber-500/30 shadow-2xl">
+              <div className="relative h-[250px] sm:h-[380px] rounded-lg overflow-hidden border border-amber-500/30 shadow-2xl">
                 <Image
                   src={imageSrc}
                   alt={product.name}
@@ -91,8 +91,8 @@ export default async function ProductDetailPage({
                   priority
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-6">
-                  <div className="text-xs font-semibold uppercase tracking-wider text-amber-400">
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-4 sm:p-6">
+                  <div className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-amber-400">
                     Standard Industrial Consignment Packaging
                   </div>
                 </div>
@@ -103,9 +103,9 @@ export default async function ProductDetailPage({
       </section>
 
       {/* Specifications & Advantages Section */}
-      <section className="py-20 bg-[#f8fafc] text-[#0f172a] border-b border-[#e2e8f0]">
+      <section className="py-14 sm:py-20 bg-[#f8fafc] text-[#0f172a] border-b border-[#e2e8f0]">
         <div className="container">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
             {/* Advantages */}
             <div className="lg:col-span-7">
               <div className="section-label mb-3">
@@ -115,7 +115,7 @@ export default async function ProductDetailPage({
                 Engineered for High Traffic & Adverse Weather
               </h2>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-6">
                 {product.features.map((feature) => (
                   <div
                     key={feature}
@@ -128,11 +128,11 @@ export default async function ProductDetailPage({
               </div>
 
               {/* Applications List */}
-              <div className="mt-12">
+              <div className="mt-10 sm:mt-12">
                 <div className="section-label mb-3">
                   <span /> RECOMMENDED APPLICATION ZONES
                 </div>
-                <h3 className="text-xl font-bold text-[#0f172a] mb-4 font-serif">
+                <h3 className="text-lg sm:text-xl font-bold text-[#0f172a] mb-4 font-serif">
                   Where this product is deployed:
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -142,7 +142,7 @@ export default async function ProductDetailPage({
                       className="p-3 bg-white rounded border border-[#e2e8f0] text-center shadow-sm"
                     >
                       <span className="block text-xs font-bold text-[#c9a35d] mb-1">0{i + 1}</span>
-                      <span className="text-xs font-semibold text-[#334155]">{use}</span>
+                      <span className="text-xs font-semibold text-[#334155] leading-tight block">{use}</span>
                     </div>
                   ))}
                 </div>
@@ -151,11 +151,11 @@ export default async function ProductDetailPage({
 
             {/* Specifications Matrix */}
             <div className="lg:col-span-5">
-              <div className="p-8 rounded-lg bg-white text-[#0f172a] border border-[#e2e8f0] shadow-sm">
+              <div className="p-6 sm:p-8 rounded-lg bg-white text-[#0f172a] border border-[#e2e8f0] shadow-sm">
                 <div className="flex items-center gap-2 text-[#c9a35d] text-xs font-bold uppercase tracking-wider mb-6">
                   <Layers size={16} /> Supply Specifications
                 </div>
-                <h3 className="text-xl font-bold text-[#0f172a] mb-6 font-serif">
+                <h3 className="text-lg sm:text-xl font-bold text-[#0f172a] mb-6 font-serif">
                   Commercial & Packaging Parameters
                 </h3>
 
@@ -168,7 +168,7 @@ export default async function ProductDetailPage({
                       <span className="text-[#c9a35d] font-bold text-xs mt-0.5">
                         0{i + 1}.
                       </span>
-                      <span className="text-[#475569]">{spec}</span>
+                      <span className="text-[#475569] text-xs sm:text-sm">{spec}</span>
                     </div>
                   ))}
                 </div>
@@ -180,7 +180,7 @@ export default async function ProductDetailPage({
                   </div>
                   <Link
                     href={`/contact?product=${encodeURIComponent(product.name)}`}
-                    className="btn btn-primary w-full text-xs"
+                    className="btn btn-primary w-full text-xs text-center"
                   >
                     Request Project Quotation
                   </Link>
@@ -192,9 +192,9 @@ export default async function ProductDetailPage({
       </section>
 
       {/* Production & Dispatch Protocol */}
-      <section className="py-16 bg-white border-t border-[#e2e8f0] text-[#0f172a]">
+      <section className="py-14 sm:py-16 bg-white border-t border-[#e2e8f0] text-[#0f172a]">
         <div className="container">
-          <div className="text-center max-w-2xl mx-auto mb-12">
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
             <div className="section-label justify-center mb-2">
               <span /> ORDER EXECUTION
             </div>
@@ -203,7 +203,7 @@ export default async function ProductDetailPage({
             </h2>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4">
             {[
               ["01", "BOQ Review", "Specification alignment"],
               ["02", "Sample Approval", "Laboratory check"],
@@ -213,7 +213,7 @@ export default async function ProductDetailPage({
             ].map(([num, title, desc]) => (
               <div
                 key={num}
-                className="p-5 rounded-lg bg-[#f8fafc] border border-[#e2e8f0] text-center shadow-sm"
+                className="p-4 sm:p-5 rounded-lg bg-[#f8fafc] border border-[#e2e8f0] text-center shadow-sm"
               >
                 <span className="text-[#c9a35d] font-black text-sm block mb-1">{num}</span>
                 <strong className="text-[#0f172a] text-sm block">{title}</strong>

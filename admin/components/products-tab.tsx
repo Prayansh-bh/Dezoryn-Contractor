@@ -52,36 +52,12 @@ export function ProductsTab({
         </div>
 
         {sortedProducts.length === 0 ? (
-          <div
-            className="empty-state"
-            style={{
-              padding: "64px 24px",
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: "12px",
-                background: "rgba(56, 189, 248, 0.1)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                marginBottom: 16,
-                color: "#38bdf8",
-              }}
-            >
+          <div className="empty-state">
+            <div className="empty-state-icon">
               <Box size={28} />
             </div>
-            <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#f8fafc", margin: "0 0 6px 0" }}>
-              No Products in Catalog
-            </h3>
-            <p style={{ color: "var(--text-dim, #94a3b8)", maxWidth: "420px", fontSize: "13px", lineHeight: "1.6", margin: "0 0 20px 0" }}>
+            <h3>No Products in Catalog</h3>
+            <p>
               Your product catalog is currently empty. Click &ldquo;Add Product&rdquo; to create your first highway product line and technical specification.
             </p>
             <button className="admin-primary" onClick={() => edit(emptyProduct)}>

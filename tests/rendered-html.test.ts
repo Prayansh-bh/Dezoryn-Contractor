@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { DEFAULT_PRODUCTS, DEFAULT_SITE_SETTINGS } from "../shared/constants/index.ts";
+import { DEFAULT_PRODUCTS, DEFAULT_SITE_SETTINGS } from "../shared/constants/index";
 
 test("shared constants integrity", () => {
   assert.equal(Array.isArray(DEFAULT_PRODUCTS), true);

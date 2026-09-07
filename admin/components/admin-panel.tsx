@@ -7,6 +7,7 @@ import {
   Inbox,
   LayoutDashboard,
   LogOut,
+  Menu,
   RefreshCw,
   Settings,
   X,
@@ -37,6 +38,7 @@ export function AdminPanel({
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState<Partial<Product> | null>(null);
   const [notice, setNotice] = useState("");
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -67,7 +69,15 @@ export function AdminPanel({
     setNotice("");
     try {
       await postAdminAction(payload);
-      setNotice("Saved successfully");
+      const actionMessages: Record<string, string> = {
+        save_product: payload.id ? "Product updated successfully" : "New product added to catalog",
+        delete_product: "Product deleted successfully",
+        save_settings: "Website settings saved successfully",
+        enquiry_status: `Enquiry status changed to "${payload.status}"`,
+        delete_enquiry: "Enquiry deleted permanently",
+        gallery_toggle: payload.featured ? "Media pinned to featured homepage showcase" : "Gallery media updated",
+      };
+      setNotice(actionMessages[payload?.action] || "Changes saved successfully");
       await load();
       return true;
     } catch (err: any) {
@@ -102,21 +112,44 @@ export function AdminPanel({
 
   return (
     <div className="admin-app">
-      <aside className="admin-side">
-        <a className="admin-brand" href="http://localhost:3000" target="_blank" rel="noreferrer">
-          <div className="admin-brand-mark">
-            <span className="sr-only">{companyName}</span>
-          </div>
-          <div className="admin-brand-info">
-            <b>{companyName.toUpperCase()}</b>
-            <small>CONTROL CENTRE</small>
-          </div>
-        </a>
+      {/* Mobile Drawer Backdrop */}
+      {mobileNavOpen && (
+        <div
+          className="admin-side-backdrop"
+          onClick={() => setMobileNavOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      <aside className={`admin-side ${mobileNavOpen ? "open" : ""}`}>
+        <div className="admin-side-header">
+          <a className="admin-brand" href="http://localhost:3000" target="_blank" rel="noreferrer">
+            <div className="admin-brand-mark">
+              <span className="sr-only">{companyName}</span>
+            </div>
+            <div className="admin-brand-info">
+              <b>{companyName.toUpperCase()}</b>
+              <small>CONTROL CENTRE</small>
+            </div>
+          </a>
+          <button
+            type="button"
+            className="admin-side-close"
+            onClick={() => setMobileNavOpen(false)}
+            aria-label="Close navigation"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
         <nav>
           {nav.map(([id, Icon, label]) => (
             <button
               className={tab === id ? "active" : ""}
-              onClick={() => setTab(id as Tab)}
+              onClick={() => {
+                setTab(id as Tab);
+                setMobileNavOpen(false);
+              }}
               key={id}
             >
               <Icon /> {label}
@@ -152,15 +185,25 @@ export function AdminPanel({
 
       <main className="admin-main">
         <header>
-          <div>
-            <div className="section-label">
-              <span /> {companyName.toUpperCase()} CONTROL PORTAL
+          <div className="admin-header-title-group">
+            <button
+              type="button"
+              className="admin-menu-btn"
+              onClick={() => setMobileNavOpen(true)}
+              aria-label="Open sidebar navigation"
+            >
+              <Menu size={20} />
+            </button>
+            <div>
+              <div className="section-label">
+                <span /> {companyName.toUpperCase()} CONTROL PORTAL
+              </div>
+              <h1>{nav.find((n) => n[0] === tab)?.[2]}</h1>
             </div>
-            <h1>{nav.find((n) => n[0] === tab)?.[2]}</h1>
           </div>
-          <div>
+          <div className="admin-header-actions">
             <a className="admin-view" href="http://localhost:3000" target="_blank" rel="noreferrer">
-              <Eye size={15} className="text-[#c9a35d]" /> View Website
+              <Eye size={15} className="text-[#c9a35d]" /> <span className="admin-view-text">View Website</span>
             </a>
             <button className="admin-refresh" onClick={load} title="Refresh data">
               <RefreshCw size={16} className={loading ? "spin" : ""} />

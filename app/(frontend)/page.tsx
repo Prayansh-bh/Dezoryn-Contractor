@@ -110,13 +110,13 @@ export default async function HomePage() {
                 We collaborate directly with road contractors, EPC concessionaires, State PWD vendors, and infrastructure distributors who demand repeatable batch quality, verified retro-reflectivity, and scheduled site dispatches.
               </p>
 
-              <div className="flex items-center gap-6">
-                <Link href="/about" className="btn btn-secondary">
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+                <Link href="/about" className="btn btn-secondary w-full sm:w-auto">
                   Our Manufacturing Setup <ArrowRight size={15} />
                 </Link>
                 <Link
                   href="/quality"
-                  className="text-xs font-bold uppercase tracking-wider text-[#c9a35d] hover:underline"
+                  className="text-xs font-bold uppercase tracking-wider text-[#c9a35d] hover:underline py-2"
                 >
                   Quality Protocol →
                 </Link>
@@ -124,21 +124,21 @@ export default async function HomePage() {
             </div>
 
             <div className="lg:col-span-6">
-              <div className="relative h-[380px] sm:h-[450px] rounded-lg overflow-hidden border border-[#e2e8f0] shadow-xl group">
+              <div className="relative h-[280px] sm:h-[420px] rounded-lg overflow-hidden border border-[#e2e8f0] shadow-xl group">
                 <Image
                   src="/images/products/custom-manufacturing.jpg"
                   alt="Dezoryn Automated Highway Material Production Facility"
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#06090d]/95 via-[#06090d]/40 to-transparent flex flex-col justify-end p-8 text-white">
+                <div className="absolute inset-0 bg-gradient-to-t from-[#06090d]/95 via-[#06090d]/40 to-transparent flex flex-col justify-end p-6 sm:p-8 text-white">
                   <div className="flex items-center gap-2 text-[#f0d796] text-xs font-bold uppercase tracking-widest mb-1">
                     <Factory size={16} /> Automated Batch Production
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2 font-serif">
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-2 font-serif">
                     Standardized Chemical Compounding & Packaging
                   </h3>
-                  <p className="text-xs text-[#cbd5e1]">
+                  <p className="text-xs text-[#cbd5e1] line-clamp-2 sm:line-clamp-none">
                     Continuous monitoring of resin purity, pigment concentration, and retro-reflective bead gradation.
                   </p>
                 </div>
@@ -271,42 +271,42 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between h-[240px] shadow-sm hover:shadow-md group">
+            <div className="p-6 sm:p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between min-h-[210px] h-auto shadow-sm hover:shadow-md group">
               <div>
                 <Route size={32} className="text-[#c9a35d] mb-4 transition-transform duration-300 group-hover:scale-110" />
                 <h3 className="text-lg font-bold text-[#0f172a]">National & State Highways</h3>
               </div>
-              <span className="text-xs text-[#64748b] uppercase tracking-wider font-semibold">
+              <span className="text-xs text-[#64748b] uppercase tracking-wider font-semibold mt-4">
                 High-Volume Corridors
               </span>
             </div>
 
-            <div className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between h-[240px] shadow-sm hover:shadow-md group">
+            <div className="p-6 sm:p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between min-h-[210px] h-auto shadow-sm hover:shadow-md group">
               <div>
                 <Truck size={32} className="text-[#c9a35d] mb-4 transition-transform duration-300 group-hover:scale-110" />
                 <h3 className="text-lg font-bold text-[#0f172a]">Expressways & Corridors</h3>
               </div>
-              <span className="text-xs text-[#64748b] uppercase tracking-wider font-semibold">
+              <span className="text-xs text-[#64748b] uppercase tracking-wider font-semibold mt-4">
                 Phased Construction EPC
               </span>
             </div>
 
-            <div className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between h-[240px] shadow-sm hover:shadow-md group">
+            <div className="p-6 sm:p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between min-h-[210px] h-auto shadow-sm hover:shadow-md group">
               <div>
                 <Building2 size={32} className="text-[#c9a35d] mb-4 transition-transform duration-300 group-hover:scale-110" />
                 <h3 className="text-lg font-bold text-[#0f172a]">Urban Roads & Smart Cities</h3>
               </div>
-              <span className="text-xs text-[#64748b] uppercase tracking-wider font-semibold">
+              <span className="text-xs text-[#64748b] uppercase tracking-wider font-semibold mt-4">
                 Intersections & Crossings
               </span>
             </div>
 
-            <div className="p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between h-[240px] shadow-sm hover:shadow-md group">
+            <div className="p-6 sm:p-8 rounded-lg bg-white border border-[#e2e8f0] hover:border-[#c9a35d] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between min-h-[210px] h-auto shadow-sm hover:shadow-md group">
               <div>
                 <Plane size={32} className="text-[#c9a35d] mb-4 transition-transform duration-300 group-hover:scale-110" />
                 <h3 className="text-lg font-bold text-[#0f172a]">Airports & Industrial Parks</h3>
               </div>
-              <span className="text-xs text-[#64748b] uppercase tracking-wider font-semibold">
+              <span className="text-xs text-[#64748b] uppercase tracking-wider font-semibold mt-4">
                 Controlled Transit Areas
               </span>
             </div>

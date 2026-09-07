@@ -315,19 +315,20 @@ export function LoginPage() {
         {/* Footer Security Badge */}
         <div
           style={{
-            padding: "16px 28px",
+            padding: "14px 16px",
             background: "#080c16",
             borderTop: "1px solid rgba(255, 255, 255, 0.04)",
             textAlign: "center",
             fontSize: "11px",
             color: "#64748b",
             display: "flex",
+            flexWrap: "wrap",
             alignItems: "center",
             justifyContent: "center",
             gap: "6px",
           }}
         >
-          <ShieldCheck size={13} color="#c9a35d" />
+          <ShieldCheck size={13} color="#c9a35d" style={{ flexShrink: 0 }} />
           <span>Protected Infrastructure · Short-Lived Access JWT & Token Rotation</span>
         </div>
       </div>

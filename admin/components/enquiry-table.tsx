@@ -18,36 +18,12 @@ export function EnquiryTable({
     <>
       <div className="admin-table-wrap">
         {!rows.length ? (
-          <div
-            className="empty-state"
-            style={{
-              padding: "48px 24px",
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div
-              style={{
-                width: 48,
-                height: 48,
-                borderRadius: "10px",
-                background: "rgba(56, 189, 248, 0.1)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                marginBottom: 12,
-                color: "#38bdf8",
-              }}
-            >
+          <div className="empty-state">
+            <div className="empty-state-icon">
               <Inbox size={24} />
             </div>
-            <h3 style={{ fontSize: "15px", fontWeight: 600, color: "#f8fafc", margin: "0 0 4px 0" }}>
-              No Enquiries Received Yet
-            </h3>
-            <p style={{ color: "var(--text-dim, #94a3b8)", maxWidth: "380px", fontSize: "13px", lineHeight: "1.5", margin: 0 }}>
+            <h3>No Enquiries Received Yet</h3>
+            <p>
               Incoming project quote requests and inquiries submitted from the public contact forms will automatically appear here.
             </p>
           </div>

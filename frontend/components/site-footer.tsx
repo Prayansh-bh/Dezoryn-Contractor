@@ -82,9 +82,9 @@ export function SiteFooter({ settings }: { settings?: SiteSettings }) {
 
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} {companyName} Contractor. All rights reserved.</span>
-          <span className="flex items-center gap-4">
+          <span className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-center">
             <span>MORTH & IRC Specification Aligned</span>
-            <span>•</span>
+            <span className="hidden sm:inline opacity-40">•</span>
             <span>Engineered for Indian Roads</span>
           </span>
         </div>

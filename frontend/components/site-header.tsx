@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowRight, Mail, Menu, Phone, ShieldCheck, X } from "lucide-react";
+import { ArrowRight, ChevronRight, Mail, Menu, Phone, ShieldCheck, X } from "lucide-react";
 import type { SiteSettings } from "@shared/types";
 
 export function SiteHeader({ settings }: { settings?: SiteSettings }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const progressBarRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
 
   const email = settings?.email || "sales@dezoryn.com";
@@ -16,16 +16,44 @@ export function SiteHeader({ settings }: { settings?: SiteSettings }) {
   const companyName = settings?.company_name || "DEZORYN";
 
   useEffect(() => {
-    const handleScroll = () => {
+    let ticking = false;
+
+    const updateProgressBar = () => {
+      const el = progressBarRef.current;
+      if (!el) return;
       const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalScroll > 0) {
-        setScrollProgress((window.scrollY / totalScroll) * 100);
+      const progress = totalScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / totalScroll)) : 0;
+      el.style.transform = `scaleX(${progress})`;
+      el.style.opacity = progress > 0.005 ? "1" : "0";
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateProgressBar);
+        ticking = true;
       }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    updateProgressBar();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Close menu on route change or escape key
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && menuOpen) {
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [menuOpen]);
 
   const navLinks = [
     { label: "Home", href: "/" },
@@ -82,7 +110,8 @@ export function SiteHeader({ settings }: { settings?: SiteSettings }) {
                   onClick={() => setMenuOpen(false)}
                   className={isActive ? "active" : ""}
                 >
-                  {link.label}
+                  <span>{link.label}</span>
+                  {menuOpen && <ChevronRight size={14} className="text-[#c9a35d] md:hidden" />}
                 </Link>
               );
             })}
@@ -99,6 +128,7 @@ export function SiteHeader({ settings }: { settings?: SiteSettings }) {
             className="menu-btn"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle navigation menu"
+            aria-expanded={menuOpen}
           >
             {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -106,11 +136,21 @@ export function SiteHeader({ settings }: { settings?: SiteSettings }) {
 
         {/* 2px Aztec Gold Scroll Progress Hairline */}
         <div
-          className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-[#c9a35d] to-[#f1d99b] transition-all duration-150 ease-out pointer-events-none"
-          style={{ width: `${scrollProgress}%`, opacity: scrollProgress > 1 ? 1 : 0 }}
+          ref={progressBarRef}
+          className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#c9a35d] to-[#f1d99b] origin-left transition-opacity duration-200 ease-out pointer-events-none"
+          style={{ transform: "scaleX(0)", opacity: 0, willChange: "transform" }}
           aria-hidden="true"
         />
       </nav>
+
+      {/* Backdrop overlay for mobile menu */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-40 md:hidden animate-in fade-in duration-200"
+          onClick={() => setMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
     </>
   );
 }

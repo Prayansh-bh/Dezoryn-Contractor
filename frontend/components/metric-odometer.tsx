@@ -86,7 +86,7 @@ export function MetricOdometer({ value, label, index }: MetricOdometerProps) {
   return (
     <div
       ref={containerRef}
-      className={`metric-odometer-card relative flex flex-col justify-center pl-6 py-2 transition-all duration-700 ${
+      className={`metric-odometer-card relative flex flex-col justify-center pl-4 sm:pl-6 py-2 transition-all duration-700 ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
       }`}
       style={{ transitionDelay: `${index * 90}ms` }}
@@ -102,10 +102,10 @@ export function MetricOdometer({ value, label, index }: MetricOdometerProps) {
         }}
       />
 
-      <span className="text-[#c9a35d] font-black text-2xl lg:text-3xl tracking-tight font-display font-feature-settings-num">
+      <span className="text-[#c9a35d] font-black text-xl sm:text-2xl lg:text-3xl tracking-tight font-display font-feature-settings-num">
         {displayValue}
       </span>
-      <span className="text-xs uppercase tracking-wider text-[#64748b] font-semibold mt-1.5">
+      <span className="text-[11px] sm:text-xs uppercase tracking-wider text-[#64748b] font-semibold mt-1">
         {label}
       </span>
     </div>
@@ -118,9 +118,9 @@ export function CapabilitiesStrip({
   capabilities: readonly [string, string][];
 }) {
   return (
-    <section className="bg-[#f8fafc] border-y border-[#e2e8f0] py-12 text-[#0f172a] relative z-20 overflow-hidden">
+    <section className="bg-[#f8fafc] border-y border-[#e2e8f0] py-10 sm:py-12 text-[#0f172a] relative z-20 overflow-hidden">
       <div className="container">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8 lg:gap-12">
           {capabilities.map(([val, lbl], idx) => (
             <MetricOdometer key={lbl} value={val} label={lbl} index={idx} />
           ))}

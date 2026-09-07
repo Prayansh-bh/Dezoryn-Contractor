@@ -51,7 +51,7 @@ export function HeroTelemetryHud() {
 
     const render = () => {
       if (!isVisible) {
-        animationId = requestAnimationFrame(render);
+        animationId = 0;
         return;
       }
 
@@ -135,9 +135,15 @@ export function HeroTelemetryHud() {
       (entries) => {
         entries.forEach((e) => {
           isVisible = e.isIntersecting;
+          if (isVisible && !animationId) {
+            animationId = requestAnimationFrame(render);
+          } else if (!isVisible && animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = 0;
+          }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.05 }
     );
 
     observer.observe(canvas);
@@ -146,7 +152,7 @@ export function HeroTelemetryHud() {
     return () => {
       observer.disconnect();
       window.removeEventListener("resize", handleResize);
-      cancelAnimationFrame(animationId);
+      if (animationId) cancelAnimationFrame(animationId);
     };
   }, []);
 

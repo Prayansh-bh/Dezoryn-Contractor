@@ -18,13 +18,13 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
 
     // Initialize Lenis with refined, responsive momentum calibration
     const lenis = new Lenis({
-      duration: 1.1,
+      duration: 1.0,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // smooth exponential decay
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 0.95,
-      touchMultiplier: 1.0,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 0, // Bypass touch devices for native 120Hz hardware scrolling
       infinite: false,
     });
 
