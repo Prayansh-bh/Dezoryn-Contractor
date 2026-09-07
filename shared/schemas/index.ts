@@ -113,8 +113,22 @@ export const createIndividualWorkerSchema = z.object({
   availability: z.string().trim().default("immediate"),
 });
 
+export const saveCertificateSchema = z.object({
+  id: z.number().int().positive().optional(),
+  title: z.string().trim().min(1, "Certificate title is required").max(200),
+  subtitle: z.string().trim().max(250).default("").optional(),
+  issuer: z.string().trim().min(1, "Issuer / Authority is required").max(160),
+  certificateNo: z.string().trim().max(120).default("").optional(),
+  validUntil: z.string().trim().max(80).default("").optional(),
+  imageUrl: z.string().trim().min(1, "Certificate image is required"),
+  fileName: z.string().trim().default("").optional(),
+  active: z.boolean().default(true),
+  sortOrder: z.coerce.number().int().default(0),
+});
+
 export type CreateEnquiryInput = z.infer<typeof createEnquirySchema>;
 export type SaveProductInput = z.infer<typeof saveProductSchema>;
+export type SaveCertificateInput = z.infer<typeof saveCertificateSchema>;
 export type SiteSettingsInput = z.infer<typeof siteSettingsSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
@@ -122,5 +136,6 @@ export type ChangeEmailInput = z.infer<typeof changeEmailSchema>;
 export type CreateLabourRequisitionInput = z.infer<typeof createLabourRequisitionSchema>;
 export type CreateLabourAgencyInput = z.infer<typeof createLabourAgencySchema>;
 export type CreateIndividualWorkerInput = z.infer<typeof createIndividualWorkerSchema>;
+
 
 

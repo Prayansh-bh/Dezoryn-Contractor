@@ -186,3 +186,25 @@ model IndividualWorker {
   @@map("individual_workers")
 }
 
+model Certificate {
+  id            Int      @id @default(autoincrement())
+  title         String
+  subtitle      String?  @default("")
+  issuer        String   @default("")
+  certificateNo String?  @map("certificate_no")
+  validUntil    String?  @map("valid_until")
+  imageUrl      String   @map("image_url")
+  fileName      String?  @map("file_name")
+  fileData      Bytes?   @map("file_data")
+  contentType   String?  @map("content_type")
+  active        Boolean  @default(true)
+  sortOrder     Int      @default(0) @map("sort_order")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([active, sortOrder])
+  @@index([createdAt])
+  @@map("certificates")
+}
+
+

@@ -108,3 +108,101 @@ model AdminRefreshToken {
   @@index([familyId])
   @@map("admin_refresh_tokens")
 }
+
+model LabourRequisition {
+  id              Int      @id @default(autoincrement())
+  requisitionCode String   @unique @map("requisition_code")
+  companyName     String   @map("company_name")
+  contactPerson   String   @map("contact_person")
+  phone           String
+  email           String
+  projectTitle    String   @map("project_title")
+  projectType     String   @map("project_type")
+  locationState   String   @map("location_state")
+  locationCity    String   @map("location_city")
+  siteAddress     String?  @map("site_address")
+  totalWorkers    Int      @map("total_workers")
+  skillsRequired  Json     @default("[]") @map("skills_required")
+  startDate       String?  @map("start_date")
+  durationMonths  String?  @map("duration_months")
+  amenities       Json     @default("[]")
+  dailyWageBudget String?  @map("daily_wage_budget")
+  message         String?  @default("")
+  status          String   @default("open")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([status, createdAt])
+  @@index([locationState])
+  @@map("labour_requisitions")
+}
+
+model LabourAgency {
+  id              Int      @id @default(autoincrement())
+  agencyCode      String   @unique @map("agency_code")
+  agencyName      String   @map("agency_name")
+  proprietorName  String   @map("proprietor_name")
+  phone           String   @unique
+  email           String?
+  gstin           String?
+  labourLicenseNo String?  @map("labour_license_no")
+  state           String
+  city            String
+  totalCrewSize   Int      @map("total_crew_size")
+  primaryTrades   Json     @default("[]") @map("primary_trades")
+  preferredStates Json     @default("[]") @map("preferred_states")
+  availability    String   @default("immediate")
+  verified        Boolean  @default(false)
+  status          String   @default("active")
+  notes           String?  @default("")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([status, verified])
+  @@index([state])
+  @@map("labour_agencies")
+}
+
+model IndividualWorker {
+  id              Int      @id @default(autoincrement())
+  workerCode      String   @unique @map("worker_code")
+  fullName        String   @map("full_name")
+  phone           String   @unique
+  trade           String
+  experienceYears Int      @default(1) @map("experience_years")
+  currentCity     String   @map("current_city")
+  currentState    String   @map("current_state")
+  dailyWageExpect String?  @map("daily_wage_expect")
+  canRelocate     Boolean  @default(true) @map("can_relocate")
+  availability    String   @default("immediate")
+  verified        Boolean  @default(false)
+  status          String   @default("available")
+  notes           String?  @default("")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([trade, currentState])
+  @@index([status])
+  @@map("individual_workers")
+}
+
+model Certificate {
+  id            Int      @id @default(autoincrement())
+  title         String
+  subtitle      String?  @default("")
+  issuer        String   @default("")
+  certificateNo String?  @map("certificate_no")
+  validUntil    String?  @map("valid_until")
+  imageUrl      String   @map("image_url")
+  fileName      String?  @map("file_name")
+  fileData      Bytes?   @map("file_data")
+  contentType   String?  @map("content_type")
+  active        Boolean  @default(true)
+  sortOrder     Int      @default(0) @map("sort_order")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([active, sortOrder])
+  @@index([createdAt])
+  @@map("certificates")
+}

@@ -1,6 +1,7 @@
 export type {
   CreateEnquiryInput,
   SaveProductInput,
+  SaveCertificateInput,
   SiteSettingsInput,
   LoginInput,
   ChangePasswordInput,
@@ -159,11 +160,29 @@ export interface AdminSession {
   isAdmin: boolean;
 }
 
+export interface Certificate {
+  id: number;
+  title: string;
+  subtitle?: string | null;
+  issuer: string;
+  certificateNo?: string | null;
+  validUntil?: string | null;
+  imageUrl: string;
+  fileName?: string | null;
+  fileData?: Uint8Array | ArrayBuffer | any;
+  contentType?: string | null;
+  active: boolean;
+  sortOrder: number;
+  createdAt: string | Date;
+  updatedAt?: string | Date;
+}
+
 export interface AdminDashboardData {
   products: Product[];
   gallery: GalleryItem[];
   enquiries: Enquiry[];
   settings: SiteSettings;
+  certificates?: Certificate[];
   workforce?: {
     requisitions: LabourRequisition[];
     agencies: LabourAgency[];

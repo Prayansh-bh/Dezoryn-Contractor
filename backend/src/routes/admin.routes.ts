@@ -38,6 +38,14 @@ import {
   deleteIndividualWorker,
   getWorkforceSummary,
 } from "../services/workforce.service";
+import {
+  getAllCertificates,
+  createCertificate,
+  updateCertificate,
+  deleteCertificate,
+  toggleCertificateStatus,
+} from "../services/certificates.service";
+import { saveCertificateSchema } from "@shared/schemas";
 
 export const adminRouter = Router();
 
@@ -68,6 +76,7 @@ adminRouter.get("/", async (_req, res) => {
       gallery,
       enquiries,
       settings,
+      certificates,
       requisitions,
       agencies,
       workers,
@@ -77,6 +86,7 @@ adminRouter.get("/", async (_req, res) => {
       getAllGalleryItems(),
       getAllEnquiries(250),
       getAdminSettings(),
+      getAllCertificates(),
       getAllLabourRequisitions(250),
       getAllLabourAgencies(250),
       getAllIndividualWorkers(250),
@@ -88,6 +98,7 @@ adminRouter.get("/", async (_req, res) => {
       gallery,
       enquiries,
       settings,
+      certificates,
       workforce: {
         requisitions,
         agencies,
@@ -231,6 +242,45 @@ adminRouter.post("/", async (req, res) => {
       return res.json({ ok: true });
     }
 
+    // 14. Save / Update Certificate
+    if (action === "save_certificate") {
+      const payload = body.data || body;
+      const parsed = saveCertificateSchema.safeParse(payload);
+      if (!parsed.success) {
+        return res.status(400).json({
+          error: parsed.error.errors[0]?.message || "Validation failed",
+          issues: parsed.error.issues,
+        });
+      }
+
+      if (parsed.data.id) {
+        const updated = await updateCertificate(parsed.data.id, parsed.data);
+        return res.json({ ok: true, ...updated, certificate: updated });
+      } else {
+        const created = await createCertificate(parsed.data);
+        return res.status(200).json({ ok: true, ...created, certificate: created });
+      }
+    }
+
+    // 15. Delete Certificate
+    if (action === "delete_certificate") {
+      const id = Number(body.id);
+      if (!id) return res.status(400).json({ error: "Certificate ID required" });
+      await deleteCertificate(id);
+      return res.json({ ok: true, success: true });
+    }
+
+    // 16. Toggle Certificate Active Status
+    if (action === "toggle_certificate_active") {
+      const id = Number(body.id);
+      if (!id) return res.status(400).json({ error: "Certificate ID required" });
+      const updated = await toggleCertificateStatus(
+        id,
+        body.active !== undefined ? Boolean(body.active) : undefined
+      );
+      return res.json({ ok: true, ...updated, certificate: updated });
+    }
+
     return res.status(400).json({ error: "Unknown action" });
 
   } catch (error: any) {
@@ -339,4 +389,46 @@ adminRouter.post(
     }
   }
 );
+
+// POST /api/admin/certificates/upload - Upload certificate image
+adminRouter.post(
+  "/certificates/upload",
+  (req, res, next) => {
+    productImageUpload.single("file")(req, res, (err) => {
+      if (err instanceof multer.MulterError) {
+        if (err.code === "LIMIT_FILE_SIZE") {
+          return res.status(400).json({ error: "Certificate image exceeds maximum 10MB limit" });
+        }
+        return res.status(400).json({ error: err.message });
+      } else if (err) {
+        return res.status(400).json({ error: err.message || "Invalid file" });
+      }
+      next();
+    });
+  },
+  async (req, res) => {
+    try {
+      const file = req.file;
+      if (!file) {
+        return res.status(400).json({ error: "File required" });
+      }
+
+      const { localPath, objectKey } = await saveProductImageFile(
+        file.originalname,
+        file.buffer
+      );
+
+      res.status(200).json({
+        ok: true,
+        imageUrl: localPath,
+        fileName: file.originalname,
+        objectKey,
+      });
+    } catch (error) {
+      console.error("❌ [Admin Routes POST /api/admin/certificates/upload] Error:", error);
+      res.status(500).json({ error: "Failed to upload certificate image" });
+    }
+  }
+);
+
 

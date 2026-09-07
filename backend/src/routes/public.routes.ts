@@ -7,6 +7,7 @@ import { createEnquiry } from "../services/enquiries.service";
 import { sendEnquiryNotifications } from "../services/email.service";
 import { getActiveProducts, getProductBySlug } from "../services/products.service";
 import { getActiveGalleryItems, getGalleryItemById } from "../services/gallery.service";
+import { getActiveCertificates, getCertificateById } from "../services/certificates.service";
 import { getMediaFile } from "../storage/local-storage.service";
 import { createEnquirySchema } from "../validation/enquiry.schema";
 
@@ -65,6 +66,17 @@ publicRouter.get("/gallery", async (_req, res) => {
     res.json(items);
   } catch (error) {
     console.error("❌ [Public Routes GET /api/gallery] Error:", error);
+    res.status(500).json([]);
+  }
+});
+
+// GET /api/certificates - Active certificates list
+publicRouter.get("/certificates", async (_req, res) => {
+  try {
+    const list = await getActiveCertificates();
+    res.json(list);
+  } catch (error) {
+    console.error("❌ [Public Routes GET /api/certificates] Error:", error);
     res.status(500).json([]);
   }
 });
@@ -149,3 +161,56 @@ publicRouter.get("/media/:id", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+
+// GET /api/certificates/:id/image - Stream certificate image binary
+publicRouter.get("/certificates/:id/image", async (req, res) => {
+  try {
+    const certId = Number(req.params.id);
+    if (!certId) {
+      return res.status(400).send("Invalid certificate ID");
+    }
+
+    const cert = await getCertificateById(certId);
+    if (!cert || !cert.active) {
+      return res.status(404).send("Certificate not found");
+    }
+
+    if (cert.fileData) {
+      res.setHeader("Content-Type", cert.contentType || "image/jpeg");
+      res.setHeader("Cache-Control", "public, max-age=86400");
+      return res.send(Buffer.from(cert.fileData));
+    }
+
+    if (cert.imageUrl) {
+      const cleanPath = cert.imageUrl.replace(/^\//, "");
+      const candidatePaths = [
+        path.join(process.cwd(), "public", cleanPath),
+        path.join(process.cwd(), "..", "public", cleanPath),
+        path.resolve(process.cwd(), "public", cleanPath),
+      ];
+
+      for (const p of candidatePaths) {
+        try {
+          const fileBuffer = await fs.readFile(p);
+          if (fileBuffer) {
+            res.setHeader("Content-Type", cert.contentType || "image/jpeg");
+            res.setHeader("Cache-Control", "public, max-age=86400");
+            return res.send(fileBuffer);
+          }
+        } catch {
+          // Continue searching candidates
+        }
+      }
+
+      if (cert.imageUrl.startsWith("http://") || cert.imageUrl.startsWith("https://")) {
+        return res.redirect(cert.imageUrl);
+      }
+    }
+
+    res.status(404).send("Certificate image not found");
+  } catch (error) {
+    console.error(`❌ [Public Routes GET /api/certificates/${req.params.id}/image] Error:`, error);
+    res.status(500).send("Server error");
+  }
+});
+

@@ -20,20 +20,23 @@ import { QcRadarVisual } from "@frontend/components/qc-radar-visual";
 import { CapabilitiesStrip } from "@frontend/components/metric-odometer";
 import { HighwayFlowLine } from "@frontend/components/highway-flow-line";
 import { HomeWorkforceSection } from "@frontend/components/home-workforce-section";
+import { HomeCertificatesSection } from "@frontend/components/home-certificates-section";
 import { CAPABILITIES } from "@shared/constants";
 import { getSettings } from "@backend/services/settings.service";
 import { getActiveProducts } from "@backend/services/products.service";
 import { getActiveGalleryItems } from "@backend/services/gallery.service";
 import { getWorkforceSummary } from "@backend/services/workforce.service";
+import { getActiveCertificates } from "@backend/services/certificates.service";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [settings, products, galleryItems, workforceSummary] = await Promise.all([
+  const [settings, products, galleryItems, workforceSummary, certificates] = await Promise.all([
     getSettings(),
     getActiveProducts(),
     getActiveGalleryItems(),
     getWorkforceSummary().catch(() => undefined),
+    getActiveCertificates().catch(() => []),
   ]);
 
   const featuredItems = galleryItems.filter((item) => item.featured);
@@ -400,7 +403,10 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Section 6: B2B Quotation Form */}
+      {/* Section 7: Verified Quality & Compliance Accreditations */}
+      <HomeCertificatesSection certificates={certificates} />
+
+      {/* Section 8: B2B Quotation Form */}
       <section id="quote" className="py-24 bg-[#ffffff] text-[#0f172a] relative">
         <EnquiryForm />
       </section>

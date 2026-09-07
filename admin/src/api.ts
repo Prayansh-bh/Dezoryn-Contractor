@@ -139,3 +139,18 @@ export async function uploadProductImage(
   return res.json();
 }
 
+export async function uploadCertificateImage(
+  formData: FormData
+): Promise<{ ok: boolean; imageUrl: string; fileName?: string; objectKey?: string }> {
+  const res = await authenticatedFetch("/api/admin/certificates/upload", {
+    method: "POST",
+    body: formData,
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to upload certificate image");
+  }
+  return res.json();
+}
+
+

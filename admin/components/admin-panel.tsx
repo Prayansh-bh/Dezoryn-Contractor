@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  Award,
   Box,
   CheckCircle2,
   Eye,
@@ -17,6 +18,7 @@ import { DashboardTab } from "./dashboard-tab";
 import { WorkforceTab } from "./workforce-tab";
 import { ProductsTab } from "./products-tab";
 import { GalleryTab } from "./gallery-tab";
+import { CertificatesTab } from "./certificates-tab";
 import { EnquiriesTab } from "./enquiries-tab";
 import { SettingsTab } from "./settings-tab";
 import { ProductEditorModal } from "./product-editor-modal";
@@ -24,7 +26,7 @@ import type { AdminDashboardData, Product } from "@shared/types";
 
 import { fetchAdminData, postAdminAction } from "../src/api";
 
-type Tab = "dashboard" | "workforce" | "products" | "gallery" | "enquiries" | "settings";
+type Tab = "dashboard" | "workforce" | "products" | "gallery" | "certificates" | "enquiries" | "settings";
 
 
 export function AdminPanel({
@@ -85,6 +87,9 @@ export function AdminPanel({
         delete_agency: "Labour agency deleted successfully",
         worker_status: "Individual worker status updated",
         delete_worker: "Worker profile deleted successfully",
+        save_certificate: payload.id ? "Certificate updated successfully" : "New certificate published successfully",
+        delete_certificate: "Certificate deleted successfully",
+        toggle_certificate_active: "Certificate visibility updated",
       };
       setNotice(actionMessages[payload?.action] || "Changes saved successfully");
       await load();
@@ -108,6 +113,7 @@ export function AdminPanel({
     ["workforce", HardHat, "Workforce & Labour"],
     ["products", Box, "Products"],
     ["gallery", FileImage, "Gallery"],
+    ["certificates", Award, "Certificates & Accreditations"],
     ["enquiries", Inbox, "Enquiries"],
     ["settings", Settings, "Website settings"],
   ] as const;
@@ -235,6 +241,9 @@ export function AdminPanel({
             action={action}
             setNotice={setNotice}
           />
+        )}
+        {data && tab === "certificates" && (
+          <CertificatesTab data={data} action={action} />
         )}
         {data && tab === "enquiries" && (
           <EnquiriesTab data={data} action={action} />
