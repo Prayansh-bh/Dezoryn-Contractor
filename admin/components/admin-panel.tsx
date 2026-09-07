@@ -4,6 +4,7 @@ import {
   CheckCircle2,
   Eye,
   FileImage,
+  HardHat,
   Inbox,
   LayoutDashboard,
   LogOut,
@@ -13,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import { DashboardTab } from "./dashboard-tab";
+import { WorkforceTab } from "./workforce-tab";
 import { ProductsTab } from "./products-tab";
 import { GalleryTab } from "./gallery-tab";
 import { EnquiriesTab } from "./enquiries-tab";
@@ -22,7 +24,8 @@ import type { AdminDashboardData, Product } from "@shared/types";
 
 import { fetchAdminData, postAdminAction } from "../src/api";
 
-type Tab = "dashboard" | "products" | "gallery" | "enquiries" | "settings";
+type Tab = "dashboard" | "workforce" | "products" | "gallery" | "enquiries" | "settings";
+
 
 export function AdminPanel({
   user = "Dezoryn Administrator",
@@ -76,6 +79,12 @@ export function AdminPanel({
         enquiry_status: `Enquiry status changed to "${payload.status}"`,
         delete_enquiry: "Enquiry deleted permanently",
         gallery_toggle: payload.featured ? "Media pinned to featured homepage showcase" : "Gallery media updated",
+        requisition_status: `Requisition status changed to "${payload.status}"`,
+        delete_requisition: "Labour requisition deleted successfully",
+        agency_verify: "Labour agency verification updated",
+        delete_agency: "Labour agency deleted successfully",
+        worker_status: "Individual worker status updated",
+        delete_worker: "Worker profile deleted successfully",
       };
       setNotice(actionMessages[payload?.action] || "Changes saved successfully");
       await load();
@@ -96,6 +105,7 @@ export function AdminPanel({
 
   const nav = [
     ["dashboard", LayoutDashboard, "Dashboard"],
+    ["workforce", HardHat, "Workforce & Labour"],
     ["products", Box, "Products"],
     ["gallery", FileImage, "Gallery"],
     ["enquiries", Inbox, "Enquiries"],
@@ -158,45 +168,33 @@ export function AdminPanel({
         </nav>
         <div className="admin-user">
           <span>{user === "Dezoryn Administrator" ? `${companyName} Administrator` : user}</span>
-          {onSignOut ? (
+          <div className="flex items-center gap-2">
             <button
-              type="button"
-              onClick={onSignOut}
-              style={{
-                background: "transparent",
-                border: "none",
-                color: "inherit",
-                cursor: "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "4px",
-                fontSize: "inherit",
-              }}
+              className="admin-signout"
+              onClick={() => onSignOut ? onSignOut() : (window.location.href = signOut)}
+              title="Sign out of Admin Portal"
             >
-              <LogOut size={14} /> Sign out
+              <LogOut size={16} />
+              <span>Sign Out</span>
             </button>
-          ) : (
-            <a href={signOut}>
-              <LogOut size={14} /> Exit
-            </a>
-          )}
+          </div>
         </div>
       </aside>
 
       <main className="admin-main">
-        <header>
-          <div className="admin-header-title-group">
+        <header className="admin-header">
+          <div className="admin-header-left">
             <button
               type="button"
-              className="admin-menu-btn"
+              className="admin-menu-toggle"
               onClick={() => setMobileNavOpen(true)}
-              aria-label="Open sidebar navigation"
+              aria-label="Open navigation menu"
             >
               <Menu size={20} />
             </button>
             <div>
-              <div className="section-label">
-                <span /> {companyName.toUpperCase()} CONTROL PORTAL
+              <div className="admin-eyebrow">
+                {companyName.toUpperCase()} INFRASTRUCTURE PLATFORM
               </div>
               <h1>{nav.find((n) => n[0] === tab)?.[2]}</h1>
             </div>
@@ -223,6 +221,9 @@ export function AdminPanel({
 
         {data && tab === "dashboard" && (
           <DashboardTab data={data} action={action} />
+        )}
+        {data && tab === "workforce" && (
+          <WorkforceTab data={data} action={action} />
         )}
         {data && tab === "products" && (
           <ProductsTab data={data} edit={setProduct} action={action} />

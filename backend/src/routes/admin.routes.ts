@@ -26,6 +26,18 @@ import {
   saveProductImageFile,
   deleteMediaFile,
 } from "../storage/local-storage.service";
+import {
+  getAllLabourRequisitions,
+  updateLabourRequisitionStatus,
+  deleteLabourRequisition,
+  getAllLabourAgencies,
+  updateLabourAgency,
+  deleteLabourAgency,
+  getAllIndividualWorkers,
+  updateIndividualWorker,
+  deleteIndividualWorker,
+  getWorkforceSummary,
+} from "../services/workforce.service";
 
 export const adminRouter = Router();
 
@@ -51,11 +63,24 @@ const productImageUpload = multer({
 // GET /api/admin - Dashboard summary & collections
 adminRouter.get("/", async (_req, res) => {
   try {
-    const [products, gallery, enquiries, settings] = await Promise.all([
+    const [
+      products,
+      gallery,
+      enquiries,
+      settings,
+      requisitions,
+      agencies,
+      workers,
+      summary,
+    ] = await Promise.all([
       getAllProducts(),
       getAllGalleryItems(),
       getAllEnquiries(250),
       getAdminSettings(),
+      getAllLabourRequisitions(250),
+      getAllLabourAgencies(250),
+      getAllIndividualWorkers(250),
+      getWorkforceSummary(),
     ]);
 
     res.json({
@@ -63,12 +88,19 @@ adminRouter.get("/", async (_req, res) => {
       gallery,
       enquiries,
       settings,
+      workforce: {
+        requisitions,
+        agencies,
+        workers,
+        summary,
+      },
     });
   } catch (error) {
     console.error("❌ [Admin Routes GET /api/admin] Error:", error);
     res.status(500).json({ error: "Failed to load admin data" });
   }
 });
+
 
 // POST /api/admin - Admin management actions
 adminRouter.post("/", async (req, res) => {
@@ -142,7 +174,65 @@ adminRouter.post("/", async (req, res) => {
       return res.json({ ok: true });
     }
 
+    // 8. Update Labour Requisition Status
+    if (action === "requisition_status") {
+      const id = Number(body.id);
+      const status = String(body.status || "open");
+      if (!id) return res.status(400).json({ error: "Requisition ID required" });
+      await updateLabourRequisitionStatus(id, status);
+      return res.json({ ok: true });
+    }
+
+    // 9. Delete Labour Requisition
+    if (action === "delete_requisition") {
+      const id = Number(body.id);
+      if (!id) return res.status(400).json({ error: "Requisition ID required" });
+      await deleteLabourRequisition(id);
+      return res.json({ ok: true });
+    }
+
+    // 10. Update Labour Agency Verification & Status
+    if (action === "agency_verify") {
+      const id = Number(body.id);
+      if (!id) return res.status(400).json({ error: "Agency ID required" });
+      await updateLabourAgency(id, {
+        verified: body.verified !== undefined ? Boolean(body.verified) : undefined,
+        status: body.status ? String(body.status) : undefined,
+        notes: body.notes !== undefined ? String(body.notes) : undefined,
+      });
+      return res.json({ ok: true });
+    }
+
+    // 11. Delete Labour Agency
+    if (action === "delete_agency") {
+      const id = Number(body.id);
+      if (!id) return res.status(400).json({ error: "Agency ID required" });
+      await deleteLabourAgency(id);
+      return res.json({ ok: true });
+    }
+
+    // 12. Update Individual Worker Status & Verification
+    if (action === "worker_status") {
+      const id = Number(body.id);
+      if (!id) return res.status(400).json({ error: "Worker ID required" });
+      await updateIndividualWorker(id, {
+        verified: body.verified !== undefined ? Boolean(body.verified) : undefined,
+        status: body.status ? String(body.status) : undefined,
+        notes: body.notes !== undefined ? String(body.notes) : undefined,
+      });
+      return res.json({ ok: true });
+    }
+
+    // 13. Delete Individual Worker
+    if (action === "delete_worker") {
+      const id = Number(body.id);
+      if (!id) return res.status(400).json({ error: "Worker ID required" });
+      await deleteIndividualWorker(id);
+      return res.json({ ok: true });
+    }
+
     return res.status(400).json({ error: "Unknown action" });
+
   } catch (error: any) {
     console.error("❌ [Admin Routes POST /api/admin] Error:", error);
     res.status(500).json({ error: error.message || "Failed to process admin action" });

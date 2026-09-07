@@ -16,9 +16,14 @@ const PAGES = [
   "/products/custom-manufacturing",
   "/quality",
   "/applications",
+  "/workforce",
+  "/workforce/hire",
+  "/workforce/agency",
+  "/workforce/worker",
   "/gallery",
   "/contact",
 ];
+
 
 describe("Production Mobile Responsiveness & Layout Audit", () => {
   for (const path of PAGES) {

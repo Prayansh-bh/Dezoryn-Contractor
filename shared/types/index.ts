@@ -5,6 +5,9 @@ export type {
   LoginInput,
   ChangePasswordInput,
   ChangeEmailInput,
+  CreateLabourRequisitionInput,
+  CreateLabourAgencyInput,
+  CreateIndividualWorkerInput,
 } from "../schemas";
 
 export interface Product {
@@ -35,6 +38,81 @@ export interface Enquiry {
   message?: string;
   status: "new" | "contacted" | "qualified" | "closed" | string;
   createdAt: string | Date;
+}
+
+export interface LabourRequisition {
+  id: number;
+  requisitionCode: string;
+  companyName: string;
+  contactPerson: string;
+  phone: string;
+  email: string;
+  projectTitle: string;
+  projectType: string;
+  locationState: string;
+  locationCity: string;
+  siteAddress?: string | null;
+  totalWorkers: number;
+  skillsRequired: any;
+  startDate?: string | null;
+  durationMonths?: string | null;
+  amenities: string[];
+  dailyWageBudget?: string | null;
+  message?: string | null;
+  status: "open" | "matched" | "fulfilling" | "completed" | "cancelled" | string;
+  createdAt: string | Date;
+  updatedAt?: string | Date;
+}
+
+export interface LabourAgency {
+  id: number;
+  agencyCode: string;
+  agencyName: string;
+  proprietorName: string;
+  phone: string;
+  email?: string | null;
+  gstin?: string | null;
+  labourLicenseNo?: string | null;
+  state: string;
+  city: string;
+  totalCrewSize: number;
+  primaryTrades: string[];
+  preferredStates: string[];
+  availability: string;
+  verified: boolean;
+  status: "active" | "inactive" | "suspended" | string;
+  notes?: string | null;
+  createdAt: string | Date;
+  updatedAt?: string | Date;
+}
+
+export interface IndividualWorker {
+  id: number;
+  workerCode: string;
+  fullName: string;
+  phone: string;
+  trade: string;
+  experienceYears: number;
+  currentCity: string;
+  currentState: string;
+  dailyWageExpect?: string | null;
+  canRelocate: boolean;
+  availability: string;
+  verified: boolean;
+  status: "available" | "deployed" | "inactive" | string;
+  notes?: string | null;
+  createdAt: string | Date;
+  updatedAt?: string | Date;
+}
+
+export interface WorkforceSummary {
+  totalRequisitions: number;
+  openRequisitions: number;
+  totalAgencies: number;
+  verifiedAgencies: number;
+  totalWorkers: number;
+  totalWorkforcePool: number;
+  topTrades: string[];
 }
 
 export interface GalleryItem {
@@ -86,6 +164,12 @@ export interface AdminDashboardData {
   gallery: GalleryItem[];
   enquiries: Enquiry[];
   settings: SiteSettings;
+  workforce?: {
+    requisitions: LabourRequisition[];
+    agencies: LabourAgency[];
+    workers: IndividualWorker[];
+    summary: WorkforceSummary;
+  };
 }
 
 export interface ApiResponse<T = unknown> {
@@ -93,3 +177,4 @@ export interface ApiResponse<T = unknown> {
   data?: T;
   error?: string;
 }
+

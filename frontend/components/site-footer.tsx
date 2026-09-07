@@ -48,16 +48,17 @@ export function SiteFooter({ settings }: { settings?: SiteSettings }) {
 
           {/* Col 3: Sectors */}
           <div className="footer-col">
-            <h4>Applications</h4>
+            <h4>Applications & Workforce</h4>
             <div className="footer-links">
+              <Link href="/workforce">Workforce & Labour Exchange</Link>
               <Link href="/applications">National & State Highways</Link>
               <Link href="/applications">Expressways & Corridors</Link>
               <Link href="/applications">Urban Roads & Smart Cities</Link>
-              <Link href="/applications">Airports & Logistics Parks</Link>
               <Link href="/quality">Quality Assurance Protocol</Link>
               <Link href="/gallery">Project Media Gallery</Link>
             </div>
           </div>
+
 
           {/* Col 4: Contact */}
           <div className="footer-col">

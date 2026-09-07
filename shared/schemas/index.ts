@@ -62,10 +62,65 @@ export const changeEmailSchema = z.object({
   currentPassword: z.string().min(1, "Current password is required"),
 });
 
+export const tradeRequirementItemSchema = z.object({
+  trade: z.string().trim().min(1),
+  count: z.coerce.number().int().positive().default(1),
+});
+
+export const createLabourRequisitionSchema = z.object({
+  companyName: z.string().trim().min(1, "Company name is required").max(200),
+  contactPerson: z.string().trim().min(1, "Contact person name is required").max(160),
+  phone: z.string().trim().min(8, "Valid phone number required (min 8 digits)").max(20),
+  email: z.string().trim().email("Enter a valid email address").max(160),
+  projectTitle: z.string().trim().min(1, "Project title is required").max(250),
+  projectType: z.string().trim().min(1, "Project type is required").max(120),
+  locationState: z.string().trim().min(1, "Project state is required").max(100),
+  locationCity: z.string().trim().min(1, "Project city/district is required").max(100),
+  siteAddress: z.string().trim().max(300).default("").optional(),
+  totalWorkers: z.coerce.number().int().min(1, "Total workers must be at least 1"),
+  skillsRequired: z.array(z.union([z.string(), tradeRequirementItemSchema])).default([]),
+  startDate: z.string().trim().max(60).default("").optional(),
+  durationMonths: z.string().trim().max(60).default("").optional(),
+  amenities: z.array(z.string().trim()).default([]),
+  dailyWageBudget: z.string().trim().max(120).default("").optional(),
+  message: z.string().trim().max(2000).default("").optional(),
+});
+
+export const createLabourAgencySchema = z.object({
+  agencyName: z.string().trim().min(1, "Agency / Firm name is required").max(200),
+  proprietorName: z.string().trim().min(1, "Proprietor / Representative name is required").max(160),
+  phone: z.string().trim().min(8, "Valid phone number required (min 8 digits)").max(20),
+  email: z.string().trim().email("Enter a valid email address").max(160).optional().or(z.literal("")),
+  gstin: z.string().trim().max(25).default("").optional(),
+  labourLicenseNo: z.string().trim().max(80).default("").optional(),
+  state: z.string().trim().min(1, "State is required").max(100),
+  city: z.string().trim().min(1, "City is required").max(100),
+  totalCrewSize: z.coerce.number().int().min(1, "Crew size must be at least 1"),
+  primaryTrades: z.array(z.string().trim()).default([]),
+  preferredStates: z.array(z.string().trim()).default([]),
+  availability: z.string().trim().default("immediate"),
+});
+
+export const createIndividualWorkerSchema = z.object({
+  fullName: z.string().trim().min(1, "Full name is required").max(160),
+  phone: z.string().trim().min(8, "Valid phone number required (min 8 digits)").max(20),
+  trade: z.string().trim().min(1, "Skill / Trade category is required").max(120),
+  experienceYears: z.coerce.number().int().min(0).default(1),
+  currentCity: z.string().trim().min(1, "Current city is required").max(100),
+  currentState: z.string().trim().min(1, "Current state is required").max(100),
+  dailyWageExpect: z.string().trim().max(120).default("").optional(),
+  canRelocate: z.boolean().default(true),
+  availability: z.string().trim().default("immediate"),
+});
+
 export type CreateEnquiryInput = z.infer<typeof createEnquirySchema>;
 export type SaveProductInput = z.infer<typeof saveProductSchema>;
 export type SiteSettingsInput = z.infer<typeof siteSettingsSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 export type ChangeEmailInput = z.infer<typeof changeEmailSchema>;
+export type CreateLabourRequisitionInput = z.infer<typeof createLabourRequisitionSchema>;
+export type CreateLabourAgencyInput = z.infer<typeof createLabourAgencySchema>;
+export type CreateIndividualWorkerInput = z.infer<typeof createIndividualWorkerSchema>;
+
 

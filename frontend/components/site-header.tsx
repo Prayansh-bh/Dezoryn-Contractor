@@ -61,9 +61,11 @@ export function SiteHeader({ settings }: { settings?: SiteSettings }) {
     { label: "Products", href: "/products" },
     { label: "Quality", href: "/quality" },
     { label: "Applications", href: "/applications" },
+    { label: "Workforce", href: "/workforce" },
     { label: "Gallery", href: "/gallery" },
     { label: "Contact", href: "/contact" },
   ];
+
 
   return (
     <>

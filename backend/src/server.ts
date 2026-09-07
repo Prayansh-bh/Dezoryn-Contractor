@@ -8,7 +8,9 @@ import path from "path";
 import { authRouter } from "./auth/auth.routes";
 import { adminRouter } from "./routes/admin.routes";
 import { publicRouter } from "./routes/public.routes";
+import { workforceRouter } from "./routes/workforce.routes";
 import { ensureUploadDirectory } from "./storage/local-storage.service";
+
 
 // Production fail-closed environment validation
 if (process.env.NODE_ENV === "production") {
@@ -134,7 +136,9 @@ app.get("/api/health", (_req, res) => {
 // Mount routes
 app.use("/api/auth", authRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/workforce", workforceRouter);
 app.use("/api", publicRouter);
+
 
 // Global 404 handler
 app.use((_req, res) => {
