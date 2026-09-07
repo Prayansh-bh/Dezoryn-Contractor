@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { StatCard } from "./stat-card";
 import { ConfirmDialog } from "./confirm-dialog";
+import { RequisitionDetailsModal } from "./requisition-details-modal";
 import {
   RequisitionTradeDemandChart,
   RequisitionStatusDonutChart,
@@ -353,24 +354,27 @@ export function WorkforceTab({
                         </td>
 
                         <td style={{ textAlign: "right" }}>
-                          <button
-                            type="button"
-                            className="table-btn"
-                            title="View Full Scope & Amenities"
-                            onClick={() => setViewingRequisition(req)}
-                          >
-                            <Eye size={13} style={{ display: "inline", verticalAlign: "middle", marginRight: "4px" }} /> Details
-                          </button>
-                          {action && (
+                          <div className="table-actions">
                             <button
                               type="button"
-                              className="icon-danger"
-                              title="Delete Requisition"
-                              onClick={() => setReqToDelete(req)}
+                              className="table-btn"
+                              title="View Full Scope & Amenities"
+                              onClick={() => setViewingRequisition(req)}
                             >
-                              <Trash2 size={13} />
+                              <Eye size={13} />
+                              <span>Details</span>
                             </button>
-                          )}
+                            {action && (
+                              <button
+                                type="button"
+                                className="icon-danger"
+                                title="Delete Requisition"
+                                onClick={() => setReqToDelete(req)}
+                              >
+                                <Trash2 size={13} />
+                              </button>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     );
@@ -467,14 +471,16 @@ export function WorkforceTab({
 
                         {action && (
                           <td style={{ textAlign: "right" }}>
-                            <button
-                              type="button"
-                              className="icon-danger"
-                              title="Delete Agency"
-                              onClick={() => setAgencyToDelete(agency)}
-                            >
-                              <Trash2 size={13} />
-                            </button>
+                            <div className="table-actions">
+                              <button
+                                type="button"
+                                className="icon-danger"
+                                title="Delete Agency"
+                                onClick={() => setAgencyToDelete(agency)}
+                              >
+                                <Trash2 size={13} />
+                              </button>
+                            </div>
                           </td>
                         )}
                       </tr>
@@ -559,14 +565,16 @@ export function WorkforceTab({
 
                       {action && (
                         <td style={{ textAlign: "right" }}>
-                          <button
-                            type="button"
-                            className="icon-danger"
-                            title="Delete Worker Profile"
-                            onClick={() => setWorkerToDelete(worker)}
-                          >
-                            <Trash2 size={13} />
-                          </button>
+                          <div className="table-actions">
+                            <button
+                              type="button"
+                              className="icon-danger"
+                              title="Delete Worker Profile"
+                              onClick={() => setWorkerToDelete(worker)}
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          </div>
                         </td>
                       )}
                     </tr>
@@ -590,132 +598,10 @@ export function WorkforceTab({
       </section>
 
       {/* Requisition Details View Modal */}
-      {viewingRequisition && (
-        <div className="admin-modal" onClick={() => setViewingRequisition(null)}>
-          <div className="editor details-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="editor-head">
-              <div>
-                <span className="section-label">
-                  <span /> REQUISITION DETAILS
-                </span>
-                <h2>{viewingRequisition.requisitionCode} • {viewingRequisition.projectTitle}</h2>
-              </div>
-              <button
-                type="button"
-                className="editor-close"
-                onClick={() => setViewingRequisition(null)}
-                aria-label="Close details"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <div className="editor-body">
-              <div className="details-grid">
-                <div className="details-item">
-                  <label>Contractor / Firm Name</label>
-                  <strong>{viewingRequisition.companyName}</strong>
-                </div>
-                <div className="details-item">
-                  <label>Authorized Contact</label>
-                  <strong>{viewingRequisition.contactPerson}</strong>
-                </div>
-                <div className="details-item">
-                  <label>Direct Phone</label>
-                  <a href={`tel:${viewingRequisition.phone}`} style={{ color: "var(--amber-primary)", fontWeight: 700 }}>
-                    {viewingRequisition.phone}
-                  </a>
-                </div>
-                <div className="details-item">
-                  <label>Email Address</label>
-                  <strong>{viewingRequisition.email}</strong>
-                </div>
-                <div className="details-item">
-                  <label>Project Site Location</label>
-                  <strong>{viewingRequisition.locationCity}, {viewingRequisition.locationState}</strong>
-                </div>
-                <div className="details-item">
-                  <label>Project Classification</label>
-                  <strong>{viewingRequisition.projectType}</strong>
-                </div>
-                <div className="details-item">
-                  <label>Deployment Duration</label>
-                  <strong>{viewingRequisition.durationMonths || "Project based"}</strong>
-                </div>
-                <div className="details-item">
-                  <label>Total Workforce Required</label>
-                  <strong style={{ color: "var(--amber-dark)" }}>{viewingRequisition.totalWorkers} Personnel</strong>
-                </div>
-              </div>
-
-              {/* Trade Matrix Table */}
-              <div style={{ marginBottom: "18px" }}>
-                <label style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-dim)", display: "block", marginBottom: "8px" }}>
-                  Trade Headcount Matrix Breakdown
-                </label>
-                <div className="admin-table-wrap">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Trade Discipline</th>
-                        <th style={{ textAlign: "right" }}>Required Headcount</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(Array.isArray(viewingRequisition.skillsRequired) ? viewingRequisition.skillsRequired : []).map((s: any, idx: number) => (
-                        <tr key={idx}>
-                          <td><b>{typeof s === "string" ? s : s.trade}</b></td>
-                          <td style={{ textAlign: "right", fontWeight: 700, color: "var(--amber-dark)" }}>
-                            {typeof s === "string" ? "—" : `${s.count} Workers`}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Amenities Provided */}
-              {Array.isArray(viewingRequisition.amenities) && viewingRequisition.amenities.length > 0 && (
-                <div style={{ marginBottom: "18px" }}>
-                  <label style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-dim)", display: "block", marginBottom: "6px" }}>
-                    Site Amenities & Logistics Provided
-                  </label>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                    {viewingRequisition.amenities.map((a: string, idx: number) => (
-                      <span key={idx} className="trade-tag" style={{ background: "#ecfdf5", color: "#065f46", border: "1px solid #a7f3d0" }}>
-                        ✓ {a}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Additional Scope Message */}
-              {viewingRequisition.message && (
-                <div>
-                  <label style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-dim)", display: "block", marginBottom: "4px" }}>
-                    Scope Notes
-                  </label>
-                  <p style={{ fontSize: "13px", color: "var(--text-muted)", background: "#f8fafc", padding: "12px", borderRadius: "6px", border: "1px solid var(--border)" }}>
-                    {viewingRequisition.message}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            <div className="editor-foot">
-              <button
-                type="button"
-                className="btn-confirm-cancel"
-                onClick={() => setViewingRequisition(null)}
-              >
-                Close Details
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <RequisitionDetailsModal
+        requisition={viewingRequisition}
+        onClose={() => setViewingRequisition(null)}
+      />
 
       {/* Confirmation Dialog for Requisition Deletion */}
       <ConfirmDialog

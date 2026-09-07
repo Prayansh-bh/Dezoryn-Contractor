@@ -80,13 +80,15 @@ export function EnquiryTable({
                   </td>
                   {action && (
                     <td>
-                      <button
-                        className="icon-danger"
-                        title="Delete enquiry permanently"
-                        onClick={() => setEnquiryToDelete(e)}
-                      >
-                        <Trash2 size={14} />
-                      </button>
+                      <div className="table-actions">
+                        <button
+                          className="icon-danger"
+                          title="Delete enquiry permanently"
+                          onClick={() => setEnquiryToDelete(e)}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
                     </td>
                   )}
                 </tr>

@@ -126,16 +126,18 @@ export function ProductsTab({
                       </span>
                     </td>
                     <td>
-                      <button className="table-btn" onClick={() => edit(p)}>
-                        Edit
-                      </button>
-                      <button
-                        className="icon-danger"
-                        title="Delete product"
-                        onClick={() => setProductToDelete(p)}
-                      >
-                        <Trash2 size={15} />
-                      </button>
+                      <div className="table-actions">
+                        <button className="table-btn" onClick={() => edit(p)}>
+                          Edit
+                        </button>
+                        <button
+                          className="icon-danger"
+                          title="Delete product"
+                          onClick={() => setProductToDelete(p)}
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

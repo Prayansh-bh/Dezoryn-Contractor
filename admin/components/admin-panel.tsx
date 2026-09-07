@@ -182,19 +182,19 @@ export function AdminPanel({
       </aside>
 
       <main className="admin-main">
-        <header className="admin-header">
-          <div className="admin-header-left">
+        <header>
+          <div className="admin-header-title-group">
             <button
               type="button"
-              className="admin-menu-toggle"
+              className="admin-menu-btn"
               onClick={() => setMobileNavOpen(true)}
               aria-label="Open navigation menu"
             >
               <Menu size={20} />
             </button>
             <div>
-              <div className="admin-eyebrow">
-                {companyName.toUpperCase()} INFRASTRUCTURE PLATFORM
+              <div className="section-label">
+                <span /> {companyName.toUpperCase()} INFRASTRUCTURE PLATFORM
               </div>
               <h1>{nav.find((n) => n[0] === tab)?.[2]}</h1>
             </div>
