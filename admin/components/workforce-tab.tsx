@@ -2,8 +2,9 @@ import { useState } from "react";
 import {
   Building2,
   CheckCircle2,
-  Filter,
+  Eye,
   HardHat,
+  Inbox,
   Info,
   MapPin,
   Phone,
@@ -14,8 +15,15 @@ import {
   UserCheck,
   Users,
   Wrench,
-  XCircle,
+  X,
 } from "lucide-react";
+import { StatCard } from "./stat-card";
+import { ConfirmDialog } from "./confirm-dialog";
+import {
+  RequisitionTradeDemandChart,
+  RequisitionStatusDonutChart,
+  WorkforceCompositionChart,
+} from "./analytics-charts";
 import type {
   AdminDashboardData,
   LabourRequisition,
@@ -30,9 +38,15 @@ export function WorkforceTab({
   data: AdminDashboardData;
   action?: (payload: any) => Promise<boolean>;
 }) {
-  const [subTab, setSubTab] = useState<"requisitions" | "agencies" | "workers">("requisitions");
+  const [subTab, setSubTab] = useState<"requisitions" | "agencies" | "workers" | "analytics">("requisitions");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [viewingRequisition, setViewingRequisition] = useState<LabourRequisition | null>(null);
+
+  // Deletion modals state
+  const [reqToDelete, setReqToDelete] = useState<LabourRequisition | null>(null);
+  const [agencyToDelete, setAgencyToDelete] = useState<LabourAgency | null>(null);
+  const [workerToDelete, setWorkerToDelete] = useState<IndividualWorker | null>(null);
 
   const requisitions: LabourRequisition[] = data.workforce?.requisitions || [];
   const agencies: LabourAgency[] = data.workforce?.agencies || [];
@@ -41,26 +55,30 @@ export function WorkforceTab({
 
   const totalReqWorkers = requisitions.reduce((sum, r) => sum + (r.totalWorkers || 0), 0);
   const verifiedAgenciesCount = agencies.filter((a) => a.verified).length;
+  const openReqsCount = requisitions.filter((r) => r.status === "open").length;
+  const totalWorkforcePool = summary?.totalWorkforcePool || 2450;
 
   // Filtered lists
   const filteredRequisitions = requisitions.filter((r) => {
+    const term = search.toLowerCase();
     const matchesSearch =
-      r.companyName.toLowerCase().includes(search.toLowerCase()) ||
-      r.projectTitle.toLowerCase().includes(search.toLowerCase()) ||
-      r.locationState.toLowerCase().includes(search.toLowerCase()) ||
-      r.locationCity.toLowerCase().includes(search.toLowerCase()) ||
-      r.requisitionCode.toLowerCase().includes(search.toLowerCase());
+      r.companyName.toLowerCase().includes(term) ||
+      r.projectTitle.toLowerCase().includes(term) ||
+      r.locationState.toLowerCase().includes(term) ||
+      r.locationCity.toLowerCase().includes(term) ||
+      r.requisitionCode.toLowerCase().includes(term);
     const matchesStatus = statusFilter === "all" || r.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
   const filteredAgencies = agencies.filter((a) => {
+    const term = search.toLowerCase();
     const matchesSearch =
-      a.agencyName.toLowerCase().includes(search.toLowerCase()) ||
-      a.proprietorName.toLowerCase().includes(search.toLowerCase()) ||
-      a.city.toLowerCase().includes(search.toLowerCase()) ||
-      a.state.toLowerCase().includes(search.toLowerCase()) ||
-      a.agencyCode.toLowerCase().includes(search.toLowerCase());
+      a.agencyName.toLowerCase().includes(term) ||
+      a.proprietorName.toLowerCase().includes(term) ||
+      a.city.toLowerCase().includes(term) ||
+      a.state.toLowerCase().includes(term) ||
+      a.agencyCode.toLowerCase().includes(term);
     const matchesStatus =
       statusFilter === "all" ||
       (statusFilter === "verified" && a.verified) ||
@@ -69,12 +87,13 @@ export function WorkforceTab({
   });
 
   const filteredWorkers = workers.filter((w) => {
+    const term = search.toLowerCase();
     const matchesSearch =
-      w.fullName.toLowerCase().includes(search.toLowerCase()) ||
-      w.trade.toLowerCase().includes(search.toLowerCase()) ||
-      w.currentCity.toLowerCase().includes(search.toLowerCase()) ||
-      w.currentState.toLowerCase().includes(search.toLowerCase()) ||
-      w.workerCode.toLowerCase().includes(search.toLowerCase());
+      w.fullName.toLowerCase().includes(term) ||
+      w.trade.toLowerCase().includes(term) ||
+      w.currentCity.toLowerCase().includes(term) ||
+      w.currentState.toLowerCase().includes(term) ||
+      w.workerCode.toLowerCase().includes(term);
     const matchesStatus = statusFilter === "all" || w.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -84,23 +103,9 @@ export function WorkforceTab({
     await action({ action: "requisition_status", id, status: newStatus });
   }
 
-  async function handleDeleteRequisition(id: number, code: string) {
-    if (!action) return;
-    if (confirm(`Are you sure you want to permanently delete Requisition ${code}?`)) {
-      await action({ action: "delete_requisition", id });
-    }
-  }
-
   async function handleAgencyVerify(id: number, currentVerified: boolean) {
     if (!action) return;
     await action({ action: "agency_verify", id, verified: !currentVerified });
-  }
-
-  async function handleDeleteAgency(id: number, name: string) {
-    if (!action) return;
-    if (confirm(`Are you sure you want to delete agency "${name}"?`)) {
-      await action({ action: "delete_agency", id });
-    }
   }
 
   async function handleWorkerStatus(id: number, newStatus: string) {
@@ -108,273 +113,264 @@ export function WorkforceTab({
     await action({ action: "worker_status", id, status: newStatus });
   }
 
-  async function handleDeleteWorker(id: number, name: string) {
-    if (!action) return;
-    if (confirm(`Are you sure you want to delete worker record for "${name}"?`)) {
-      await action({ action: "delete_worker", id });
-    }
-  }
-
   return (
-    <div className="space-y-6">
-      {/* Top Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 rounded-xl bg-white border border-[#e2e8f0] shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-[#c9a35d] shrink-0">
-            <Building2 size={24} />
-          </div>
+    <>
+      {/* KPI Stat Cards Strip */}
+      <div className="stat-grid">
+        <div className="stat-card">
           <div>
-            <span className="text-xs font-bold text-[#64748b] uppercase tracking-wider block">
-              Contractor Requisitions
-            </span>
-            <strong className="text-2xl font-bold text-[#0f172a]">{requisitions.length}</strong>
-            <span className="text-[11px] text-[#c9a35d] block">
-              {requisitions.filter((r) => r.status === "open").length} open ({totalReqWorkers} manpower needed)
-            </span>
+            <span>Contractor Requisitions</span>
+            <b>{requisitions.length}</b>
+            <div className="stat-card-sub highlight">
+              {openReqsCount} open ({totalReqWorkers} manpower needed)
+            </div>
           </div>
+          <Building2 />
         </div>
 
-        <div className="p-4 rounded-xl bg-white border border-[#e2e8f0] shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-[#c9a35d] shrink-0">
-            <Users size={24} />
-          </div>
+        <div className="stat-card">
           <div>
-            <span className="text-xs font-bold text-[#64748b] uppercase tracking-wider block">
-              Labour Supply Agencies
-            </span>
-            <strong className="text-2xl font-bold text-[#0f172a]">{agencies.length}</strong>
-            <span className="text-[11px] text-emerald-600 block">
-              {verifiedAgenciesCount} verified partners
-            </span>
+            <span>Labour Supply Agencies</span>
+            <b>{agencies.length}</b>
+            <div className="stat-card-sub success">
+              {verifiedAgenciesCount} verified partner firms
+            </div>
           </div>
+          <Users />
         </div>
 
-        <div className="p-4 rounded-xl bg-white border border-[#e2e8f0] shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-[#c9a35d] shrink-0">
-            <HardHat size={24} />
-          </div>
+        <div className="stat-card">
           <div>
-            <span className="text-xs font-bold text-[#64748b] uppercase tracking-wider block">
-              Direct Skill Registry
-            </span>
-            <strong className="text-2xl font-bold text-[#0f172a]">{workers.length}</strong>
-            <span className="text-[11px] text-[#64748b] block">
+            <span>Direct Skill Registry</span>
+            <b>{workers.length}</b>
+            <div className="stat-card-sub">
               {workers.filter((w) => w.status === "available").length} immediately available
-            </span>
+            </div>
           </div>
+          <HardHat />
         </div>
 
-        <div className="p-4 rounded-xl bg-white border border-[#e2e8f0] shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-[#c9a35d] shrink-0">
-            <ShieldCheck size={24} />
-          </div>
+        <div className="stat-card">
           <div>
-            <span className="text-xs font-bold text-[#64748b] uppercase tracking-wider block">
-              Total Workforce Pool
-            </span>
-            <strong className="text-2xl font-bold text-[#0f172a]">
-              {(summary?.totalWorkforcePool || 2450).toLocaleString()}
-            </strong>
-            <span className="text-[11px] text-slate-500 block">Pan-India Deployment</span>
+            <span>Total Workforce Pool</span>
+            <b>{totalWorkforcePool.toLocaleString()}</b>
+            <div className="stat-card-sub">Pan-India Deployment</div>
           </div>
+          <ShieldCheck />
         </div>
       </div>
 
-      {/* Workforce Management Desk */}
+      {/* Main Workforce Desk Container */}
       <section className="admin-card">
-        {/* Navigation Sub-Tabs */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#e2e8f0] pb-4 mb-6">
-          <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-lg">
+        {/* Sub-Tabs Selector Header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
+          <div className="workforce-subtabs">
             <button
+              type="button"
               onClick={() => {
                 setSubTab("requisitions");
                 setStatusFilter("all");
               }}
-              className={`px-4 py-2 rounded-md text-xs font-bold transition-all ${
-                subTab === "requisitions"
-                  ? "bg-white text-[#0f172a] shadow-sm"
-                  : "text-slate-600 hover:text-[#0f172a]"
-              }`}
+              className={`workforce-pill ${subTab === "requisitions" ? "active" : ""}`}
             >
-              Contractor Requisitions ({requisitions.length})
+              <Building2 size={15} />
+              <span>Contractor Requisitions</span>
+              <span className="workforce-pill-count">{requisitions.length}</span>
             </button>
+
             <button
+              type="button"
               onClick={() => {
                 setSubTab("agencies");
                 setStatusFilter("all");
               }}
-              className={`px-4 py-2 rounded-md text-xs font-bold transition-all ${
-                subTab === "agencies"
-                  ? "bg-white text-[#0f172a] shadow-sm"
-                  : "text-slate-600 hover:text-[#0f172a]"
-              }`}
+              className={`workforce-pill ${subTab === "agencies" ? "active" : ""}`}
             >
-              Labour Agencies ({agencies.length})
+              <Users size={15} />
+              <span>Labour Agencies</span>
+              <span className="workforce-pill-count">{agencies.length}</span>
             </button>
+
             <button
+              type="button"
               onClick={() => {
                 setSubTab("workers");
                 setStatusFilter("all");
               }}
-              className={`px-4 py-2 rounded-md text-xs font-bold transition-all ${
-                subTab === "workers"
-                  ? "bg-white text-[#0f172a] shadow-sm"
-                  : "text-slate-600 hover:text-[#0f172a]"
-              }`}
+              className={`workforce-pill ${subTab === "workers" ? "active" : ""}`}
             >
-              Individual Workers ({workers.length})
+              <HardHat size={15} />
+              <span>Individual Artisans</span>
+              <span className="workforce-pill-count">{workers.length}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setSubTab("analytics")}
+              className={`workforce-pill ${subTab === "analytics" ? "active" : ""}`}
+            >
+              <Wrench size={15} />
+              <span>Analytics & KPI Insights</span>
             </button>
           </div>
 
-          {/* Search & Filter Bar */}
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <div className="relative flex-1 sm:w-64">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search by name, state, trade, code…"
-                className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-[#cbd5e1] focus:border-[#c9a35d] outline-none"
-              />
+          {/* Search & Status Filter Toolbar (visible for lists) */}
+          {subTab !== "analytics" && (
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+              <div className="workforce-search-box">
+                <Search size={14} />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search code, name, trade, location…"
+                  className="workforce-search-input"
+                />
+              </div>
+
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="workforce-select"
+              >
+                <option value="all">All Statuses</option>
+                {subTab === "requisitions" && (
+                  <>
+                    <option value="open">Open Requisitions</option>
+                    <option value="matched">Agency Matched</option>
+                    <option value="fulfilling">Fulfilling / Deployed</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                  </>
+                )}
+                {subTab === "agencies" && (
+                  <>
+                    <option value="verified">Verified Partners Only</option>
+                    <option value="pending">Pending Verification</option>
+                  </>
+                )}
+                {subTab === "workers" && (
+                  <>
+                    <option value="available">Available for Work</option>
+                    <option value="deployed">Deployed on Site</option>
+                    <option value="inactive">Inactive</option>
+                  </>
+                )}
+              </select>
             </div>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-1.5 text-xs rounded-lg border border-[#cbd5e1] bg-white outline-none"
-            >
-              <option value="all">All Statuses</option>
-              {subTab === "requisitions" && (
-                <>
-                  <option value="open">Open</option>
-                  <option value="matched">Matched</option>
-                  <option value="fulfilling">Fulfilling</option>
-                  <option value="completed">Completed</option>
-                  <option value="cancelled">Cancelled</option>
-                </>
-              )}
-              {subTab === "agencies" && (
-                <>
-                  <option value="verified">Verified Partners Only</option>
-                  <option value="pending">Pending Verification</option>
-                </>
-              )}
-              {subTab === "workers" && (
-                <>
-                  <option value="available">Available</option>
-                  <option value="deployed">Deployed</option>
-                  <option value="inactive">Inactive</option>
-                </>
-              )}
-            </select>
-          </div>
+          )}
         </div>
 
-        {/* VIEW 1: REQUISITIONS */}
+        {/* 1. CONTRACTOR REQUISITIONS TAB */}
         {subTab === "requisitions" && (
-          <div className="overflow-x-auto">
-            {filteredRequisitions.length === 0 ? (
-              <div className="text-center py-12 text-slate-500">
-                <Building2 size={36} className="mx-auto mb-2 text-slate-300" />
-                <p className="text-sm font-semibold">No contractor requisitions found matching criteria.</p>
+          <div className="admin-table-wrap">
+            {!filteredRequisitions.length ? (
+              <div className="empty-state">
+                <div className="empty-state-icon">
+                  <Building2 size={24} />
+                </div>
+                <h3>No Contractor Requisitions Found</h3>
+                <p>Project labour requisitions submitted by EPC contractors will appear here in real-time.</p>
               </div>
             ) : (
-              <table className="admin-table w-full text-left">
+              <table>
                 <thead>
-                  <tr className="border-b border-[#e2e8f0] text-[11px] uppercase tracking-wider text-slate-500 bg-slate-50">
-                    <th className="py-3 px-4">Code & Project</th>
-                    <th className="py-3 px-4">Contractor Details</th>
-                    <th className="py-3 px-4">Trades & Headcount</th>
-                    <th className="py-3 px-4">Location & Timeline</th>
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4 text-right">Actions</th>
+                  <tr>
+                    <th>Docket & Project</th>
+                    <th>Contractor Details</th>
+                    <th>Trade Requirements</th>
+                    <th>Location & Timeline</th>
+                    <th>Fulfillment Status</th>
+                    <th style={{ textAlign: "right" }}>Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#e2e8f0] text-xs">
+                <tbody>
                   {filteredRequisitions.map((req) => {
                     const skills = Array.isArray(req.skillsRequired) ? req.skillsRequired : [];
                     return (
-                      <tr key={req.id} className="hover:bg-slate-50/80 transition-colors">
-                        <td className="py-3.5 px-4">
-                          <span className="font-mono text-[11px] font-bold text-[#c9a35d] block">
+                      <tr key={req.id}>
+                        <td>
+                          <span style={{ fontFamily: "var(--font-display)", fontWeight: 800, color: "var(--amber-dark)", fontSize: "12px", display: "block" }}>
                             {req.requisitionCode}
                           </span>
-                          <strong className="text-sm text-[#0f172a] block mt-0.5">
-                            {req.projectTitle}
-                          </strong>
-                          <span className="text-[11px] text-slate-500">{req.projectType}</span>
+                          <b>{req.projectTitle}</b>
+                          <small>{req.projectType}</small>
                         </td>
 
-                        <td className="py-3.5 px-4">
-                          <strong className="text-[#0f172a] block">{req.companyName}</strong>
-                          <span className="text-slate-600 block">{req.contactPerson}</span>
-                          <a
-                            href={`tel:${req.phone}`}
-                            className="text-[#c9a35d] hover:underline font-mono inline-flex items-center gap-1 mt-0.5"
-                          >
-                            <Phone size={11} /> {req.phone}
-                          </a>
+                        <td>
+                          <b>{req.companyName}</b>
+                          <small>{req.contactPerson}</small>
+                          <div style={{ marginTop: "3px" }}>
+                            <a href={`tel:${req.phone}`} style={{ color: "var(--amber-dark)", fontWeight: 700, textDecoration: "none", fontSize: "12px" }}>
+                              {req.phone}
+                            </a>
+                          </div>
                         </td>
 
-                        <td className="py-3.5 px-4">
-                          <span className="inline-block px-2 py-0.5 rounded bg-amber-100 text-[#926017] font-bold text-xs mb-1">
+                        <td>
+                          <span className="trade-tag gold" style={{ fontWeight: 800, fontSize: "11.5px" }}>
                             {req.totalWorkers} Workers Total
                           </span>
-                          <div className="space-y-0.5 text-[11px] text-slate-600">
-                            {skills.slice(0, 3).map((s: any, idx: number) => (
-                              <div key={idx}>
-                                • {typeof s === "string" ? s : `${s.trade} (${s.count})`}
-                              </div>
+                          <div style={{ marginTop: "4px" }}>
+                            {skills.slice(0, 2).map((s: any, idx: number) => (
+                              <span key={idx} className="trade-tag">
+                                {typeof s === "string" ? s : `${s.trade} (${s.count})`}
+                              </span>
                             ))}
-                            {skills.length > 3 && (
-                              <span className="text-[10px] text-slate-400">+{skills.length - 3} more trades</span>
+                            {skills.length > 2 && (
+                              <small style={{ color: "#64748b", display: "inline-block" }}>
+                                +{skills.length - 2} more
+                              </small>
                             )}
                           </div>
                         </td>
 
-                        <td className="py-3.5 px-4">
-                          <div className="flex items-center gap-1 text-[#0f172a] font-medium">
-                            <MapPin size={12} className="text-[#c9a35d]" />
-                            <span>{req.locationCity}, {req.locationState}</span>
-                          </div>
-                          <span className="text-[11px] text-slate-500 block mt-0.5">
-                            Duration: {req.durationMonths || "Project based"}
-                          </span>
-                          <span className="text-[10px] text-slate-400">
-                            Lodged: {new Date(req.createdAt).toLocaleDateString()}
-                          </span>
+                        <td>
+                          <b>{req.locationCity}, {req.locationState}</b>
+                          <small>Duration: {req.durationMonths || "Project based"}</small>
+                          <small style={{ color: "#94a3b8" }}>
+                            Lodged: {new Date(req.createdAt).toLocaleDateString("en-IN")}
+                          </small>
                         </td>
 
-                        <td className="py-3.5 px-4">
-                          <select
-                            value={req.status}
-                            onChange={(e) => handleRequisitionStatus(req.id, e.target.value)}
-                            className={`px-2.5 py-1 rounded text-xs font-bold border outline-none cursor-pointer ${
-                              req.status === "open"
-                                ? "bg-blue-50 text-blue-700 border-blue-200"
-                                : req.status === "matched"
-                                ? "bg-amber-50 text-amber-700 border-amber-200"
-                                : req.status === "fulfilling"
-                                ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                                : "bg-slate-100 text-slate-600 border-slate-200"
-                            }`}
-                          >
-                            <option value="open">Open</option>
-                            <option value="matched">Matched</option>
-                            <option value="fulfilling">Fulfilling</option>
-                            <option value="completed">Completed</option>
-                            <option value="cancelled">Cancelled</option>
-                          </select>
+                        <td>
+                          {action ? (
+                            <select
+                              value={req.status}
+                              onChange={(e) => handleRequisitionStatus(req.id, e.target.value)}
+                              className="workforce-select"
+                              style={{ padding: "4px 8px", fontSize: "11.5px", fontWeight: 700 }}
+                            >
+                              <option value="open">Open</option>
+                              <option value="matched">Matched</option>
+                              <option value="fulfilling">Fulfilling</option>
+                              <option value="completed">Completed</option>
+                              <option value="cancelled">Cancelled</option>
+                            </select>
+                          ) : (
+                            <span className={`status-badge ${req.status}`}>{req.status}</span>
+                          )}
                         </td>
 
-                        <td className="py-3.5 px-4 text-right">
+                        <td style={{ textAlign: "right" }}>
                           <button
-                            onClick={() => handleDeleteRequisition(req.id, req.requisitionCode)}
-                            className="p-1.5 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors"
-                            title="Delete requisition"
+                            type="button"
+                            className="table-btn"
+                            title="View Full Scope & Amenities"
+                            onClick={() => setViewingRequisition(req)}
                           >
-                            <Trash2 size={15} />
+                            <Eye size={13} style={{ display: "inline", verticalAlign: "middle", marginRight: "4px" }} /> Details
                           </button>
+                          {action && (
+                            <button
+                              type="button"
+                              className="icon-danger"
+                              title="Delete Requisition"
+                              onClick={() => setReqToDelete(req)}
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          )}
                         </td>
                       </tr>
                     );
@@ -385,110 +381,102 @@ export function WorkforceTab({
           </div>
         )}
 
-        {/* VIEW 2: LABOUR AGENCIES */}
+        {/* 2. LABOUR AGENCIES TAB */}
         {subTab === "agencies" && (
-          <div className="overflow-x-auto">
-            {filteredAgencies.length === 0 ? (
-              <div className="text-center py-12 text-slate-500">
-                <Users size={36} className="mx-auto mb-2 text-slate-300" />
-                <p className="text-sm font-semibold">No registered manpower agencies found.</p>
+          <div className="admin-table-wrap">
+            {!filteredAgencies.length ? (
+              <div className="empty-state">
+                <div className="empty-state-icon">
+                  <Users size={24} />
+                </div>
+                <h3>No Registered Labour Agencies</h3>
+                <p>Manpower supply agencies and subcontractor crews registered on the platform will appear here.</p>
               </div>
             ) : (
-              <table className="admin-table w-full text-left">
+              <table>
                 <thead>
-                  <tr className="border-b border-[#e2e8f0] text-[11px] uppercase tracking-wider text-slate-500 bg-slate-50">
-                    <th className="py-3 px-4">Code & Agency</th>
-                    <th className="py-3 px-4">Proprietor & Phone</th>
-                    <th className="py-3 px-4">Crew Strength & Trades</th>
-                    <th className="py-3 px-4">Base & Coverage</th>
-                    <th className="py-3 px-4">Verification Badge</th>
-                    <th className="py-3 px-4 text-right">Actions</th>
+                  <tr>
+                    <th>Docket & Firm Name</th>
+                    <th>Proprietor & Contact</th>
+                    <th>Crew Capacity & Trades</th>
+                    <th>Headquarters & Coverage</th>
+                    <th>Partner Verification</th>
+                    {action && <th style={{ textAlign: "right" }}>Action</th>}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#e2e8f0] text-xs">
+                <tbody>
                   {filteredAgencies.map((agency) => {
                     const trades = Array.isArray(agency.primaryTrades) ? agency.primaryTrades : [];
                     return (
-                      <tr key={agency.id} className="hover:bg-slate-50/80 transition-colors">
-                        <td className="py-3.5 px-4">
-                          <span className="font-mono text-[11px] font-bold text-[#c9a35d] block">
+                      <tr key={agency.id}>
+                        <td>
+                          <span style={{ fontFamily: "var(--font-display)", fontWeight: 800, color: "var(--amber-dark)", fontSize: "12px", display: "block" }}>
                             {agency.agencyCode}
                           </span>
-                          <strong className="text-sm text-[#0f172a] block mt-0.5">
-                            {agency.agencyName}
-                          </strong>
+                          <b>{agency.agencyName}</b>
                           {agency.gstin && (
-                            <span className="text-[10px] text-slate-500 font-mono">GST: {agency.gstin}</span>
+                            <small style={{ fontFamily: "monospace" }}>GSTIN: {agency.gstin}</small>
+                          )}
+                          {agency.labourLicenseNo && (
+                            <small style={{ color: "#64748b" }}>Lic: {agency.labourLicenseNo}</small>
                           )}
                         </td>
 
-                        <td className="py-3.5 px-4">
-                          <strong className="text-[#0f172a] block">{agency.proprietorName}</strong>
-                          <a
-                            href={`tel:${agency.phone}`}
-                            className="text-[#c9a35d] hover:underline font-mono inline-flex items-center gap-1 mt-0.5"
-                          >
-                            <Phone size={11} /> {agency.phone}
-                          </a>
-                          {agency.email && (
-                            <span className="text-[11px] text-slate-500 block">{agency.email}</span>
-                          )}
+                        <td>
+                          <b>{agency.proprietorName}</b>
+                          <div>
+                            <a href={`tel:${agency.phone}`} style={{ color: "var(--amber-dark)", fontWeight: 700, textDecoration: "none", fontSize: "12px" }}>
+                              {agency.phone}
+                            </a>
+                          </div>
+                          {agency.email && <small>{agency.email}</small>}
                         </td>
 
-                        <td className="py-3.5 px-4">
-                          <span className="inline-block px-2.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-xs mb-1">
-                            {agency.totalCrewSize} Workforce Crew
+                        <td>
+                          <span className="trade-tag gold" style={{ fontWeight: 800, fontSize: "11.5px" }}>
+                            {agency.totalCrewSize} Crew Strength
                           </span>
-                          <div className="space-y-0.5 text-[11px] text-slate-600">
+                          <div style={{ marginTop: "4px" }}>
                             {trades.slice(0, 2).map((t, idx) => (
-                              <div key={idx}>• {t}</div>
+                              <span key={idx} className="trade-tag">{t}</span>
                             ))}
                             {trades.length > 2 && (
-                              <span className="text-[10px] text-slate-400">+{trades.length - 2} more trades</span>
+                              <small style={{ color: "#64748b" }}>+{trades.length - 2} more</small>
                             )}
                           </div>
                         </td>
 
-                        <td className="py-3.5 px-4">
-                          <div className="flex items-center gap-1 text-[#0f172a] font-medium">
-                            <MapPin size={12} className="text-[#c9a35d]" />
-                            <span>{agency.city}, {agency.state}</span>
-                          </div>
-                          <span className="text-[11px] text-slate-500 block mt-0.5 capitalize">
-                            Availability: {agency.availability.replace(/_/g, " ")}
-                          </span>
+                        <td>
+                          <b>{agency.city}, {agency.state}</b>
+                          <small style={{ textTransform: "capitalize" }}>
+                            Status: {agency.availability.replace(/_/g, " ")}
+                          </small>
                         </td>
 
-                        <td className="py-3.5 px-4">
+                        <td>
                           <button
+                            type="button"
                             onClick={() => handleAgencyVerify(agency.id, agency.verified)}
-                            className={`px-3 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1.5 transition-all ${
-                              agency.verified
-                                ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
-                                : "bg-slate-100 text-slate-600 border border-slate-300 hover:bg-slate-200"
-                            }`}
+                            className={`status-badge ${agency.verified ? "verified" : "pending"}`}
+                            style={{ cursor: "pointer", border: "1px solid", padding: "5px 10px" }}
+                            title="Click to toggle partner verification badge"
                           >
-                            {agency.verified ? (
-                              <>
-                                <CheckCircle2 size={13} className="text-emerald-600" /> Verified Partner
-                              </>
-                            ) : (
-                              <>
-                                <Info size={13} /> Click to Verify
-                              </>
-                            )}
+                            {agency.verified ? "✓ Verified Partner" : "Pending Verification"}
                           </button>
                         </td>
 
-                        <td className="py-3.5 px-4 text-right">
-                          <button
-                            onClick={() => handleDeleteAgency(agency.id, agency.agencyName)}
-                            className="p-1.5 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors"
-                            title="Delete agency"
-                          >
-                            <Trash2 size={15} />
-                          </button>
-                        </td>
+                        {action && (
+                          <td style={{ textAlign: "right" }}>
+                            <button
+                              type="button"
+                              className="icon-danger"
+                              title="Delete Agency"
+                              onClick={() => setAgencyToDelete(agency)}
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          </td>
+                        )}
                       </tr>
                     );
                   })}
@@ -498,94 +486,89 @@ export function WorkforceTab({
           </div>
         )}
 
-        {/* VIEW 3: INDIVIDUAL WORKERS */}
+        {/* 3. INDIVIDUAL ARTISANS TAB */}
         {subTab === "workers" && (
-          <div className="overflow-x-auto">
-            {filteredWorkers.length === 0 ? (
-              <div className="text-center py-12 text-slate-500">
-                <HardHat size={36} className="mx-auto mb-2 text-slate-300" />
-                <p className="text-sm font-semibold">No registered individual workers found.</p>
+          <div className="admin-table-wrap">
+            {!filteredWorkers.length ? (
+              <div className="empty-state">
+                <div className="empty-state-icon">
+                  <HardHat size={24} />
+                </div>
+                <h3>No Registered Workers Found</h3>
+                <p>Individual artisans and machine operators enrolled in the Dezoryn Skill Registry will appear here.</p>
               </div>
             ) : (
-              <table className="admin-table w-full text-left">
+              <table>
                 <thead>
-                  <tr className="border-b border-[#e2e8f0] text-[11px] uppercase tracking-wider text-slate-500 bg-slate-50">
-                    <th className="py-3 px-4">ID & Artisan</th>
-                    <th className="py-3 px-4">Primary Trade</th>
-                    <th className="py-3 px-4">Experience & Wage</th>
-                    <th className="py-3 px-4">Location & Relocation</th>
-                    <th className="py-3 px-4">Deployment Status</th>
-                    <th className="py-3 px-4 text-right">Actions</th>
+                  <tr>
+                    <th>Artisan ID & Name</th>
+                    <th>Skill Category / Trade</th>
+                    <th>Experience & Wage Expectation</th>
+                    <th>Location & Relocation</th>
+                    <th>Deployment Status</th>
+                    {action && <th style={{ textAlign: "right" }}>Action</th>}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#e2e8f0] text-xs">
+                <tbody>
                   {filteredWorkers.map((worker) => (
-                    <tr key={worker.id} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="py-3.5 px-4">
-                        <span className="font-mono text-[11px] font-bold text-[#c9a35d] block">
+                    <tr key={worker.id}>
+                      <td>
+                        <span style={{ fontFamily: "var(--font-display)", fontWeight: 800, color: "var(--amber-dark)", fontSize: "12px", display: "block" }}>
                           {worker.workerCode}
                         </span>
-                        <strong className="text-sm text-[#0f172a] block mt-0.5">
-                          {worker.fullName}
-                        </strong>
-                        <a
-                          href={`tel:${worker.phone}`}
-                          className="text-[#c9a35d] hover:underline font-mono inline-flex items-center gap-1 mt-0.5"
-                        >
-                          <Phone size={11} /> {worker.phone}
-                        </a>
+                        <b>{worker.fullName}</b>
+                        <div>
+                          <a href={`tel:${worker.phone}`} style={{ color: "var(--amber-dark)", fontWeight: 700, textDecoration: "none", fontSize: "12px" }}>
+                            {worker.phone}
+                          </a>
+                        </div>
                       </td>
 
-                      <td className="py-3.5 px-4">
-                        <span className="inline-block px-2.5 py-1 rounded bg-slate-100 text-[#0f172a] font-bold text-xs">
+                      <td>
+                        <span className="trade-tag gold" style={{ fontWeight: 700 }}>
                           {worker.trade}
                         </span>
                       </td>
 
-                      <td className="py-3.5 px-4">
-                        <strong className="text-[#0f172a] block">{worker.experienceYears} Years Exp</strong>
-                        <span className="text-[11px] text-slate-500">
-                          {worker.dailyWageExpect || "Standard Rate"}
-                        </span>
+                      <td>
+                        <b>{worker.experienceYears} Years Experience</b>
+                        <small>{worker.dailyWageExpect || "Standard Daily Rate"}</small>
                       </td>
 
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-1 text-[#0f172a] font-medium">
-                          <MapPin size={12} className="text-[#c9a35d]" />
-                          <span>{worker.currentCity}, {worker.currentState}</span>
-                        </div>
-                        <span className="text-[11px] text-slate-500 block mt-0.5">
-                          {worker.canRelocate ? "✓ Pan-India Relocation" : "Local only"}
-                        </span>
+                      <td>
+                        <b>{worker.currentCity}, {worker.currentState}</b>
+                        <small>{worker.canRelocate ? "✓ Pan-India Relocation" : "Local only"}</small>
                       </td>
 
-                      <td className="py-3.5 px-4">
-                        <select
-                          value={worker.status}
-                          onChange={(e) => handleWorkerStatus(worker.id, e.target.value)}
-                          className={`px-2.5 py-1 rounded text-xs font-bold border outline-none cursor-pointer ${
-                            worker.status === "available"
-                              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                              : worker.status === "deployed"
-                              ? "bg-blue-50 text-blue-700 border-blue-200"
-                              : "bg-slate-100 text-slate-600 border-slate-200"
-                          }`}
-                        >
-                          <option value="available">Available</option>
-                          <option value="deployed">Deployed to Site</option>
-                          <option value="inactive">Inactive</option>
-                        </select>
+                      <td>
+                        {action ? (
+                          <select
+                            value={worker.status}
+                            onChange={(e) => handleWorkerStatus(worker.id, e.target.value)}
+                            className="workforce-select"
+                            style={{ padding: "4px 8px", fontSize: "11.5px", fontWeight: 700 }}
+                          >
+                            <option value="available">Available</option>
+                            <option value="deployed">Deployed on Site</option>
+                            <option value="inactive">Inactive</option>
+                          </select>
+                        ) : (
+                          <span className={`status-badge ${worker.status}`}>{worker.status}</span>
+                        )}
                       </td>
 
-                      <td className="py-3.5 px-4 text-right">
-                        <button
-                          onClick={() => handleDeleteWorker(worker.id, worker.fullName)}
-                          className="p-1.5 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors"
-                          title="Delete worker"
-                        >
-                          <Trash2 size={15} />
-                        </button>
-                      </td>
+                      {action && (
+                        <td style={{ textAlign: "right" }}>
+                          <button
+                            type="button"
+                            className="icon-danger"
+                            title="Delete Worker Profile"
+                            onClick={() => setWorkerToDelete(worker)}
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
@@ -593,7 +576,194 @@ export function WorkforceTab({
             )}
           </div>
         )}
+
+        {/* 4. ANALYTICS & DEMAND INSIGHTS TAB */}
+        {subTab === "analytics" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+            <div className="analytics-grid-2">
+              <RequisitionTradeDemandChart requisitions={requisitions} />
+              <RequisitionStatusDonutChart requisitions={requisitions} />
+            </div>
+            <WorkforceCompositionChart agencies={agencies} workers={workers} />
+          </div>
+        )}
       </section>
-    </div>
+
+      {/* Requisition Details View Modal */}
+      {viewingRequisition && (
+        <div className="admin-modal" onClick={() => setViewingRequisition(null)}>
+          <div className="editor details-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="editor-head">
+              <div>
+                <span className="section-label">
+                  <span /> REQUISITION DETAILS
+                </span>
+                <h2>{viewingRequisition.requisitionCode} • {viewingRequisition.projectTitle}</h2>
+              </div>
+              <button
+                type="button"
+                className="editor-close"
+                onClick={() => setViewingRequisition(null)}
+                aria-label="Close details"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="editor-body">
+              <div className="details-grid">
+                <div className="details-item">
+                  <label>Contractor / Firm Name</label>
+                  <strong>{viewingRequisition.companyName}</strong>
+                </div>
+                <div className="details-item">
+                  <label>Authorized Contact</label>
+                  <strong>{viewingRequisition.contactPerson}</strong>
+                </div>
+                <div className="details-item">
+                  <label>Direct Phone</label>
+                  <a href={`tel:${viewingRequisition.phone}`} style={{ color: "var(--amber-primary)", fontWeight: 700 }}>
+                    {viewingRequisition.phone}
+                  </a>
+                </div>
+                <div className="details-item">
+                  <label>Email Address</label>
+                  <strong>{viewingRequisition.email}</strong>
+                </div>
+                <div className="details-item">
+                  <label>Project Site Location</label>
+                  <strong>{viewingRequisition.locationCity}, {viewingRequisition.locationState}</strong>
+                </div>
+                <div className="details-item">
+                  <label>Project Classification</label>
+                  <strong>{viewingRequisition.projectType}</strong>
+                </div>
+                <div className="details-item">
+                  <label>Deployment Duration</label>
+                  <strong>{viewingRequisition.durationMonths || "Project based"}</strong>
+                </div>
+                <div className="details-item">
+                  <label>Total Workforce Required</label>
+                  <strong style={{ color: "var(--amber-dark)" }}>{viewingRequisition.totalWorkers} Personnel</strong>
+                </div>
+              </div>
+
+              {/* Trade Matrix Table */}
+              <div style={{ marginBottom: "18px" }}>
+                <label style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-dim)", display: "block", marginBottom: "8px" }}>
+                  Trade Headcount Matrix Breakdown
+                </label>
+                <div className="admin-table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Trade Discipline</th>
+                        <th style={{ textAlign: "right" }}>Required Headcount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(Array.isArray(viewingRequisition.skillsRequired) ? viewingRequisition.skillsRequired : []).map((s: any, idx: number) => (
+                        <tr key={idx}>
+                          <td><b>{typeof s === "string" ? s : s.trade}</b></td>
+                          <td style={{ textAlign: "right", fontWeight: 700, color: "var(--amber-dark)" }}>
+                            {typeof s === "string" ? "—" : `${s.count} Workers`}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Amenities Provided */}
+              {Array.isArray(viewingRequisition.amenities) && viewingRequisition.amenities.length > 0 && (
+                <div style={{ marginBottom: "18px" }}>
+                  <label style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-dim)", display: "block", marginBottom: "6px" }}>
+                    Site Amenities & Logistics Provided
+                  </label>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                    {viewingRequisition.amenities.map((a: string, idx: number) => (
+                      <span key={idx} className="trade-tag" style={{ background: "#ecfdf5", color: "#065f46", border: "1px solid #a7f3d0" }}>
+                        ✓ {a}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Additional Scope Message */}
+              {viewingRequisition.message && (
+                <div>
+                  <label style={{ fontFamily: "var(--font-display)", fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-dim)", display: "block", marginBottom: "4px" }}>
+                    Scope Notes
+                  </label>
+                  <p style={{ fontSize: "13px", color: "var(--text-muted)", background: "#f8fafc", padding: "12px", borderRadius: "6px", border: "1px solid var(--border)" }}>
+                    {viewingRequisition.message}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="editor-foot">
+              <button
+                type="button"
+                className="btn-confirm-cancel"
+                onClick={() => setViewingRequisition(null)}
+              >
+                Close Details
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confirmation Dialog for Requisition Deletion */}
+      <ConfirmDialog
+        open={Boolean(reqToDelete)}
+        title="Delete Labour Requisition?"
+        message={`Are you sure you want to permanently delete Requisition "${reqToDelete?.requisitionCode}" for project "${reqToDelete?.projectTitle}"?`}
+        confirmText="Delete Requisition"
+        cancelText="Cancel"
+        isDestructive={true}
+        onConfirm={async () => {
+          if (reqToDelete && action) {
+            await action({ action: "delete_requisition", id: reqToDelete.id });
+          }
+        }}
+        onClose={() => setReqToDelete(null)}
+      />
+
+      {/* Confirmation Dialog for Agency Deletion */}
+      <ConfirmDialog
+        open={Boolean(agencyToDelete)}
+        title="Delete Labour Supply Agency?"
+        message={`Are you sure you want to permanently delete agency "${agencyToDelete?.agencyName}" (${agencyToDelete?.proprietorName})?`}
+        confirmText="Delete Agency"
+        cancelText="Cancel"
+        isDestructive={true}
+        onConfirm={async () => {
+          if (agencyToDelete && action) {
+            await action({ action: "delete_agency", id: agencyToDelete.id });
+          }
+        }}
+        onClose={() => setAgencyToDelete(null)}
+      />
+
+      {/* Confirmation Dialog for Worker Deletion */}
+      <ConfirmDialog
+        open={Boolean(workerToDelete)}
+        title="Delete Worker Profile?"
+        message={`Are you sure you want to permanently delete artisan "${workerToDelete?.fullName}" (${workerToDelete?.workerCode})?`}
+        confirmText="Delete Worker"
+        cancelText="Cancel"
+        isDestructive={true}
+        onConfirm={async () => {
+          if (workerToDelete && action) {
+            await action({ action: "delete_worker", id: workerToDelete.id });
+          }
+        }}
+        onClose={() => setWorkerToDelete(null)}
+      />
+    </>
   );
 }

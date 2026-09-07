@@ -1050,3 +1050,80 @@ footer {
     left: 8px;
   }
 }
+
+/* ==========================================================================
+   PUBLIC WORKFORCE & LABOUR EXCHANGE PLATFORM STYLING
+   ========================================================================== */
+
+.workforce-entry-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px;
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.workforce-entry-card.dark {
+  background: #0b1220;
+  border: 2px solid rgba(201, 163, 93, 0.4);
+  color: #ffffff;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
+}
+
+.workforce-entry-card.dark:hover {
+  border-color: var(--amber-primary);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.3), 0 0 24px rgba(201, 163, 93, 0.2);
+}
+
+.workforce-entry-card.light {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.workforce-entry-card.light:hover {
+  border-color: var(--amber-primary);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+}
+
+.workforce-icon-box {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.workforce-entry-card.dark .workforce-icon-box {
+  background: rgba(201, 163, 93, 0.15);
+  border: 1px solid var(--amber-primary);
+  color: var(--amber-light);
+}
+
+.workforce-entry-card.light .workforce-icon-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: var(--amber-primary);
+}
+
+.workforce-form-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 36px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+@media (max-width: 640px) {
+  .workforce-form-card {
+    padding: 20px 16px;
+  }
+}
